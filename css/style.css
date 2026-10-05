@@ -1,0 +1,217 @@
+:root {
+    --header: #141414;
+    --panel: #1c1c1c;
+    --line: #3a3a3a;
+    --gold: #dfae55;
+    --green: #0b5d33;
+    --input: #f6f3ec;
+    --text: #f4f1ea;
+    --muted: #b9b6ae;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html,
+body {
+    height: 100%;
+}
+
+body {
+    font-family: "Inter", system-ui, sans-serif;
+    background: var(--panel);
+    color: var(--text);
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+/* Header */
+header {
+    background: var(--header);
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5%;
+    height: 90px;
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    text-decoration: none;
+    color: var(--text);
+}
+
+.brand-mark {
+    width: 42px;
+    height: 42px;
+    border-radius: 9px;
+    background: var(--gold);
+    color: #1a1a1a;
+    display: grid;
+    place-items: center;
+    font-family: "Lato", sans-serif;
+    font-size: 26px;
+}
+
+.brand-name {
+    font-family: "Lato", sans-serif;
+    font-size: 28px;
+}
+
+nav {
+    display: flex;
+    gap: 34px;
+}
+
+nav a {
+    color: var(--muted);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 17px;
+}
+
+nav a:hover {
+    color: var(--text);
+}
+
+nav a.active {
+    color: var(--gold);
+}
+
+/* Split layout */
+main {
+    flex: 1;
+    display: grid;
+    grid-template-columns: 5fr 7fr;
+}
+
+.photo {
+    background:
+        linear-gradient(to bottom, rgba(0, 0, 0, 0) 40%, rgba(0, 0, 0, .45)),
+        url("../img/parking.jpg") center / cover no-repeat,
+        linear-gradient(160deg, #5b5f86, #2c3342 60%, #1f242c);
+    min-height: 320px;
+}
+
+.form-side {
+    display: flex;
+    align-items: center;
+    padding: 48px 5%;
+}
+
+.form-wrap {
+    width: min(100%, 460px);
+    margin: 0 auto;
+}
+
+h1 {
+    font-family: "Lato", sans-serif;
+    font-size: 44px;
+    padding-bottom: 28px;
+    border-bottom: 1px solid var(--line);
+    margin-bottom: 36px;
+}
+
+label {
+    display: block;
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 12px;
+}
+
+input {
+    width: 100%;
+    height: 50px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    background: var(--input);
+    color: #1a1a1a;
+    padding: 0 16px;
+    font: inherit;
+    font-size: 16px;
+    margin-bottom: 24px;
+}
+
+input::placeholder {
+    color: #8b8a85;
+}
+
+input:focus {
+    outline: none;
+    border-color: var(--gold);
+}
+
+button {
+    width: 100%;
+    height: 50px;
+    margin-top: 8px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--green);
+    color: var(--text);
+    font: inherit;
+    font-size: 17px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+button:hover {
+    background: #0e7340;
+}
+
+button:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: 3px;
+}
+
+.links {
+    text-align: center;
+    margin-top: 32px;
+    font-size: 16px;
+    color: var(--muted);
+}
+
+.links a {
+    color: var(--gold);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.links a:hover {
+    text-decoration: underline;
+}
+
+.forgot {
+    display: inline-block;
+    margin-bottom: 18px;
+    font-weight: 600;
+}
+
+@media (max-width: 800px) {
+    header {
+        height: 72px;
+    }
+
+    nav {
+        gap: 18px;
+    }
+
+    nav a {
+        font-size: 15px;
+    }
+
+    main {
+        grid-template-columns: 1fr;
+    }
+
+    .photo {
+        min-height: 180px;
+    }
+}
