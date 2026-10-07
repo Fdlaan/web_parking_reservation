@@ -1,12 +1,13 @@
 :root {
     --header: #141414;
-    --panel: #1c1c1c;
+    --panel: #1e1e1e;
     --line: #3a3a3a;
     --gold: #dfae55;
     --green: #0b5d33;
     --input: #f6f3ec;
     --text: #f4f1ea;
     --muted: #b9b6ae;
+    --bs-border-color: #3a3a3a;
 }
 
 * {
@@ -30,7 +31,7 @@ body {
 }
 
 /* Header */
-header {
+.login header {
     background: var(--header);
     border-bottom: 1px solid var(--line);
     display: flex;
