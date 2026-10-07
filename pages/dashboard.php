@@ -133,13 +133,15 @@
                             style="width: 95px; height: 30px; padding: 0.1em">View More</button>
                     </div>
 
-                    <div class="row justify-content-start">
-                        <div class="col-md-6 mb-4">
-                            <a href="" class="text-decoration-none">
-                                <div class="d-flex flex-column justify-content-center w-75 h-100 p-3 text-bg-dark rounded-3">
+                    <div class="d-flex gap-3">
+
+                        <div class="col-md-6">
+                            <a href="" class="d-block w-75 h-100 text-decoration-none">
+                                <div
+                                    class="d-flex flex-column justify-content-center w-100 h-100 p-3 text-bg-dark rounded-3">
 
                                     <img src="../img/grand-indonesia-mall.jpg" alt="Grand Indonesia Mall"
-                                        class="w-100 object-fit-fill rounded" style="height: 250px;">
+                                        class="w-100 object-fit-cover rounded" style="height: 250px;">
 
                                     <div class="d-flex align-items-center justify-content-between mt-4 mb-2">
                                         <h4 class="fw-bold text-light mb-0">Grand Indonesia Mall</h4>
@@ -150,12 +152,13 @@
                             </a>
                         </div>
 
-                        <div class="col-md-6 mb-4">
-                            <a href="" class="text-decoration-none">
-                                <div class="d-flex flex-column justify-content-center w-75 h-100 p-3 text-bg-dark rounded-3">
+                        <div class="col-md-6">
+                            <a href="" class="d-block w-75 h-100 text-decoration-none">
+                                <div
+                                    class="d-flex flex-column justify-content-center w-100 h-100 p-3 text-bg-dark rounded-3">
 
                                     <img src="../img/grand-indonesia-mall.jpg" alt="Grand Indonesia Mall"
-                                        class="w-100 object-fit-fill rounded" style="height: 250px;">
+                                        class="w-100 object-fit-cover rounded" style="height: 250px;">
 
                                     <div class="d-flex align-items-center justify-content-between mt-4 mb-2">
                                         <h4 class="fw-bold text-light mb-0">Grand Indonesia Mall</h4>
@@ -165,6 +168,8 @@
                                 </div>
                             </a>
                         </div>
+
+                    </div>
 
                 </div>
             </main>
