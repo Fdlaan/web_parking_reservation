@@ -1,12 +1,13 @@
 :root {
     --header: #141414;
-    --panel: #1c1c1c;
+    --panel: #1e1e1e;
     --line: #3a3a3a;
     --gold: #dfae55;
     --green: #0b5d33;
     --input: #f6f3ec;
     --text: #f4f1ea;
     --muted: #b9b6ae;
+    --bs-border-color: #3a3a3a;
 }
 
 * {
@@ -30,7 +31,7 @@ body {
 }
 
 /* Header */
-header {
+.login header {
     background: var(--header);
     border-bottom: 1px solid var(--line);
     display: flex;
@@ -126,7 +127,7 @@ label {
     margin-bottom: 12px;
 }
 
-input {
+.input-form input {
     width: 100%;
     height: 50px;
     border: 2px solid transparent;
@@ -139,11 +140,11 @@ input {
     margin-bottom: 24px;
 }
 
-input::placeholder {
+.input-form input::placeholder {
     color: #8b8a85;
 }
 
-input:focus {
+.input-form input:focus {
     outline: none;
     border-color: var(--gold);
 }
@@ -171,6 +172,27 @@ button:focus-visible {
     outline-offset: 3px;
 }
 
+.form-check-input {
+    flex-shrink: 0;
+    width: 1em;
+    height: 1em;
+    margin-top: .30em;
+    background-color: var(--input);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    border: var(--line) solid var(--line);
+}
+
+.form-check .form-check-input {
+    float: left;
+}
+
+.form-check-input[type=checkbox] {
+    border-radius: .25em;
+    margin-right: .5em;
+}
+
 .links {
     text-align: center;
     margin-top: 32px;
@@ -192,6 +214,11 @@ button:focus-visible {
     display: inline-block;
     margin-bottom: 18px;
     font-weight: 600;
+}
+
+/* Main Content */
+.main-content {
+    min-width: 0;
 }
 
 @media (max-width: 800px) {
