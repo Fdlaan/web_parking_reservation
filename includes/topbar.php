@@ -1,13 +1,21 @@
 <div class="flex-grow-1 d-flex flex-column min-vw-0">
 
-    <header class="p-3 border-bottom" style="--bs-border-color: var(--line);">
+    <header class="p-3 border-bottom sticky-top" style="--bs-border-color: var(--line);">
         <div class="container-fluid">
+
             <div class="d-flex align-items-center">
+
                 <p class="px-2 mb-0 me-auto link-secondary">Home</p>
-                <i class="fa-solid fa-bell me-3"></i>
-                <a href="#" class="d-block link-body-emphasis text-decoration-none">
-                    <img src="https://github.com/mdo.png" alt="mdo" width="32" height="32" class="rounded-circle">
+
+                <a href="">
+                    <i class="fa-solid fa-bell text-light me-4"></i>
                 </a>
+
+                <a href="#" class="d-flex align-items-center text-uppercase text-decoration-none text-light fw-medium">
+                    <img src="https://github.com/mdo.png" alt="mdo" width="36" height="36" class="rounded me-2">
+                    Placeholder Name
+                </a>
+
             </div>
         </div>
     </header>
