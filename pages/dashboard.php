@@ -25,7 +25,7 @@
                         <p class="d-flex align-items-center text-secondary">Current Location
                             <i class="fa-solid fa-location-dot ms-1"></i>
                         </p>
-                        <a href="/" class="d-flex align-items-center text-light text-decoration-none fw-medium">
+                        <a href="/" class="d-flex align-items-center text-light text-decoration-none fw-medium w-25 text-nowrap">
                             <span class="fs-4">Universitas Indonesia, Depok, Indonesia
                                 <i class="fa-solid fa-caret-down"></i>
                             </span>
@@ -38,13 +38,14 @@
 
                         </div>
                     </div>
+
+                    <!-- Recommended Parking -->
                     <div class="d-flex mb-3 align-items-center">
                         <h3 class="fw-bold flex-shrink 0 text-light">Recommended Parking</h3>
                         <button type="button" class="ms-auto text-nowrap btn btn-outline-warning"
                             style="width: 95px; height: 30px; padding: 0.1em">View More</button>
                     </div>
 
-                    <!-- Cards -->
                     <div class="row align-items-md-stretch">
                         <div class="col-md-6 mb-4">
                             <a href="" class="text-decoration-none">
@@ -127,21 +128,22 @@
                         </div>
                     </div>
 
+                    <!-- Previously Parked -->
                     <div class="d-flex mb-3 align-items-center">
                         <h3 class="fw-bold flex-shrink 0 text-light">Previously Parked</h3>
                         <button type="button" class="ms-auto text-nowrap btn btn-outline-warning"
                             style="width: 95px; height: 30px; padding: 0.1em">View More</button>
                     </div>
 
-                    <div class="d-flex gap-3">
+                    <div class="row g-4">
 
-                        <div class="col-md-6">
-                            <a href="" class="d-block w-75 h-100 text-decoration-none">
+                        <div class="col-md-4">
+                            <a href="" class="d-block w-100 h-100 text-decoration-none">
                                 <div
                                     class="d-flex flex-column justify-content-center w-100 h-100 p-3 text-bg-dark rounded-3">
 
                                     <img src="../img/grand-indonesia-mall.jpg" alt="Grand Indonesia Mall"
-                                        class="w-100 object-fit-cover rounded" style="height: 250px;">
+                                        class="w-100 object-fit-fill rounded" style="height: 250px;">
 
                                     <div class="d-flex align-items-center justify-content-between mt-4 mb-2">
                                         <h4 class="fw-bold text-light mb-0">Grand Indonesia Mall</h4>
@@ -152,13 +154,30 @@
                             </a>
                         </div>
 
-                        <div class="col-md-6">
-                            <a href="" class="d-block w-75 h-100 text-decoration-none">
+                        <div class="col-md-4">
+                            <a href="" class="d-block w-100 h-100 text-decoration-none">
                                 <div
                                     class="d-flex flex-column justify-content-center w-100 h-100 p-3 text-bg-dark rounded-3">
 
                                     <img src="../img/grand-indonesia-mall.jpg" alt="Grand Indonesia Mall"
-                                        class="w-100 object-fit-cover rounded" style="height: 250px;">
+                                        class="w-100 object-fit-fill rounded" style="height: 250px;">
+
+                                    <div class="d-flex align-items-center justify-content-between mt-4 mb-2">
+                                        <h4 class="fw-bold text-light mb-0">Grand Indonesia Mall</h4>
+                                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                                    </div>
+
+                                </div>
+                            </a>
+                        </div>
+
+                        <div class="col-md-4">
+                            <a href="" class="d-block w-100 h-100 text-decoration-none">
+                                <div
+                                    class="d-flex flex-column justify-content-center w-100 h-100 p-3 text-bg-dark rounded-3">
+
+                                    <img src="../img/grand-indonesia-mall.jpg" alt="Grand Indonesia Mall"
+                                        class="w-100 object-fit-fill rounded" style="height: 250px;">
 
                                     <div class="d-flex align-items-center justify-content-between mt-4 mb-2">
                                         <h4 class="fw-bold text-light mb-0">Grand Indonesia Mall</h4>
