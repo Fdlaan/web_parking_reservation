@@ -26,7 +26,7 @@
                             <i class="fa-solid fa-location-dot ms-1"></i>
                         </p>
                         <a href="/" class="d-flex align-items-center text-light text-decoration-none fw-medium w-25 text-nowrap">
-                            <span class="fs-4">UUniversitas Indonesia, Depok, Indonesia
+                            <span class="fs-4">Universitas Indonesia, Depok, Indonesia
                                 <i class="fa-solid fa-caret-down"></i>
                             </span>
                         </a>
