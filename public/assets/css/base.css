@@ -1,0 +1,29 @@
+:root {
+    --background: #1e1e1e;
+    --primary-text: #F4F2EB;
+    --input-text: #FFFFFF;
+    --secondary-text: #B5B5AD;
+    --primary-action: #02542D;
+    --brand: #dfae55;
+    --line: #3a3a3a;
+    --input: #f6f3ec;
+    --muted: #b9b6ae;
+    --bs-border-color: #3a3a3a;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    background: var(--background);
+}
+
+h1 {
+    color: var(--primary-text);
+}
+label {
+    color: var(--primary-text);
+}
