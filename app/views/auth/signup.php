@@ -11,33 +11,99 @@
 </head>
 
 <body>
-    <!-- Sign up -->
     <main class="container">
+
         <section class="form-side">
             <div class="form-wrap">
-                <h1>Let's Create Your Account</h1>
-                <form class="input-form" action="../backend/register_process.php" method="POST">
-                    <label for="fullname">Name</label>
-                    <input type="text" name="fullname" id="fullname" placeholder="Brian Fadlan" required>
-                    <label>Email</label>
-                    <input type="email" name="email" id="email" placeholder="brianfadlan@example.com" required>
-                    <label for="password">Create Password</label>
-                    <input type="password" id="password" name="password" placeholder="Brianfadlan123." required>
-                    <label for="confirm_password">Confirm Password</label>
-                    <input type="password" id="confirm_password" name="confirm_password" placeholder="Brianfadlan123." required>
+
+                <h1>Let's create your account</h1>
+                
+                <form class= "input-form" action="../backend/signup_process.php" method="POST">
+                    <?php
+                        $field = [
+                        'id' => 'username',
+                        'name' => 'username',
+                        'label' => 'Username',
+                        'type' => 'text',
+                        'placeholder' => 'brianfadlan',
+                        'required' => true,
+                        'autocomplete' => 'username'
+                        ];
+
+                        require __DIR__ . '/../components/input.php';
+                    ?>
+
+                    <?php
+                        $field = [
+                        'id' => 'email',
+                        'name' => 'email',
+                        'label' => 'Email',
+                        'type' => 'email',
+                        'placeholder' => 'brianfadlan@example.com',
+                        'required' => true,
+                        'autocomplete' => 'email'
+                        ];
+
+                        require __DIR__ . '/../components/input.php';
+                    ?>
+                    <?php
+                        $field = [
+                        'id' => 'phone',
+                        'name' => 'phone',
+                        'label' => 'Phone Number',
+                        'type' => 'tel',
+                        'placeholder' => '08123456789',
+                        'required' => true,
+                        'autocomplete' => 'tel'
+                        ];
+
+                        require __DIR__ . '/../components/input.php';
+                    ?>
+                    <?php
+                        $field = [
+                        'id' => 'password',
+                        'name' => 'password',
+                        'label' => 'Create Password',
+                        'type' => 'password',
+                        'placeholder' => 'Brianfadlan123.',
+                        'required' => true,
+                        'autocomplete' => 'new-password'
+                        ];
+
+                        require __DIR__ . '/../components/input.php';
+                    ?>
+                    <?php
+                        $field = [
+                        'id' => 'confirm_password',
+                        'name' => 'confirm_password',
+                        'label' => 'Confirm Password',
+                        'type' => 'password',
+                        'placeholder' => 'Brianfadlan123.',
+                        'required' => true,
+                        'autocomplete' => 'new-password'
+                        ];
+
+                        require __DIR__ . '/../components/input.php';
+                    ?>
+
+                    <button class="continue-button" type="submit">Continue</button>
+
                 </form>
-                <button class="continue-button" type="submit">Continue</button>
+            
                 <div class="links">
-                    <span>Already have an account?</span>
-                    <a href="login.php">Login here.</a>
+                    <span>
+                        Already have an account?
+                    </span>
+                    <a href="login.php">Log in here.</a>
                 </div>
+
             </div>
         </section>
+
         <div class="photo-background" role="img" aria-label="Parking garage entrance">
             <img src="" alt="">
         </div>
     </main>
-    <!-- End of Sign up -->
 </body>
 
 </html>

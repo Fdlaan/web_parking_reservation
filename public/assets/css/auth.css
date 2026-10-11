@@ -2,7 +2,7 @@
   display: flex;
   width: 100%;
   min-height: 100vh;
-  padding: 48px;
+  padding: 24px;
 }
 
 .photo-background {
@@ -10,7 +10,7 @@
   width: 50%;
   overflow: hidden;
   border-radius: 12px;
-  background-color: var(--secondary-text);
+  background-color: var(--primary-text);
 }
 
 .photo-background img {
@@ -55,16 +55,23 @@
   gap: 12px;
 }
 
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
 input {
   padding: 9px 12px 9px 12px;
   border-radius: 6px;
-  background: var(--input-text);
+  background: var(--white-input-surface);
   border-color: var(--secondary-text);
   border: 1px solid var(--secondary-text);
 }
 
 input::placeholder {
   color: var(--secondary-text);
+  font: var(--text-body);
   font-style: italic;
   opacity: 1;
 }
@@ -73,18 +80,21 @@ input::placeholder {
   width: 100%;
   padding: 12px 0 12px;
   border-radius: 12px;
-  background: var(--primary-action);
-  color: var(--primary-text);
+  background: var(--primary-action-available-emerald);
+  color: var(--white-input-surface);
   border: none;
   cursor: pointer;
+  font: var(--text-button);
 }
 
 .links span {
   color: var(--secondary-text);
+  font: var(--text-body);
 }
 
 .links a {
-  color: var(--brand);
+  color: var(--brand-gold);
+  font: var(--text-button);
   text-decoration: none;
 }
 
@@ -97,11 +107,16 @@ input::placeholder {
   gap: 6px;
 }
 
+.form-check label {
+  font: var(--text-body);
+  color: var(--primary-text);
+}
+
 .form-check-input {
   flex-shrink: 0;
   width: 1.2em;
   height: 1.2em;
-  background-color: var(--input-text);
+  background-color: var(--white-input-surface);
   background-repeat: no-repeat;
   background-position: center;
   background-size: contain;
@@ -115,6 +130,7 @@ input::placeholder {
 }
 
 .forgot-password a {
-  color: var(--brand);
+  color: var(--brand-gold);
+  font: var(--text-button);
   text-decoration: none;
 }
