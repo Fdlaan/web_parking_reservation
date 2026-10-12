@@ -47,85 +47,54 @@
                     </div>
 
                     <div class="row align-items-md-stretch">
-                        <div class="col-md-6 mb-4">
-                            <a href="" class="text-decoration-none">
-                                <div class="d-flex flex-column justify-content-center h-100 p-3 text-bg-dark rounded-3">
+                        <?php
+                            $field = [
+                                'id' => 'grand-indonesia',
+                                'name' => 'Grand Indonesia Mall',
+                                'image' => '/web_parking_reservation/img/grand-indonesia-mall.jpg',
+                                'distance' => '7.1 KM',
+                                'url' => '#',
+                                'alt' => 'Grand Indonesia Mall'
+                            ];
 
-                                    <img src="../img/grand-indonesia-mall.jpg" alt="Grand Indonesia Mall"
-                                        class="w-100 object-fit-fill rounded" style="height: 250px;">
+                            include __DIR__ . '/../components/card-recommended.php'
+                        ?>
+                        <?php
+                            $field = [
+                                'id' => 'grand-indonesia',
+                                'name' => 'Grand Indonesia Mall',
+                                'image' => '/web_parking_reservation/img/grand-indonesia-mall.jpg',
+                                'distance' => '7.1 KM',
+                                'url' => '#',
+                                'alt' => 'Grand Indonesia Mall'
+                            ];
 
-                                    <div class="d-flex align-items-center justify-content-between mt-4">
-                                        <h4 class="fw-bold text-light mb-0">Grand Indonesia Mall</h4>
-                                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                                    </div>
+                            include __DIR__ . '/../components/card-recommended.php'
+                        ?>
+                        <?php
+                            $field = [
+                                'id' => 'grand-indonesia',
+                                'name' => 'Grand Indonesia Mall',
+                                'image' => '/web_parking_reservation/img/grand-indonesia-mall.jpg',
+                                'distance' => '7.1 KM',
+                                'url' => '#',
+                                'alt' => 'Grand Indonesia Mall'
+                            ];
 
-                                    <p class="mt-2 mb-0">
-                                        <i class="fa-solid fa-location-dot me-2"></i>20 KM
-                                    </p>
+                            include __DIR__ . '/../components/card-recommended.php'
+                        ?>
+                        <?php
+                            $field = [
+                                'id' => 'grand-indonesia',
+                                'name' => 'Grand Indonesia Mall',
+                                'image' => '/web_parking_reservation/img/grand-indonesia-mall.jpg',
+                                'distance' => '7.1 KM',
+                                'url' => '#',
+                                'alt' => 'Grand Indonesia Mall'
+                            ];
 
-                                </div>
-                            </a>
-                        </div>
-
-                        <div class="col-md-6 mb-4">
-                            <a href="" class="text-decoration-none">
-                                <div class="d-flex flex-column justify-content-center h-100 p-3 text-bg-dark rounded-3">
-
-                                    <img src="../img/grand-indonesia-mall.jpg" alt="Grand Indonesia Mall"
-                                        class="w-100 object-fit-fill rounded" style="height: 250px;">
-
-                                    <div class="d-flex align-items-center justify-content-between mt-4">
-                                        <h4 class="fw-bold text-light mb-0">Grand Indonesia Mall</h4>
-                                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                                    </div>
-
-                                    <p class="mt-2 mb-0">
-                                        <i class="fa-solid fa-location-dot me-2"></i>20 KM
-                                    </p>
-
-                                </div>
-                            </a>
-                        </div>
-
-                        <div class="col-md-6 mb-4">
-                            <a href="" class="text-decoration-none">
-                                <div class="d-flex flex-column justify-content-center h-100 p-3 text-bg-dark rounded-3">
-
-                                    <img src="../img/grand-indonesia-mall.jpg" alt="Grand Indonesia Mall"
-                                        class="w-100 object-fit-fill rounded" style="height: 250px;">
-
-                                    <div class="d-flex align-items-center justify-content-between mt-4">
-                                        <h4 class="fw-bold text-light mb-0">Grand Indonesia Mall</h4>
-                                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                                    </div>
-
-                                    <p class="mt-2 mb-0">
-                                        <i class="fa-solid fa-location-dot me-2"></i>20 KM
-                                    </p>
-
-                                </div>
-                            </a>
-                        </div>
-
-                        <div class="col-md-6 mb-4">
-                            <a href="" class="text-decoration-none">
-                                <div class="d-flex flex-column justify-content-center h-100 p-3 text-bg-dark rounded-3">
-
-                                    <img src="../img/grand-indonesia-mall.jpg" alt="Grand Indonesia Mall"
-                                        class="w-100 object-fit-fill rounded" style="height: 250px;">
-
-                                    <div class="d-flex align-items-center justify-content-between mt-4">
-                                        <h4 class="fw-bold text-light mb-0">Grand Indonesia Mall</h4>
-                                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                                    </div>
-
-                                    <p class="mt-2 mb-0">
-                                        <i class="fa-solid fa-location-dot me-2"></i>20 KM
-                                    </p>
-
-                                </div>
-                            </a>
-                        </div>
+                            include __DIR__ . '/../components/card-recommended.php'
+                        ?>
                     </div>
 
                     <!-- Previously Parked -->
@@ -136,58 +105,39 @@
                     </div>
 
                     <div class="row g-4">
+                        <?php
+                            $field = [
+                                'id' => 'grand-indonesia',
+                                'name' => 'Grand Indonesia Mall',
+                                'image' => '/web_parking_reservation/img/grand-indonesia-mall.jpg',
+                                'url' => '#',
+                                'alt' => 'Grand Indonesia Mall'
+                            ];
 
-                        <div class="col-md-4">
-                            <a href="" class="d-block w-100 h-100 text-decoration-none">
-                                <div
-                                    class="d-flex flex-column justify-content-center w-100 h-100 p-3 text-bg-dark rounded-3">
+                            include __DIR__ . '/../components/card-prev.php'
+                        ?>
+                        <?php
+                            $field = [
+                                'id' => 'grand-indonesia',
+                                'name' => 'Grand Indonesia Mall',
+                                'image' => '/web_parking_reservation/img/grand-indonesia-mall.jpg',
+                                'url' => '#',
+                                'alt' => 'Grand Indonesia Mall'
+                            ];
 
-                                    <img src="../img/grand-indonesia-mall.jpg" alt="Grand Indonesia Mall"
-                                        class="w-100 object-fit-fill rounded" style="height: 250px;">
+                            include __DIR__ . '/../components/card-prev.php'
+                        ?>
+                        <?php
+                            $field = [
+                                'id' => 'grand-indonesia',
+                                'name' => 'Grand Indonesia Mall',
+                                'image' => '/web_parking_reservation/img/grand-indonesia-mall.jpg',
+                                'url' => '#',
+                                'alt' => 'Grand Indonesia Mall'
+                            ];
 
-                                    <div class="d-flex align-items-center justify-content-between mt-4 mb-2">
-                                        <h4 class="fw-bold text-light mb-0">Grand Indonesia Mall</h4>
-                                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                                    </div>
-
-                                </div>
-                            </a>
-                        </div>
-
-                        <div class="col-md-4">
-                            <a href="" class="d-block w-100 h-100 text-decoration-none">
-                                <div
-                                    class="d-flex flex-column justify-content-center w-100 h-100 p-3 text-bg-dark rounded-3">
-
-                                    <img src="../img/grand-indonesia-mall.jpg" alt="Grand Indonesia Mall"
-                                        class="w-100 object-fit-fill rounded" style="height: 250px;">
-
-                                    <div class="d-flex align-items-center justify-content-between mt-4 mb-2">
-                                        <h4 class="fw-bold text-light mb-0">Grand Indonesia Mall</h4>
-                                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                                    </div>
-
-                                </div>
-                            </a>
-                        </div>
-
-                        <div class="col-md-4">
-                            <a href="" class="d-block w-100 h-100 text-decoration-none">
-                                <div
-                                    class="d-flex flex-column justify-content-center w-100 h-100 p-3 text-bg-dark rounded-3">
-
-                                    <img src="../img/grand-indonesia-mall.jpg" alt="Grand Indonesia Mall"
-                                        class="w-100 object-fit-fill rounded" style="height: 250px;">
-
-                                    <div class="d-flex align-items-center justify-content-between mt-4 mb-2">
-                                        <h4 class="fw-bold text-light mb-0">Grand Indonesia Mall</h4>
-                                        <i class="fa-solid fa-arrow-up-right-from-square"></i>
-                                    </div>
-
-                                </div>
-                            </a>
-                        </div>
-
+                            include __DIR__ . '/../components/card-prev.php'
+                        ?>
                     </div>
 
                 </div>
