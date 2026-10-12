@@ -57,7 +57,7 @@
 
                     <div class="form-check">
                         <input class="form-check-input" type="checkbox" value="1" id="checkDefault">
-                        <label class="form-check-label" for="checkDefault">Always Login for 30 day's</label>
+                        <label class="form-check-label" for="checkDefault">Remember me</label>
                     </div>
 
                     <button class="continue-button" type="submit">Continue</button>
