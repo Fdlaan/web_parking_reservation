@@ -3,7 +3,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parkeasy</title>
 
-    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="/web_parking_reservation/public/assets/css/home.css">
     <script src="../js/project.js"></script>
 
     <!-- Font Awesome Icons -->
