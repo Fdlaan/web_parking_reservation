@@ -1,0 +1,92 @@
+.sidebar {
+  width: 280px;
+  min-width: 280px;
+  height: 100vh;
+  overflow: auto;
+  background-color: var(--navigation);
+  border-right: 1px solid var(--border-divider);
+  color: var(--primary-text);
+}
+
+.sidebar-brand {
+  gap: 12px;
+  padding-inline: 12px;
+  color: var(--primary-text);
+}
+
+.sidebar-brand:hover {
+  color: var(--primary-text);
+}
+
+.sidebar-brand-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  flex-shrink: 0;
+  border-radius: var(--radius-lg);
+  background-color: var(--brand-gold);
+  color: var(--navigation);
+  font: var(--text-h2);
+}
+
+.sidebar-brand-name {
+  font: var(--text-h3);
+  white-space: nowrap;
+}
+
+.sidebar-nav {
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 12px 16px;
+  border-radius: var(--radius-md) !important;
+  color: var(--secondary-text);
+  font: var(--text-button);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.sidebar-link:hover {
+    background-color: var(--surface-card);
+    color: var(--brand-gold);
+}
+
+.sidebar-link.active {
+    background-color: var(--active-navigation-background);
+    color: var(--brand-gold);
+}
+
+.sidebar-link.active:hover {
+    background-color: var(--active-navigation-background);
+    color: var(--brand-gold);
+}
+
+.sidebar-button-nav {
+    margin-top: auto;
+    padding-top: 16px;
+    border-top: 1px solid var(--border-divider);
+}
+
+.sidebar-logout {
+    color: var(--danger-foreground);
+}
+
+.sidebar-logout:hover {
+    background-color: var(--danger-background);
+    color: var(--danger-foreground);
+}
+
+.sidebar-link:focus-visible,
+.sidebar-brand:focus-visible {
+    outline: 2px solid var(--brand-gold);
+    outline-offset: 3px;
+}

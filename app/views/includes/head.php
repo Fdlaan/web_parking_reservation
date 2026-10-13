@@ -1,5 +1,5 @@
 <?php
-$title_page = $field ['title_page'] ?? '';
+$title_page = $title_page ?? 'Parkeasy';
 
 $file_css = $file_css ?? [];
 $file_js = $file_js ?? [];
@@ -29,6 +29,6 @@ $asset_url = '/web_parking_reservation/public/assets';
 
     <!-- Custom JS -->
     <?php foreach ($file_js as $js): ?>
-        <script src="<? $asset_url ?>/js/<?= htmlspecialchars($js, ENT_QUOTES,'UTF-8') ?>"defer></script>
+        <script src="<?= $asset_url ?>/js/<?= htmlspecialchars($js, ENT_QUOTES,'UTF-8') ?>"defer></script>
     <?php endforeach; ?>
 </head>
