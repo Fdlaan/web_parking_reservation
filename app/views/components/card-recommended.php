@@ -7,23 +7,23 @@
     $alt = $field['alt'] ?? $name;
 ?>
 
-<div class="col-md-6 mb-4">
+<div class="w-100"style="min-height: 150px;">
     <a href="<?= htmlspecialchars($url) ?>" class="text-decoration-none" id="<?= htmlspecialchars($id) ?>">
-        <div class="d-flex flex-column justify-content-center h-100 p-4 text-bg-dark rounded-4">
+        <div class="d-flex flex-column justify-content-center h-100" style="background-color: var(--surface-card); padding: 16px; border: 1px solid var(--border-divider); border-radius: var(--radius-xl); gap: 8px;">
 
-            <img src="<?= htmlspecialchars($image) ?>" alt="<?= htmlspecialchars($alt) ?>" class="w-100 object-fit-cover rounded-4" style="height: 300px;">
+            <img src="<?= htmlspecialchars($image) ?>" alt="<?= htmlspecialchars($alt) ?>" class="w-100 object-fit-cover rounded-4" style="height: 200px; background-color: var(--secondary-text);">
 
-            <div class="d-flex align-items-center justify-content-between mt-4">
-                <h3 class="fw-bold text-light mb-0">
+            <div class="d-flex align-items-center justify-content-between">
+                <span style="font:var(--text-H4);">
                     <?= htmlspecialchars($name) ?>
-                </h3>
-                <i class="fa-solid fa-arrow-up-right-from-square text-warning"></i>
+                </span>
+                <i class="fa-solid fa-arrow-up-right-from-square" style="color: currentColor;"></i>
             </div>
 
-            <p class="mt-2 mb-0 text-secondary">
-                <i class="fa-solid fa-location-dot me-2"></i>
+            <div class="d-flex align-items-center justify-content-start gap-1" style="color: var(--secondary-text); font: var(--text-label);">
+                <i class="fa-solid fa-location-dot"></i>
                 <?= htmlspecialchars($distance) ?>
-            </p>
+            </div>
 
         </div>
     </a>
