@@ -114,13 +114,13 @@
                 
 
                 <!-- Previously Parked -->
-                <div class="d-flex mb-3 align-items-center">
-                    <h3 class="fw-bold flex-shrink 0 text-light">Previously Parked</h3>
-                    <button type="button" class="ms-auto text-nowrap btn btn-outline-warning"
-                        style="width: 95px; height: 30px; padding: 0.1em">View More</button>
-                </div>
+                <div class="home-section">
+                    <div class="home-header">
+                        <h3>Previously Parked</h3>
+                        <button type="button" class="home-button">View More</button>
+                    </div>
 
-                <div class="row g-4">
+                    <div class="prev-section">
                     <?php
                         $field = [
                             'id' => 'grand-indonesia',
@@ -155,6 +155,9 @@
                         include __DIR__ . '/../../components/card-prev.php'
                     ?>
                 </div>
+                </div>
+
+                
 
             </main>
 

@@ -35,6 +35,13 @@
     width: 100%;
 }
 
+.prev-section {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    width: 100%;
+}
+
 @media (min-width: 768px) {
     .recommend-section {
         align-items: stretch;
