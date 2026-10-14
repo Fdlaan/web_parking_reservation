@@ -9,28 +9,28 @@
         [
             'label' => 'Home',
             'page' => 'home',
-            'url' => '/web_parking_reservation/public/index.php?page=home',
+            'url' => '?page=home',
             'icon' => 'home-icon',
             'type' => 'page'
         ],
         [
             'label' => 'Search Park',
             'page' => 'parking',
-            'url' => '/web_parking_reservation/public/index.php?page=parking',
+            'url' => '?page=parking',
             'icon' => 'search-icon',
             'type' => 'page'
         ],
         [
             'label' => 'History',
             'page' => 'history',
-            'url' => '/web_parking_reservation/public/index.php?page=history',
+            'url' => '?page=history',
             'icon' => 'history-icon',
             'type' => 'page'
         ],
         [
             'label' => 'Profile',
             'page' => 'profile',
-            'url' => '/web_parking_reservation/public/index.php?page=profile',
+            'url' => '?page=profile',
             'icon' => 'profile-icon',
             'type' => 'page'
         ]
@@ -40,12 +40,12 @@
 <aside class="d-flex flex-column flex-shrink-0 p-3 vh-100 position-sticky top-0 sidebar">
     <!-- Brnad -->
     <a 
-        href="/web_parking_reservation/public/index.php?page=home"
+        href="?page=home"
         class="d-flex align-items-center mb-5 text-decoration-none sidebar-brand"
     >
 
-        <span class="sidebar-brand-icon">P</span>
-        <span class="sidebar-brand-name">Parkeasy</span>
+        <span class="sidebar-brand-icon"></span>
+        <span class="sidebar-brand-name"><h3>Parkeasy</h3></span>
 
     </a>
 
@@ -63,11 +63,16 @@
                     class="sidebar-icon <?= htmlspecialchars($item['icon'], ENT_QUOTES, 'UTF-8') ?>"
                     aria-hidden="true"
                 ></span>
-
                 <span>
                     <?= htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8') ?>
                 </span>
             </a>
         <?php endforeach; ?>
+    </nav>
+    <nav class="sidebar-button-nav">
+        <a href="?page=logout" class="nav-link sidebar-link sidebar-logout">
+            <span class="sidebar-icon logout-icon" aria-hidden="true"></span>
+            <span>Log Out</span>
+        </a>
     </nav>
 </aside>

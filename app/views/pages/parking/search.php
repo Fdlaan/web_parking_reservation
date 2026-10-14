@@ -1,21 +1,33 @@
+<?php
+    $title_page = 'Search | Parkeasy';
+
+    $file_css = [
+        'components/icon.css',
+        'pages/parking.css',
+        'layouts/sidebar.css',
+        'layouts/topbar.css',
+        'layouts/footer.css',
+    ];
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 
-<?php include __DIR__ . '/../layouts/header.php'; ?>
+<?php include __DIR__ . '/../../includes/head.php'; ?>
 
 <body>
     <!-- Wrapper: sidebar + right column side by side -->
     <div class="d-flex">
 
         <!-- Sidebar -->
-        <?php include __DIR__ . '/../layouts/sidebar.php'; ?>
+        <?php include __DIR__ . '/../../layouts/sidebar.php'; ?>
 
 
         <!-- Right column: topbar + main content -->
         <div class="flex-grow-1 d-flex flex-column" style="background: var(--panel);">
 
             <!-- Topbar -->
-            <?php include __DIR__ . '/../layouts/topbar.php'; ?>
+            <?php include __DIR__ . '/../../layouts/topbar.php'; ?>
 
             <!-- Main content -->
             <main class="d-flex flex-grow flex-column 1 py-4 ms-4 me-4">
