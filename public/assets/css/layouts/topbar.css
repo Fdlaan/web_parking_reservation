@@ -20,13 +20,30 @@
   gap: 12px;
 }
 .notification {
-  width: 36px;
-  height: 36px;
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--raised-secondary-action);
+  width: 36px;
+  height: 36px;
+  background-color: var(--raised-secondary-action);
+  color: var(--primary-text);
+  text-decoration: none;
   border-radius: var(--radius-full);
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.notification:hover {
+    background-color: var(--border-divider);
+    color: var(--secondary-text);
+}
+
+.notification-icon {
+    display: inline-block;
+    width: 12px;
+    height: 14px;
+    color: currentColor;
 }
 
 .profile {
@@ -34,6 +51,6 @@
   font: var(--text-label);
 }
 
-.profile img{
+.profile img {
   border-radius: var(--radius-xs);
 }
