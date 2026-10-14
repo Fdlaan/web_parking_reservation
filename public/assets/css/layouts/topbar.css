@@ -35,8 +35,9 @@
 }
 
 .notification:hover {
-    background-color: var(--border-divider);
-    color: var(--secondary-text);
+    /* background-color: var(--navigation); */
+    color: var(--brand-gold);
+    border: 1px solid var(--brand-gold);
 }
 
 .notification-icon {
