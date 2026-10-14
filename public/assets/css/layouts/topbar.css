@@ -1,0 +1,39 @@
+.topbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  box-sizing: border-box;
+  align-content: center;
+  padding: 0px 48px;
+  height: 56px;
+  padding: 0 48px 0 48px;
+  background-color: var(--canvas-background);
+  border-bottom: 1px solid var(--border-divider);
+}
+
+.topbar-item-left p {
+  font: var(--text-button);
+  color: var(--secondary-text);
+}
+
+.topbar-item-right {
+  gap: 12px;
+}
+.notification {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--raised-secondary-action);
+  border-radius: var(--radius-full);
+}
+
+.profile {
+  gap: 6px;
+  font: var(--text-label);
+}
+
+.profile img{
+  border-radius: var(--radius-xs);
+}

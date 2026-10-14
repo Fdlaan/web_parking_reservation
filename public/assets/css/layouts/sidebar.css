@@ -10,7 +10,6 @@
 
 .sidebar-brand {
   gap: 12px;
-  /* padding-inline: 12px; */
   color: var(--primary-text);
 }
 
@@ -78,7 +77,6 @@
 .sidebar-button-nav {
     margin-top: auto;
     padding-top: 16px;
-    /* border-top: 1px solid var(--border-divider); */
 }
 
 .sidebar-logout {
