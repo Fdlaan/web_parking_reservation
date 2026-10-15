@@ -10,6 +10,20 @@
     ];
 
     $file_js = [];
+
+    $reservation_status = 'unpaid';
+    $reservation = [
+        'mall_name' => 'Grand Indonesia Mall',
+        'parking_slot' => 'GF67',
+        'time' => '16:00',
+        'plate_number' => 'B 3012 JAV',
+        'parking_type' => 'Regular',
+        'start_time' => '2026-10-16 16:00:00',
+    ];
+
+    $reservation_start = new DateTimeImmutable($reservation['start_time']);
+    $now = new DateTimeImmutable('now');
+    $can_cancel = $now->modify('+2 hours') <= $reservation_start;
 ?>
 
 <!DOCTYPE html>
@@ -47,9 +61,82 @@
 
                 <div class="home-section">
                     <h3>Reservations</h3>
-                    <div class="d-flex flex-row p-5 container-fluid rounded-4 bg-opacity-10 border border-dark gap-3" style="background-color: #2C2C2C;">
 
-                    </div>
+                    <?php if ($reservation_status === 'none'): ?>
+                        
+                        <!-- No reservation -->
+                        <div class="reservation-card reservation-empty">
+                            <i class="fa-regular fa-calendar-days reservation-empty-icon"></i>
+                            <p>You currently have no reservations.</p>
+                        </div>
+                    <?php else: ?>
+
+                        <!-- Active reservation -->
+                         <div class="reservation-card">
+                            <div class="reservation-header">
+                                <h4>
+                                    <?= htmlspecialchars($reservation['mall_name']) ?>
+                                </h4>
+                                <span class="reservation-status <?= $reservation_status?>">
+                                    <span class="status-dot"></span>
+                                    <?= $reservation_status === 'paid' ? 'Paid' : 'Unpaid' ?>
+                                </span>
+                            </div>
+
+                            <div class="reservation-divider"></div>
+
+                            <div class="reservation-details">
+                                <div class="reservation-detail">
+                                    <span class="reservation-label">Parking Slot</span>
+                                    <strong>
+                                        <?= htmlspecialchars($reservation['parking_slot']) ?>
+                                    </strong>
+                                </div>
+                                <div class="reservation-detail">
+                                    <span class="reservation-label">Time</span>
+                                    <strong>
+                                        <?= htmlspecialchars($reservation['time']) ?>
+                                    </strong>
+                                </div>
+                                <div class="reservation-detail">
+                                    <span class="reservation-label">Plate Number</span>
+                                    <strong>
+                                        <?= htmlspecialchars($reservation['plate_number']) ?>
+                                    </strong>
+                                </div>
+                                <div class="reservation-detail">
+                                    <span class="reservation-label">Parking Type</span>
+                                    <strong>
+                                        <?= htmlspecialchars($reservation['parking_type']) ?>
+                                    </strong>
+                                </div>
+
+                            </div>
+                            <div class="reservation-actions">
+                                <?php if($reservation_status === 'unpaid'): ?>
+                                    <a href="?page=payment" class="reservation-button pay-button">
+                                        Pay Now
+                                    </a>
+                                <?php else: ?>
+                                    <?php if ($can_cancel): ?>
+                                        <form action="?page=cancel-reservation" method="POST">
+                                            <input type="hidden" name="reservation_id" value="1">
+                                            <button type="submit" class="reservation-button cancel-button">
+                                                Cancel Reservation
+                                            </button>
+                                        </form>
+                                    <?php else: ?>
+                                        <button type="button" class="reservation-button cancel-button" disabled>
+                                            Cancel Reservation
+                                        </button>
+                                        <p class="reservation-cancel-note">
+                                            Cancellation is only available at least 2 hours before your reservation.
+                                        </p>
+                                    <?php endif; ?>
+                                <?php endif; ?>
+                            </div>
+                         </div>
+                    <?php endif; ?>
                 </div>
 
                 <!-- Recommended Parking -->
