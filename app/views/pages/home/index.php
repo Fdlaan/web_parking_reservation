@@ -32,7 +32,7 @@
             <?php include __DIR__ . '/../../layouts/topbar.php'; ?>
 
             <!-- Main content -->
-            <main class="d-flex flex-column gap-4 container-main">
+            <main class="d-flex flex-column gap-4 py-4 px-5">
 
                 <div class="top-content">
                     <div class="d-flex justify-items-center align-items-center gap-1">
