@@ -39,12 +39,12 @@
                             <div class="card text-light rounded-4 mt-4" style="background-color: #2C2C2C;">
                                 <div class="card-body p-4">
 
-                                    <div class="row">
+                                    <div class="row justify-content-between align-items-center">
                                         <p class="col-10 fw-medium">Payment Method:
                                             <img class="ms-2" src="/web_parking_reservation/img/qris-logo.png"
                                                 alt="QRIS Logo" style="width: 3.5rem; height: 1.5rem;">
                                         </p>
-                                        <p class="col-2 d-flex justify-content-center align-items-center rounded-2 border fw-medium"
+                                        <p class="col-2 d-flex justify-content-center me-2 align-items-center rounded-2 border fw-medium"
                                             style="color: #D9B061; background-color: #3D3527; height: 26px; width: min-content; font-size: 14px; --bs-border-color: #D9B061;">
                                             Regular
                                         </p>
@@ -59,11 +59,11 @@
 
                                     <div class="row">
 
-                                        <p class="col-9 fs-5 mb-0 fw-medium">Park fee:</p>
-                                        <p class="col-3 fs-5 mb-0">Rp 15.000</p>
+                                        <p class="col-9 fs-5 mb-0 fw-medium">Reservation Fee:</p>
+                                        <p class="col-3 fs-5 mb-0 text-end">Rp 15.000</p>
 
-                                        <p class="col-9 fs-5 mb-0 fw-medium">Service fee:</p>
-                                        <p class="col-3 fs-5 mb-0">Rp 2.500</p>
+                                        <p class="col-9 fs-5 mb-0 fw-medium">Service Fee:</p>
+                                        <p class="col-3 fs-5 mb-0 text-end">Rp 2.500</p>
 
                                     </div>
 
@@ -84,13 +84,13 @@
                                         <div class="row">
 
                                             <p class="col-6 fs-5 mb-0 fw-medium">Parking Lot:</p>
-                                            <p class="col-6 fs-5 mb-0">LG-12</p>
+                                            <p class="col-6 fs-5 mb-0 text-end">LG-12</p>
 
                                             <p class="col-6 fs-5 mb-0 fw-medium">Floor:</p>
-                                            <p class="col-6 fs-5 mb-0">LG</p>
+                                            <p class="col-6 fs-5 mb-0 text-end">LG</p>
 
                                             <p class="col-6 fs-5 mb-0 fw-medium">Reserved Time:</p>
-                                            <p class="col-6 fs-5 mb-0">10:00 AM</p>
+                                            <p class="col-6 fs-5 mb-0 text-end">16:00</p>
 
                                         </div>
 
@@ -102,11 +102,11 @@
                                     <div class="card-body p-4">
                                         <p class="fs-5 mb-2 fw-medium" style="color: #B5B5AD;">Pay Before:</p>
 
-                                        <p class="fs-5 mb-2 fw-medium text-white">22 Sept 2026, 09.59 WIB</p>
+                                        <p class="fs-5 mb-2 fw-medium text-white">22 Sept 2026, 15.59 WIB</p>
 
                                         <hr class="my-3 border-secondary opacity-50">
 
-                                        <div class="row justify-content-between">
+                                        <div class="row justify-content-between align-items-center">
 
                                             <p class="col-9 fs-5 mb-0 fw-medium">Payment Status:</p>
                                             <p class="col-3 d-flex justify-content-center align-items-center mb-0 rounded-2 border fw-medium"
@@ -140,7 +140,7 @@
                                                 Back to Home
                                             </a>
 
-                                            <a href="/web_parking_reservation/app/views/parking/payment_success.php"
+                                            <a href="/web_parking_reservation/app/views/parking/invoice.php"
                                                 class="btn col btn-primary rounded-4 fw-medium pb-2 ms-2"
                                                 style="background-color: #D9B061; color: #3D3527; border: none; height: 48px; padding-top: 0.65rem;">
                                                 Check Invoice
