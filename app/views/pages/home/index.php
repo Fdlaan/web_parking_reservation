@@ -11,7 +11,7 @@
 
     $file_js = [];
 
-    $reservation_status = 'unpaid';
+    $reservation_status = 'paid';
     $reservation = [
         'mall_name' => 'Grand Indonesia Mall',
         'parking_slot' => 'GF67',
@@ -66,25 +66,25 @@
                         
                         <!-- No reservation -->
                         <div class="reservation-card reservation-empty">
-                            <i class="fa-regular fa-calendar-days reservation-empty-icon"></i>
-                            <p>You currently have no reservations.</p>
+                            <i class="fa-regular fa-calendar-xmark reservation-empty-icon"></i>
+                            <p style="font: var(--text-subtitle);">You currently have no reservations.</p>
                         </div>
                     <?php else: ?>
 
                         <!-- Active reservation -->
                          <div class="reservation-card">
                             <div class="reservation-header">
-                                <h4>
+                                <span style="font:var(--text-H4);">
                                     <?= htmlspecialchars($reservation['mall_name']) ?>
-                                </h4>
+                                </span>
                                 <span class="reservation-status <?= $reservation_status?>">
                                     <span class="status-dot"></span>
                                     <?= $reservation_status === 'paid' ? 'Paid' : 'Unpaid' ?>
                                 </span>
                             </div>
-
+                            
                             <div class="reservation-divider"></div>
-
+                            
                             <div class="reservation-details">
                                 <div class="reservation-detail">
                                     <span class="reservation-label">Parking Slot</span>

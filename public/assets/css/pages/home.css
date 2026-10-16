@@ -59,7 +59,7 @@
     min-height: 240px;
     align-items: center;
     justify-content: center;
-    gap: 32px;
+    gap: 16px;
     color: var(--secondary-text);
 }
 
@@ -95,19 +95,19 @@
     align-items: center;
     gap: 8px;
     flex-shrink: 0;
-    padding: 12px 20px;
-    border-radius: 999px;
-    font: var(--text-button);
+    padding: 6px 12px;
+    border-radius: var(--radius-full);
+    font: var(--text-label);
 }
 
 .reservation-status.paid {
-    background-color: #123D2D;
-    color: #6DD5A5;
+    background-color: var(--success-background);
+    color: var(--success-foreground);
 }
 
 .reservation-status.unpaid {
-    background-color: #520B0B;
-    color: #F3A0A0;
+    background-color: var(--danger-background);
+    color: var(--danger-foreground);
 }
 
 .status-dot {
@@ -135,17 +135,17 @@
 .reservation-detail {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 8px;
     min-width: 0;
 }
 
 .reservation-label {
     color: var(--secondary-text);
-    font: var(--text-body);
+    font: var(--text-label);
 }
 
 .reservation-detail strong {
-    font: var(--text-h3);
+    font: var(--text-H4);
     overflow-wrap: anywhere;
 }
 
@@ -165,10 +165,9 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-height: 64px;
-    padding: 16px 32px;
+    padding: 12px 24px;
     border: 0;
-    border-radius: var(--radius-lg);
+    border-radius: var(--radius-md);
     font: var(--text-button);
     text-decoration: none;
     cursor: pointer;
@@ -176,13 +175,15 @@
 }
 
 .cancel-button {
-    background-color: #520B0B;
-    color: #F3A0A0;
+    background-color: var(--danger-background);
+    color: var(--danger-foreground);
+    border: 1px solid var(--danger-foreground);
 }
 
 .pay-button {
-    background-color: #006039;
-    color: #FFFFFF;
+    background-color: var(--success-background);
+    color: var(--success-foreground);
+    border: 1px solid var(--success-foreground);
 }
 
 .reservation-button:hover:not(:disabled) {
