@@ -78,20 +78,20 @@
 
 <body>
     <!-- Wrapper: sidebar + right column side by side -->
-    <div class="d-flex">
+    <div class="layout">
 
         <!-- Sidebar -->
         <?php include __DIR__ . '/../../layouts/sidebar.php'; ?>
 
 
         <!-- Right column: topbar + main content -->
-        <div class="flex-grow-1 d-flex flex-column">
+        <div class="content">
 
             <!-- Topbar -->
             <?php include __DIR__ . '/../../layouts/topbar.php'; ?>
 
             <!-- Main content -->
-            <main class="d-flex flex-column gap-4 py-4 px-5">
+            <main class="main-content">
 
                 <div class="top-content">
                     <div class="d-flex justify-items-center align-items-center gap-1">
@@ -123,19 +123,21 @@
                                 <div href="#" class="mall-item">
                                     <a href="<?= htmlspecialchars($mall['url']) ?>" class="mall-card text-decoration-none">
                                         <img src="<?= htmlspecialchars($mall['image']) ?>" alt="<?= htmlspecialchars($mall['name']) ?>" class="mall-image">
-                                        <h4 class="mall-name">
-                                            <?= htmlspecialchars($mall['name']) ?>
-                                        </h4>
-
+                                        
                                         <div class="mall-info">
-                                            <p>
-                                                <?= htmlspecialchars($mall['price']) ?>
-                                            </p>
-
-                                            <p class="mall-distance">
-                                                <i class="fa-solid fa-location-dot"></i>
-                                                <?= htmlspecialchars($mall['distance']) ?>
-                                            </p>
+                                            <h4 class="mall-name">
+                                                <?= htmlspecialchars($mall['name']) ?>
+                                            </h4>
+                                            <div class="mall-detail">
+                                                <p>
+                                                    <?= htmlspecialchars($mall['price']) ?>
+                                                </p>
+    
+                                                <p class="mall-distance">
+                                                    <i class="fa-solid fa-location-dot"></i>
+                                                    <?= htmlspecialchars($mall['distance']) ?>
+                                                </p>
+                                            </div>
                                         </div>
                                     </a>
                                 </div>

@@ -33,20 +33,20 @@
 
 <body>
     <!-- Wrapper: sidebar + right column side by side -->
-    <div class="d-flex">
+    <div class="layout">
 
         <!-- Sidebar -->
         <?php include __DIR__ . '/../../layouts/sidebar.php'; ?>
 
 
         <!-- Right column: topbar + main content -->
-        <div class="flex-grow-1 d-flex flex-column">
+        <div class="content">
 
             <!-- Topbar -->
             <?php include __DIR__ . '/../../layouts/topbar.php'; ?>
 
             <!-- Main content -->
-            <main class="d-flex flex-column gap-4 py-4 px-5">
+            <main class="main-content">
 
                 <div class="top-content">
                     <div class="d-flex justify-items-center align-items-center gap-1">

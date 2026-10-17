@@ -126,16 +126,55 @@ label {
   color: var(--primary-text);
 }
 
+.layout {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  min-width: 0;
+  width: 0;
+}
+
+.main-content {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 24px 48px;
+}
+
+.main-content > * {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
 .section {
   display: flex;
   flex-direction: column;
   gap: 12px;
+  width: 100%;
+  min-width: 0;
+  height: auto;
+  max-height: none;
+  overflow: visible;
+
 }
 
 .header {
   display: flex;
-  flex-direction: row;
   justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  min-width: 0;
 }
 
 .view-more-button {
@@ -178,7 +217,7 @@ label {
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  font: var(--text-H3);
+  font: var(--text-H4);
 }
 
 .parking-card-heading {
