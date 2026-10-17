@@ -11,7 +11,7 @@
 
     $file_js = [];
 
-    $reservation_status = 'paid';
+    $reservation_status = 'unpaid';
     $reservation = [
         'mall_name' => 'Grand Indonesia Mall',
         'parking_slot' => 'GF67',
@@ -59,7 +59,7 @@
                     </a>
                 </div>
 
-                <div class="home-section">
+                <div class="section">
                     <h3>Reservations</h3>
 
                     <?php if ($reservation_status === 'none'): ?>
@@ -129,7 +129,7 @@
                                         <button type="button" class="reservation-button cancel-button" disabled>
                                             Cancel Reservation
                                         </button>
-                                        <p class="reservation-cancel-note">
+                                        <p class="reservation-cancel-note" style = "font: var(--text-body-S)">
                                             Cancellation is only available at least 2 hours before your reservation.
                                         </p>
                                     <?php endif; ?>
@@ -140,17 +140,17 @@
                 </div>
 
                 <!-- Recommended Parking -->
-                <div class="home-section">
-                    <div class="home-header">
+                <div class="section">
+                    <div class="header">
                         <h3>Recommended Parking</h3>
-                        <button type="button" class="home-button">View More</button>
+                        <button type="button" class="view-more-button">View More</button>
                     </div>
 
                     <div class="recommend-section">
                         <?php
                             $field = [
                                 'id' => 'grand-indonesia',
-                                'name' => 'Grand Indonesia Mall',
+                                'name' => 'Grand Indonesia Mall  anjay kanjay kanjyay anjay kanjay kanjyayv anjay kanjay kanjyay',
                                 'image' => '/web_parking_reservation/public/assets/images/mall-image/grand-indonesia-mall.jpg',
                                 'distance' => '7.1 KM',
                                 'url' => '#',
@@ -201,10 +201,10 @@
                 
 
                 <!-- Previously Parked -->
-                <div class="home-section">
-                    <div class="home-header">
+                <div class="section">
+                    <div class="header">
                         <h3>Previously Parked</h3>
-                        <button type="button" class="home-button">View More</button>
+                        <button type="button" class="view-more-button">View More</button>
                     </div>
 
                     <div class="prev-section">

@@ -8,6 +8,67 @@
         'layouts/topbar.css',
         'layouts/footer.css',
     ];
+
+    $malls = [
+        [
+            'name' => 'Grand Indonesia Mall',
+            'image' => '/web_parking_reservation/public/assets/images/mall-image/grand-indonesia-mall.jpg',
+            'price' => 'Rp 15.000 per slot',
+            'distance' => '7.1 KM',
+            'url' => '#',
+        ],
+        [
+            'name' => 'Grand Indonesia Mall',
+            'image' => '/web_parking_reservation/public/assets/images/mall-image/grand-indonesia-mall.jpg',
+            'price' => 'Rp 15.000 per slot',
+            'distance' => '7.1 KM',
+            'url' => '#',
+        ],
+        [
+            'name' => 'Grand Indonesia Mall',
+            'image' => '/web_parking_reservation/public/assets/images/mall-image/grand-indonesia-mall.jpg',
+            'price' => 'Rp 15.000 per slot',
+            'distance' => '7.1 KM',
+            'url' => '#',
+        ],
+        [
+            'name' => 'Grand Indonesia Mall',
+            'image' => '/web_parking_reservation/public/assets/images/mall-image/grand-indonesia-mall.jpg',
+            'price' => 'Rp 15.000 per slot',
+            'distance' => '7.1 KM',
+            'url' => '#',
+        ],
+        [
+            'name' => 'Grand Indonesia Mall',
+            'image' => '/web_parking_reservation/public/assets/images/mall-image/grand-indonesia-mall.jpg',
+            'price' => 'Rp 15.000 per slot',
+            'distance' => '7.1 KM',
+            'url' => '#',
+        ],
+        [
+            'name' => 'Grand Indonesia Mall',
+            'image' => '/web_parking_reservation/public/assets/images/mall-image/grand-indonesia-mall.jpg',
+            'price' => 'Rp 15.000 per slot',
+            'distance' => '7.1 KM',
+            'url' => '#',
+        ],
+        [
+            'name' => 'Grand Indonesia Mall',
+            'image' => '/web_parking_reservation/public/assets/images/mall-image/grand-indonesia-mall.jpg',
+            'price' => 'Rp 15.000 per slot',
+            'distance' => '7.1 KM',
+            'url' => '#',
+        ],
+        [
+            'name' => 'Grand Indonesia Mall',
+            'image' => '/web_parking_reservation/public/assets/images/mall-image/grand-indonesia-mall.jpg',
+            'price' => 'Rp 15.000 per slot',
+            'distance' => '7.1 KM',
+            'url' => '#',
+        ],
+    ];
+
+    $malls = array_slice($malls, 0, 8);
 ?>
 
 <!DOCTYPE html>
@@ -24,211 +85,63 @@
 
 
         <!-- Right column: topbar + main content -->
-        <div class="flex-grow-1 d-flex flex-column" style="background: var(--panel);">
+        <div class="flex-grow-1 d-flex flex-column">
 
             <!-- Topbar -->
             <?php include __DIR__ . '/../../layouts/topbar.php'; ?>
 
             <!-- Main content -->
-            <main class="d-flex flex-grow flex-column 1 py-4 ms-4 me-4">
-                <div class="container py-4">
+            <main class="d-flex flex-column gap-4 py-4 px-5">
 
-                    <header class="dashboard pb-3 mb-4">
-                        <p class="d-flex align-items-center text-secondary">Current Location
-                            <i class="fa-solid fa-location-dot ms-1"></i>
-                        </p>
-                        <a href="/" class="d-flex align-items-center mb-4 text-light text-decoration-none fw-medium w-25 text-nowrap">
-                            <span class="fs-4">Universitas Indonesia, Depok, Indonesia
-                                <i class="fa-solid fa-caret-down"></i>
-                            </span>
-                        </a>
-                        <button type="button" class="d-flex align-items-center" style="border-radius: 8px; background: var(--bs-body-bg);" data-bs-toggle="dialog" data-bs-target="#bdSearchDialog" aria-haspopup="dialog" aria-label="Search">
-                            <use href="#search"></use>
-                            <i class="fa-solid fa-magnifying-glass m-3" style="color: 454545"></i>
-                            <span class="bd-search-trigger-label" style="color: #B5B5AD">Search Here</span>
-                        </button>
-                    </header>
+                <div class="top-content">
+                    <div class="d-flex justify-items-center align-items-center gap-1">
+                        <span style="font: var(--text-body); color: var(--secondary-text); ">Current Location</span>
+                        <i class="d-flex fa-solid fa-location-dot" style="color: var(--secondary-text);"></i>
+                    </div>
+                    <a href="#" class="d-flex justify-items-center align-items-center gap-1">
+                        <span style="font: var(--text-H4); color: var(--primary-text);">Universitas Indonesia, Depok, Indonesia</span>
+                        <i class="fa-solid fa-caret-down" style="color: var(--primary-text);"></i>
+                    </a>
+                </div>
+            
+                <button type="button" class="d-flex align-items-center search-section" style="" data-bs-toggle="dialog" data-bs-target="#bdSearchDialog" aria-haspopup="dialog" aria-label="Search">
+                    <i class="fa-solid fa-magnifying-glass" style="color: var(--secondary-text);"></i>
+                    <span class="" style="color: var(--secondary-text); font: var(--text-body);">Search Here</span>
+                </button>
 
-                    <!-- Locations -->
-                    <div class="d-flex mb-3 align-items-center">
-                        <h3 class="fw-bold flex-shrink 0 text-light">Jakarta Pusat</h3>
+                <div class="section">
+                    <div class="header">
+                        <h3>Jakarta Pusat</h3>
+                        <button type="button" class="view-more-button">View More</button>
                     </div>
 
-                    <div class="row g-4">
+                    <div class="mall-section">
 
-                        <div class="col-md-4">
-                            <a href="" class="d-block w-100 h-100 text-decoration-none">
-                                <div class="d-flex flex-column justify-content-center w-100 h-100 p-3 text-bg-dark rounded-3">
+                        <div class="mall-list">
 
-                                    <img src="/web_parking_reservation/img/grand-indonesia-mall.jpg" alt="Grand Indonesia Mall" class="w-100 object-fit-fill rounded" style="height: 250px;">
-                                    
-                                    <h4 class="d-flex mt-4 mb-2 fw-bold text-light">Grand Indonesia Mall</h4>
+                            <?php foreach ($malls as $mall): ?>
+                                <div href="#" class="mall-item">
+                                    <a href="<?= htmlspecialchars($mall['url']) ?>" class="mall-card text-decoration-none">
+                                        <img src="<?= htmlspecialchars($mall['image']) ?>" alt="<?= htmlspecialchars($mall['name']) ?>" class="mall-image">
+                                        <h4 class="mall-name">
+                                            <?= htmlspecialchars($mall['name']) ?>
+                                        </h4>
 
-                                    <div class="d-flex justify-content-between mt-4">
-                                        <p class="mb-0">Rp. 15.000 per Slot</p>
-                                        <p class="pt-1 mb-0" style="font-size: 12px"><i class="fa-solid fa-location-dot"></i>7.1 KM</p>
-                                    </div>
+                                        <div class="mall-info">
+                                            <p>
+                                                <?= htmlspecialchars($mall['price']) ?>
+                                            </p>
 
+                                            <p class="mall-distance">
+                                                <i class="fa-solid fa-location-dot"></i>
+                                                <?= htmlspecialchars($mall['distance']) ?>
+                                            </p>
+                                        </div>
+                                    </a>
                                 </div>
-                            </a>
+                            <?php endforeach; ?>
                         </div>
-
-                        <div class="col-md-4">
-                            <a href="" class="d-block w-100 h-100 text-decoration-none">
-                                <div class="d-flex flex-column justify-content-center w-100 h-100 p-3 text-bg-dark rounded-3">
-
-                                    <img src="/web_parking_reservation/img/grand-indonesia-mall.jpg" alt="Grand Indonesia Mall" class="w-100 object-fit-fill rounded" style="height: 250px;">
-                                    
-                                    <h4 class="d-flex mt-4 mb-2 fw-bold text-light">Grand Indonesia Mall</h4>
-
-                                    <div class="d-flex justify-content-between mt-4">
-                                        <p class="mb-0">Rp. 15.000 per Slot</p>
-                                        <p class="pt-1 mb-0" style="font-size: 12px"><i class="fa-solid fa-location-dot"></i>7.1 KM</p>
-                                    </div>
-
-                                </div>
-                            </a>
-                        </div>
-
-                        <div class="col-md-4">
-                            <a href="" class="d-block w-100 h-100 text-decoration-none">
-                                <div class="d-flex flex-column justify-content-center w-100 h-100 p-3 text-bg-dark rounded-3">
-
-                                    <img src="/web_parking_reservation/img/grand-indonesia-mall.jpg" alt="Grand Indonesia Mall" class="w-100 object-fit-fill rounded" style="height: 250px;">
-                                    
-                                    <h4 class="d-flex mt-4 mb-2 fw-bold text-light">Grand Indonesia Mall</h4>
-
-                                    <div class="d-flex justify-content-between mt-4">
-                                        <p class="mb-0">Rp. 15.000 per Slot</p>
-                                        <p class="pt-1 mb-0" style="font-size: 12px"><i class="fa-solid fa-location-dot"></i>7.1 KM</p>
-                                    </div>
-
-                                </div>
-                            </a>
-                        </div>
-
                     </div>
-
-                    <!-- Locations -->
-                    <div class="d-flex mb-3 mt-3 align-items-center">
-                        <h3 class="fw-bold flex-shrink 0 text-light">Jakarta Selatan</h3>
-                    </div>
-
-                    <div class="row g-4">
-
-                        <div class="col-md-4">
-                            <a href="" class="d-block w-100 h-100 text-decoration-none">
-                                <div class="d-flex flex-column justify-content-center w-100 h-100 p-3 text-bg-dark rounded-3">
-
-                                    <img src="/web_parking_reservation/img/grand-indonesia-mall.jpg" alt="Grand Indonesia Mall" class="w-100 object-fit-fill rounded" style="height: 250px;">
-                                    
-                                    <h4 class="d-flex mt-4 mb-2 fw-bold text-light">Grand Indonesia Mall</h4>
-
-                                    <div class="d-flex justify-content-between mt-4">
-                                        <p class="mb-0">Rp. 15.000 per Slot</p>
-                                        <p class="pt-1 mb-0" style="font-size: 12px"><i class="fa-solid fa-location-dot"></i>7.1 KM</p>
-                                    </div>
-
-                                </div>
-                            </a>
-                        </div>
-
-                        <div class="col-md-4">
-                            <a href="" class="d-block w-100 h-100 text-decoration-none">
-                                <div class="d-flex flex-column justify-content-center w-100 h-100 p-3 text-bg-dark rounded-3">
-
-                                    <img src="/web_parking_reservation/img/grand-indonesia-mall.jpg" alt="Grand Indonesia Mall" class="w-100 object-fit-fill rounded" style="height: 250px;">
-                                    
-                                    <h4 class="d-flex mt-4 mb-2 fw-bold text-light">Grand Indonesia Mall</h4>
-
-                                    <div class="d-flex justify-content-between mt-4">
-                                        <p class="mb-0">Rp. 15.000 per Slot</p>
-                                        <p class="pt-1 mb-0" style="font-size: 12px"><i class="fa-solid fa-location-dot"></i>7.1 KM</p>
-                                    </div>
-
-                                </div>
-                            </a>
-                        </div>
-
-                        <div class="col-md-4">
-                            <a href="" class="d-block w-100 h-100 text-decoration-none">
-                                <div class="d-flex flex-column justify-content-center w-100 h-100 p-3 text-bg-dark rounded-3">
-
-                                    <img src="/web_parking_reservation/img/grand-indonesia-mall.jpg" alt="Grand Indonesia Mall" class="w-100 object-fit-fill rounded" style="height: 250px;">
-                                    
-                                    <h4 class="d-flex mt-4 mb-2 fw-bold text-light">Grand Indonesia Mall</h4>
-
-                                    <div class="d-flex justify-content-between mt-4">
-                                        <p class="mb-0">Rp. 15.000 per Slot</p>
-                                        <p class="pt-1 mb-0" style="font-size: 12px"><i class="fa-solid fa-location-dot"></i>7.1 KM</p>
-                                    </div>
-
-                                </div>
-                            </a>
-                        </div>
-
-                    </div>
-
-                    <!-- Locations -->
-                    <div class="d-flex mb-3 mt-3 align-items-center">
-                        <h3 class="fw-bold flex-shrink 0 text-light">Jakarta Barat</h3>
-                    </div>
-
-                    <div class="row g-4">
-
-                        <div class="col-md-4">
-                            <a href="" class="d-block w-100 h-100 text-decoration-none">
-                                <div class="d-flex flex-column justify-content-center w-100 h-100 p-3 text-bg-dark rounded-3">
-
-                                    <img src="/web_parking_reservation/img/grand-indonesia-mall.jpg" alt="Grand Indonesia Mall" class="w-100 object-fit-fill rounded" style="height: 250px;">
-                                    
-                                    <h4 class="d-flex mt-4 mb-2 fw-bold text-light">Grand Indonesia Mall</h4>
-
-                                    <div class="d-flex justify-content-between mt-4">
-                                        <p class="mb-0">Rp. 15.000 per Slot</p>
-                                        <p class="pt-1 mb-0" style="font-size: 12px"><i class="fa-solid fa-location-dot"></i>7.1 KM</p>
-                                    </div>
-
-                                </div>
-                            </a>
-                        </div>
-
-                        <div class="col-md-4">
-                            <a href="" class="d-block w-100 h-100 text-decoration-none">
-                                <div class="d-flex flex-column justify-content-center w-100 h-100 p-3 text-bg-dark rounded-3">
-
-                                    <img src="/web_parking_reservation/img/grand-indonesia-mall.jpg" alt="Grand Indonesia Mall" class="w-100 object-fit-fill rounded" style="height: 250px;">
-                                    
-                                    <h4 class="d-flex mt-4 mb-2 fw-bold text-light">Grand Indonesia Mall</h4>
-
-                                    <div class="d-flex justify-content-between mt-4">
-                                        <p class="mb-0">Rp. 15.000 per Slot</p>
-                                        <p class="pt-1 mb-0" style="font-size: 12px"><i class="fa-solid fa-location-dot"></i>7.1 KM</p>
-                                    </div>
-
-                                </div>
-                            </a>
-                        </div>
-
-                        <div class="col-md-4">
-                            <a href="" class="d-block w-100 h-100 text-decoration-none">
-                                <div class="d-flex flex-column justify-content-center w-100 h-100 p-3 text-bg-dark rounded-3">
-
-                                    <img src="/web_parking_reservation/img/grand-indonesia-mall.jpg" alt="Grand Indonesia Mall" class="w-100 object-fit-fill rounded" style="height: 250px;">
-                                    
-                                    <h4 class="d-flex mt-4 mb-2 fw-bold text-light">Grand Indonesia Mall</h4>
-
-                                    <div class="d-flex justify-content-between mt-4">
-                                        <p class="mb-0">Rp. 15.000 per Slot</p>
-                                        <p class="pt-1 mb-0" style="font-size: 12px"><i class="fa-solid fa-location-dot"></i>7.1 KM</p>
-                                    </div>
-
-                                </div>
-                            </a>
-                        </div>
-
-                    </div>
-
                 </div>
             </main>
 
