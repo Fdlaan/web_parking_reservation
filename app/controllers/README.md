@@ -1,6 +1,0 @@
-AuthController.php
-HistoryController.php
-HomeController.php
-ParkingController.php
-ProfileController.php
-ReservationController.php

@@ -1,9 +1,0 @@
-Mall.php
-ParkingArea.php
-ParkingSlot.php
-PasswordResetOtp.php
-Payment.php
-RememberToken.php
-ReservationToken.php
-User.php
-Vehicle.php
