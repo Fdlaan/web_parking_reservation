@@ -1,25 +1,32 @@
 <?php
-    $file_css = [
-        'components/layouts/topbar.css',
-    ];
+
+    // breadcrumb for the current page
+    $breadcrumb = $breadcrumb ?? [];
+
 ?>
 
+<!-- topbar container -->
 <header class="topbar d-flex flex-row sticky-top">
+
+    <!-- left section -->
     <div class="topbar-item-left">
+
+        <!-- breadcrumb navigation -->
         <nav aria-label="Breadcrumb">
+
             <ol class="breadcrumb">
-                
-                <?php foreach ($breadcrumb ?? [] as $index => $item): ?>
+
+                <?php foreach ($breadcrumb as $item): ?>
                 <li class="breadcrumb-item">
 
-                    <?php if ($item['url'] !== null): ?>
-                    <a href="<?= htmlspecialchars($item['url']) ?>">
-                        <?= htmlspecialchars($item['label']) ?>
+                    <?php if (($item['url'] ?? null) !== null): ?>
+                    <a href="<?= htmlspecialchars($item['url'], ENT_QUOTES, 'UTF-8') ?>">
+                        <?= htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8') ?>
                     </a>
 
                     <?php else: ?>
                     <span aria-current="page">
-                        <?= htmlspecialchars($item['label']) ?>
+                        <?= htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8') ?> / 
                     </span>
 
                     <?php endif; ?>
@@ -28,17 +35,25 @@
                 <?php endforeach; ?>
 
             </ol>
+
         </nav>
+
     </div>
 
+    <!-- right section -->
     <div class="topbar-item-right">
+
+        <!-- notification button -->
         <a href="#" class="notification" aria-label="Notifications">
             <span class="notification-icon" aria-hidden="true"></span>
         </a>
 
-        <a href="#" class="d-flex align-items-center text-uppercase text-decoration-none profile">
-            <img src="https://github.com/mdo.png" alt="mdo" width="36" height="36">
-            Placeholder Name
+        <!-- user profile -->
+        <a href="?page=profile" class="profile text-uppercase text-decoration-none">
+            <img src="https://github.com/mdo.png" alt="Profile picture" width="36" height="36">
+            <span>Placeholder Name</span>
         </a>
+
     </div>
+
 </header>
