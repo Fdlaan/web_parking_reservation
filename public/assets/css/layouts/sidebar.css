@@ -17,15 +17,14 @@
 }
 
 .sidebar-brand-icon {
-  width: 48px;
-  height: 48px;
-
+  width: 30px;
+  height: 30px;
   align-items: center;
   justify-content: center;
-  flex-shrink: 0;
+  /* flex-shrink: 0; */
 
-  background-color: var(--brand-gold);
-  border-radius: var(--radius-lg);
+  color: var(--brand-gold);
+  /* border-radius: var(--radius-lg); */
 }
 
 .sidebar-brand-name {
