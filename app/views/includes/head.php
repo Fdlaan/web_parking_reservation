@@ -1,10 +1,10 @@
 <?php
-$title_page = $title_page ?? 'Parkeasy';
+    $title_page = $title_page ?? 'Parkeasy';
 
-$file_css = $file_css ?? [];
-$file_js = $file_js ?? [];
+    $file_css = $file_css ?? [];
+    $file_js = $file_js ?? [];
 
-$asset_url = '/web_parking_reservation/public/assets';
+    $asset_url = '/web_parking_reservation/public/assets';
 ?>
 
 <head>
@@ -21,14 +21,19 @@ $asset_url = '/web_parking_reservation/public/assets';
 
     <!-- Global CSS -->
     <link rel="stylesheet" href="<?= $asset_url ?>/css/base.css">
+    <link rel="stylesheet" href="<?= $asset_url ?>/css/layouts/sidebar.css">
+    <link rel="stylesheet" href="<?= $asset_url ?>/css/layouts/topbar.css">
+    <link rel="stylesheet" href="<?= $asset_url ?>/css/layouts/footer.css">
+    <link rel="stylesheet" href="<?= $asset_url ?>/css/layouts/footer.css">
 
     <!-- Layout CSS -->
     <?php foreach ($file_css as $css): ?>
-        <link rel="stylesheet" href="<?= $asset_url ?>/css/<?= htmlspecialchars($css, ENT_QUOTES, 'UTF-8') ?>">
+    <link rel="stylesheet" href="<?= $asset_url ?>/css/<?= htmlspecialchars($css, ENT_QUOTES, 'UTF-8') ?>">
     <?php endforeach; ?>
 
     <!-- Custom JS -->
     <?php foreach ($file_js as $js): ?>
-        <script src="<?= $asset_url ?>/js/<?= htmlspecialchars($js, ENT_QUOTES,'UTF-8') ?>"defer></script>
+    <script src="<?= $asset_url ?>/js/<?= htmlspecialchars($js, ENT_QUOTES,'UTF-8') ?>"defer></script>
     <?php endforeach; ?>
+
 </head>

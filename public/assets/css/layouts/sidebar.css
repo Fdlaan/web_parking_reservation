@@ -2,10 +2,17 @@
   width: 280px;
   min-width: 280px;
   height: 100vh;
+
+  top: 0;
+
+  position: sticky;
   overflow: auto;
+  flex-shrink: 0;
+
   background-color: var(--navigation);
-  border-right: 1px solid var(--border-divider);
   color: var(--primary-text);
+  
+  border-right: 1px solid var(--border-divider);
 }
 
 .sidebar-brand {

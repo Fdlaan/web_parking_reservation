@@ -1,256 +1,179 @@
 <?php
+    // setting title page
     $title_page = 'Home | Parkeasy';
 
+    // file CSS yang terhubung
     $file_css = [
-        'components/icon.css',
         'pages/home.css',
-        'layouts/sidebar.css',
-        'layouts/topbar.css',
-        'layouts/footer.css',
+        'components/parking-card.css'
     ];
 
+    // file JS yang terhubung
     $file_js = [];
 
-    $reservation_status = 'unpaid';
-    $reservation = [
-        'mall_name' => 'Grand Indonesia Mall',
-        'parking_slot' => 'GF67',
-        'time' => '16:00',
-        'plate_number' => 'B 3012 JAV',
-        'parking_type' => 'Regular',
-        'start_time' => '2026-10-16 16:00:00',
-    ];
+    // ambil dummy data
+    $parking_data = require __DIR__ . '/../../../../database/dummy_data/parking.php';
 
-    $reservation_start = new DateTimeImmutable($reservation['start_time']);
-    $now = new DateTimeImmutable('now');
-    $can_cancel = $now->modify('+2 hours') <= $reservation_start;
+    // data yang di ambil (recommended parking, nanti masih on going dummy data nya)
+    $recommended_parking = $parking_data ['recommended_parking'] ?? [];
+
+    // data yang di ambil (previously parking, nanti masih on going dummy data nya)
+    $previously_parking = $parking_data ['previously_parking'] ?? [];
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
+<!-- Main Content -->
+<main class="main-content">
 
-<?php include __DIR__ . '/../../includes/head.php'; ?>
+    <!-- Section | Location -->
+    <section>
 
-<body>
-    <!-- Wrapper: sidebar + right column side by side -->
-    <div class="layout">
+        <div class="d-flex justify-items-center align-items-center">
+            <span style="font: var(--text-body); color: var(--secondary-text); ">Current Location</span>
+            <i class="d-flex fa-solid fa-location-dot" style="color: var(--secondary-text);"></i>
+        </div>
 
-        <!-- Sidebar -->
-        <?php include __DIR__ . '/../../layouts/sidebar.php'; ?>
+        <a href="#" class="d-flex justify-items-center align-items-center">
+            <span style="font: var(--text-H4); color: var(--primary-text);">Universitas Indonesia, Depok, Indonesia</span>
+            <i class="fa-solid fa-caret-down" style="color: var(--primary-text);"></i>
+        </a>
 
+    </section>
 
-        <!-- Right column: topbar + main content -->
-        <div class="content">
+    <!-- Section | Reservation -->
+    <section>
 
-            <!-- Topbar -->
-            <?php include __DIR__ . '/../../layouts/topbar.php'; ?>
+        <span class="section-header">Reservations</span>
 
-            <!-- Main content -->
-            <main class="main-content">
+        <!-- Reservation: none  -->
+        <?php if ($reservation_status === 'none'): ?>
+        <div class="reservation-card reservation-empty">
+            <i class="fa-regular fa-calendar-xmark reservation-empty-icon"></i>
+            <p style="font: var(--text-subtitle);">You currently have no reservations.</p>
+        </div>
 
-                <div class="top-content">
-                    <div class="d-flex justify-items-center align-items-center gap-1">
-                        <span style="font: var(--text-body); color: var(--secondary-text); ">Current Location</span>
-                        <i class="d-flex fa-solid fa-location-dot" style="color: var(--secondary-text);"></i>
-                    </div>
-                    <a href="#" class="d-flex justify-items-center align-items-center gap-1">
-                        <span style="font: var(--text-H4); color: var(--primary-text);">Universitas Indonesia, Depok, Indonesia</span>
-                        <i class="fa-solid fa-caret-down" style="color: var(--primary-text);"></i>
-                    </a>
+        <!-- Reservation: paid -->
+        <?php else: ?>
+        <div class="reservation-card">
+            <div class="reservation-header">
+                <span style="font:var(--text-H4);">
+                    <?= htmlspecialchars($reservation['mall_name']) ?>
+                </span>
+                <span class="reservation-status <?= $reservation_status?>">
+                    <span class="status-dot"></span>
+                    <?= $reservation_status === 'paid' ? 'Paid' : 'Unpaid' ?>
+                </span>
+            </div>
+
+            <div class="reservation-divider"></div>
+
+            <div class="reservation-details">
+
+                <div class="reservation-detail">
+                    <span class="reservation-label">Parking Slot</span>
+                    <strong>
+                        <?= htmlspecialchars($reservation['parking_slot']) ?>
+                    </strong>
                 </div>
 
-                <div class="section">
-                    <h3>Reservations</h3>
-
-                    <?php if ($reservation_status === 'none'): ?>
-                        
-                        <!-- No reservation -->
-                        <div class="reservation-card reservation-empty">
-                            <i class="fa-regular fa-calendar-xmark reservation-empty-icon"></i>
-                            <p style="font: var(--text-subtitle);">You currently have no reservations.</p>
-                        </div>
-                    <?php else: ?>
-
-                        <!-- Active reservation -->
-                         <div class="reservation-card">
-                            <div class="reservation-header">
-                                <span style="font:var(--text-H4);">
-                                    <?= htmlspecialchars($reservation['mall_name']) ?>
-                                </span>
-                                <span class="reservation-status <?= $reservation_status?>">
-                                    <span class="status-dot"></span>
-                                    <?= $reservation_status === 'paid' ? 'Paid' : 'Unpaid' ?>
-                                </span>
-                            </div>
-                            
-                            <div class="reservation-divider"></div>
-                            
-                            <div class="reservation-details">
-                                <div class="reservation-detail">
-                                    <span class="reservation-label">Parking Slot</span>
-                                    <strong>
-                                        <?= htmlspecialchars($reservation['parking_slot']) ?>
-                                    </strong>
-                                </div>
-                                <div class="reservation-detail">
-                                    <span class="reservation-label">Time</span>
-                                    <strong>
-                                        <?= htmlspecialchars($reservation['time']) ?>
-                                    </strong>
-                                </div>
-                                <div class="reservation-detail">
-                                    <span class="reservation-label">Plate Number</span>
-                                    <strong>
-                                        <?= htmlspecialchars($reservation['plate_number']) ?>
-                                    </strong>
-                                </div>
-                                <div class="reservation-detail">
-                                    <span class="reservation-label">Parking Type</span>
-                                    <strong>
-                                        <?= htmlspecialchars($reservation['parking_type']) ?>
-                                    </strong>
-                                </div>
-
-                            </div>
-                            <div class="reservation-actions">
-                                <?php if($reservation_status === 'unpaid'): ?>
-                                    <a href="?page=payment" class="reservation-button pay-button">
-                                        Pay Now
-                                    </a>
-                                <?php else: ?>
-                                    <?php if ($can_cancel): ?>
-                                        <form action="?page=cancel-reservation" method="POST">
-                                            <input type="hidden" name="reservation_id" value="1">
-                                            <button type="submit" class="reservation-button cancel-button">
-                                                Cancel Reservation
-                                            </button>
-                                        </form>
-                                    <?php else: ?>
-                                        <button type="button" class="reservation-button cancel-button" disabled>
-                                            Cancel Reservation
-                                        </button>
-                                        <p class="reservation-cancel-note" style = "font: var(--text-body-S)">
-                                            Cancellation is only available at least 2 hours before your reservation.
-                                        </p>
-                                    <?php endif; ?>
-                                <?php endif; ?>
-                            </div>
-                         </div>
-                    <?php endif; ?>
+                <div class="reservation-detail">
+                    <span class="reservation-label">Time</span>
+                    <strong>
+                        <?= htmlspecialchars($reservation['time']) ?>
+                    </strong>
                 </div>
 
-                <!-- Recommended Parking -->
-                <div class="section">
-                    <div class="header">
-                        <h3>Recommended Parking</h3>
-                        <button type="button" class="view-more-button">View More</button>
-                    </div>
-
-                    <div class="recommend-section">
-                        <?php
-                            $field = [
-                                'id' => 'grand-indonesia',
-                                'name' => 'Grand Indonesia Mall  anjay kanjay kanjyay anjay kanjay kanjyayv anjay kanjay kanjyay',
-                                'image' => '/web_parking_reservation/public/assets/images/mall-image/grand-indonesia-mall.jpg',
-                                'distance' => '7.1 KM',
-                                'url' => '#',
-                                'alt' => 'Grand Indonesia Mall'
-                            ];
-
-                            include __DIR__ . '/../../components/card-recommended.php'
-                        ?>
-                        <?php
-                            $field = [
-                                'id' => 'grand-indonesia',
-                                'name' => 'Grand Indonesia Mall',
-                                'image' => '/web_parking_reservation/public/assets/images/mall-image/grand-indonesia-mall.jpg',
-                                'distance' => '7.1 KM',
-                                'url' => '#',
-                                'alt' => 'Grand Indonesia Mall'
-                            ];
-
-                            include __DIR__ . '/../../components/card-recommended.php'
-                        ?>
-                        <?php
-                            $field = [
-                                'id' => 'grand-indonesia',
-                                'name' => 'Grand Indonesia Mall',
-                                'image' => '/web_parking_reservation/public/assets/images/mall-image/grand-indonesia-mall.jpg',
-                                'distance' => '7.1 KM',
-                                'url' => '#',
-                                'alt' => 'Grand Indonesia Mall'
-                            ];
-
-                            include __DIR__ . '/../../components/card-recommended.php'
-                        ?>
-                        <?php
-                            $field = [
-                                'id' => 'grand-indonesia',
-                                'name' => 'Grand Indonesia Mall',
-                                'image' => '/web_parking_reservation/public/assets/images/mall-image/grand-indonesia-mall.jpg',
-                                'distance' => '7.1 KM',
-                                'url' => '#',
-                                'alt' => 'Grand Indonesia Mall'
-                            ];
-
-                            include __DIR__ . '/../../components/card-recommended.php'
-                        ?>
-                    </div>
+                <div class="reservation-detail">
+                    <span class="reservation-label">Plate Number</span>
+                    <strong>
+                        <?= htmlspecialchars($reservation['plate_number']) ?>
+                    </strong>
                 </div>
 
+                <div class="reservation-detail">
+                    <span class="reservation-label">Parking Type</span>
+                    <strong>
+                        <?= htmlspecialchars($reservation['parking_type']) ?>
+                    </strong>
+                </div>
+
+            </div>
+
+            <div class="reservation-actions">
+
+                <!-- Reservation: unpaid -->
+                <?php if($reservation_status === 'unpaid'): ?>
+                <a href="?page=payment" class="reservation-button pay-button">
+                    Pay Now
+                </a>
                 
-
-                <!-- Previously Parked -->
-                <div class="section">
-                    <div class="header">
-                        <h3>Previously Parked</h3>
-                        <button type="button" class="view-more-button">View More</button>
-                    </div>
-
-                    <div class="prev-section">
-                    <?php
-                        $field = [
-                            'id' => 'grand-indonesia',
-                            'name' => 'Grand Indonesia Mall',
-                            'image' => '/web_parking_reservation/public/assets/images/mall-image/grand-indonesia-mall.jpg',
-                            'url' => '#',
-                            'alt' => 'Grand Indonesia Mall'
-                        ];
-
-                        include __DIR__ . '/../../components/card-prev.php'
-                    ?>
-                    <?php
-                        $field = [
-                            'id' => 'grand-indonesia',
-                            'name' => 'Grand Indonesia Mall',
-                            'image' => '/web_parking_reservation/public/assets/images/mall-image/grand-indonesia-mall.jpg',
-                            'url' => '#',
-                            'alt' => 'Grand Indonesia Mall'
-                        ];
-
-                        include __DIR__ . '/../../components/card-prev.php'
-                    ?>
-                    <?php
-                        $field = [
-                            'id' => 'grand-indonesia',
-                            'name' => 'Grand Indonesia Mall',
-                            'image' => '/web_parking_reservation/public/assets/images/mall-image/grand-indonesia-mall.jpg',
-                            'url' => '#',
-                            'alt' => 'Grand Indonesia Mall'
-                        ];
-
-                        include __DIR__ . '/../../components/card-prev.php'
-                    ?>
-                </div>
-                </div>
-
+                <!-- Reservation:  -->
+                <?php else: ?>
+                <?php if ($can_cancel): ?>
+                <form action="?page=cancel-reservation" method="POST">
+                    <input type="hidden" name="reservation_id" value="1">
+                    <button type="submit" class="reservation-button cancel-button">
+                        Cancel Reservation
+                    </button>
+                </form>
                 
+                <!-- Reservation:  -->
+                <?php else: ?>
+                <button type="button" class="reservation-button cancel-button" disabled>
+                    Cancel Reservation
+                </button>
+                <p class="reservation-cancel-note" style = "font: var(--text-body-S)">
+                    Cancellation is only available at least 2 hours before your reservation.
+                </p>
+                
+                <?php endif; ?>
+                <?php endif; ?>
+            </div>
+        </div>
+        <?php endif; ?>
+    </section>
 
-            </main>
+    <!-- Section | Recommended Mall -->
+    <section>
+
+        <span class="section-header">
+            Recommended Parking
+            <button type="button" class="view-more-button">View More</button>
+        </span>
+        
+        <div class="parking-list recommended-mall">
+
+            <?php foreach ($recommended_parking as $field) ?>
+                <?php
+                $variant = 'recommended';
+                
+                include __DIR__ . '/../../components/card-parking.php';
+                ?>
+            <?php endforeach; ?>
 
         </div>
-    </div>
 
-</body>
+    </section>
 
-</html>
+    <!-- Section | Previously Mall -->
+    <section>
+
+        <span class="section-header">
+            Previously Parked
+            <button type="button" class="view-more-button">View More</button>
+        </span>
+        
+        <div class="parking-list previously-mall">
+
+            <?php foreach ($previously_parking as $field) ?>
+                <?php
+                $variant = 'previously';
+                
+                include __DIR__ . '/../../components/card-parking.php';
+                ?>
+            <?php endforeach; ?>
+
+        </div>
+
+    </section>
+
+</main>
