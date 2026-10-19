@@ -1,103 +1,90 @@
+/* Sidebar container */
 .sidebar {
-  width: 280px;
-  min-width: 280px;
-  height: 100vh;
+  flex: 0 0 250px;
 
-  top: 0;
-
-  position: sticky;
-  overflow: auto;
-  flex-shrink: 0;
-
-  background-color: var(--navigation);
-  color: var(--primary-text);
+  width: 250px;
+  min-width: 250px;
+  gap: 40px;
   
+  background-color: var(--navigation);
   border-right: 1px solid var(--border-divider);
 }
 
+/* Top sidebar item */
 .sidebar-brand {
   gap: 12px;
   color: var(--primary-text);
 }
 
-.sidebar-brand:hover {
-  color: var(--primary-text);
-}
-
 .sidebar-brand-icon {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   width: 48px;
   height: 48px;
+
+  align-items: center;
+  justify-content: center;
   flex-shrink: 0;
-  border-radius: var(--radius-lg);
+
   background-color: var(--brand-gold);
-  color: var(--navigation);
-  font: var(--text-h2);
+  border-radius: var(--radius-lg);
 }
 
 .sidebar-brand-name {
-  font: var(--text-h3);
+  font: var(--text-H3);
   white-space: nowrap;
 }
 
-.sidebar-nav {
-  gap: 8px;
-  margin-top: 8px;
-}
-
-.sidebar-link {
+/* Main navigation */
+.main-nav {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  min-height: 48px;
-  padding: 12px 16px;
-  border-radius: var(--radius-md) !important;
+  flex-direction: column;
+  gap: 8px;  
+}
+
+.main-nav .nav-item {
   color: var(--secondary-text);
-  font: var(--text-button);
-  transition:
-    background-color 0.2s ease,
-    color 0.2s ease;
 }
 
-.sidebar-link:hover {
-    background-color: var(--surface-card);
-    color: var(--brand-gold);
+.main-nav .nav-item:hover {
+  background-color: var(--surface-card);
+  color: var(--brand-gold);
+  border: 1px solid var(--brand-gold);
 }
 
-.sidebar-link.active {
-    background-color: var(--brand-gold);
-    color: var(--brand-gold);
-}
-
-.sidebar-nav .sidebar-link.active {
+.main-nav .nav-item.active {
   background-color: var(--active-navigation-background);
   color: var(--brand-gold);
 }
 
-.sidebar-link.active:hover {
-    background-color: var(--active-navigation-background);
-    color: var(--brand-gold);
+/* Bottom navigation */
+.buttom-nav {
+  margin-top: auto;
 }
 
-.sidebar-button-nav {
-    margin-top: auto;
-    padding-top: 16px;
+.buttom-nav .nav-item {
+  color: var(--danger-foreground);
 }
 
-.sidebar-logout {
-    color: var(--danger-foreground);
-    width: 100%;
+.buttom-nav .nav-item:hover {
+  background-color: var(--danger-background);
+  color: var(--danger-foreground);
+  border: 1px solid var(--danger-foreground);
 }
 
-.sidebar-logout:hover {
-    background-color: var(--danger-background);
-    color: var(--danger-foreground);
-}
+.nav-item {
+  display: flex;
+  align-items: center;
 
-.sidebar-link:focus-visible,
-.sidebar-brand:focus-visible {
-    outline: 2px solid var(--brand-gold);
-    outline-offset: 3px;
+  min-height: 48px;
+
+  padding: 12px 16px;
+  gap: 12px;
+
+  font: var(--text-button);
+
+  text-decoration: none;
+  
+  border-radius: var(--radius-md) !important;
+  transition:
+  background-color 0.2s ease,
+  color 0.2s ease;
 }
