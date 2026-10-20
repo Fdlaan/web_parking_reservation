@@ -9,6 +9,10 @@
         'history' => $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/pages/history/index.php',
         'profile' => $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/pages/profile/index.php',
         'login' => $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/pages/auth/login.php',
+        'detail' => $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/pages/parking/detail.php',
+        'slot' => $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/pages/parking/slot.php',
+        'invoice' => $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/pages/parking/invoice.php',
+        'payment' => $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/pages/parking/payment.php',
     ];
 
     $show_layout = ($page !== 'login');

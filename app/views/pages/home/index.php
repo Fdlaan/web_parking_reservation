@@ -28,7 +28,7 @@
 
     $previously_parking = array_slice($previously_parking, 0, 3);
 
-    $reservation_status = 'unpaid'; // none, unpaid, paid
+    $reservation_status = 'none'; // none, unpaid, paid
     $reservation = [];
     $can_cancel = false;
 ?>
