@@ -8,35 +8,28 @@
 <!-- topbar container -->
 <header class="topbar d-flex flex-row sticky-top">
 
-    <!-- left section -->
-    <div class="topbar-item-left">
+    <!-- breadcrumb nav -->
+    <div class="topbar-item-breadcrumb">
 
-        <!-- breadcrumb navigation -->
-        <nav aria-label="Breadcrumb">
+        <?php foreach ($breadcrumb as $item): ?>
+        <div class="breadcrumb-item">
 
-            <ol class="breadcrumb">
+            <?php if (($item['url'] ?? null) !== null): ?>
+            <a href="<?= htmlspecialchars($item['url'], ENT_QUOTES, 'UTF-8') ?>">
+                <?= htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8') ?>
+            </a>
+            <i class= "breadcrumb-icon" aria-hidden="true"></i>
 
-                <?php foreach ($breadcrumb as $item): ?>
-                <li class="breadcrumb-item">
+            <?php else: ?>
+            <a href="<?= htmlspecialchars($item['url'], ENT_QUOTES, 'UTF-8') ?>">
+                <?= htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8') ?> 
+            </a>
+            <i class= "breadcrumb-icon" aria-hidden="true"></i>
 
-                    <?php if (($item['url'] ?? null) !== null): ?>
-                    <a href="<?= htmlspecialchars($item['url'], ENT_QUOTES, 'UTF-8') ?>">
-                        <?= htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8') ?>
-                    </a>
+            <?php endif; ?>
 
-                    <?php else: ?>
-                    <span aria-current="page">
-                        <?= htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8') ?> / 
-                    </span>
-
-                    <?php endif; ?>
-
-                </li>
-                <?php endforeach; ?>
-
-            </ol>
-
-        </nav>
+        </div>
+        <?php endforeach; ?>
 
     </div>
 

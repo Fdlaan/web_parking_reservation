@@ -28,8 +28,7 @@
 
     $previously_parking = array_slice($previously_parking, 0, 3);
 
-    $reservation_status = 'paid'; // none, unpaid, paid
-
+    
     $reservation = [
         'id' => 1,
         'mall_name' => 'Grand Indonesia Mall',
@@ -38,17 +37,17 @@
         'parking_type' => 'Regular',
         'start_time' => '2026-10-20 16:00:00',
     ];
-
+    
     $startTime = new DateTimeImmutable($reservation['start_time']);
     $reservation['time'] = $startTime->format('d M Y, H:i');
-
     $now = new DateTimeImmutable('now');
-
     $can_cancel = $now->modify('+2 hours') <= $startTime;
+    $reservation_status = 'paid'; // none, unpaid, paid
+
 ?>
 
 <!-- Main Content -->
-<main class="main-content d-flex flex-column">
+<main class="main-content">
 
     <!-- Section | Location -->
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/components/user-location.php'; ?>

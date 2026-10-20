@@ -18,21 +18,26 @@
 }
 
 /* Left section */
-.topbar-item-left {
+.topbar-item-breadcrumb {
   display: flex;
   align-items: center;
+  text-decoration: none;
+  font: var(--text-button);
+  color: var(--secondary-text);
+  min-width: 0;
+}
+
+.breadcrumb-item{
+  display: flex;
+  align-items: center;
+  gap: 8px;
 
   min-width: 0;
 }
 
-/* Breadcrumb navigation */
-.topbar .breadcrumb {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  font: var(--text-button);
+.breadcrumb-item a {
+  text-decoration: none;
   color: var(--secondary-text);
-  margin: 0;
 }
 
 /* Right section */
