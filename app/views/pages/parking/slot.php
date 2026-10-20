@@ -1,96 +1,85 @@
-<!DOCTYPE html>
-<html lang="en">
+<main class="main-content d-flex flex-column">
 
-<?php include __DIR__ . '/../layouts/header.php'; ?>
+    <style>
+        .floor-btn {
+            color: #f1f1f1;
+            border: 1px solid transparent;
+            flex: 1 1 0;
+            /* equal widths, regardless of text length */
+            text-align: center;
+        }
 
-<style>
-    .floor-btn {
-        color: #f1f1f1;
-        border: 1px solid transparent;
-        flex: 1 1 0;
-        /* equal widths, regardless of text length */
-        text-align: center;
-    }
+        .floor-btn:hover {
+            color: #fff;
+            background-color: rgba(255, 255, 255, 0.05);
+        }
 
-    .floor-btn:hover {
-        color: #fff;
-        background-color: rgba(255, 255, 255, 0.05);
-    }
+        .floor-btn.active {
+            color: #e0b45a;
+            background-color: #4a3b24;
+            border-color: #e0b45a;
+        }
 
-    .floor-btn.active {
-        color: #e0b45a;
-        background-color: #4a3b24;
-        border-color: #e0b45a;
-    }
+        .floor-divider {
+            width: 1px;
+            height: 36px;
+            background-color: rgba(255, 255, 255, 0.12);
+            flex-shrink: 0;
+        }
 
-    .floor-divider {
-        width: 1px;
-        height: 36px;
-        background-color: rgba(255, 255, 255, 0.12);
-        flex-shrink: 0;
-    }
+        .slot-block {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            border-top: 2px solid #3a3a3a;
+        }
 
-    .slot-block {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        border-top: 2px solid #3a3a3a;
-    }
+        .slot {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            height: 118px;
+            color: #b5b5b5;
+            font-size: 1.15rem;
+            text-decoration: none;
+            border-bottom: 2px solid #3a3a3a;
+        }
 
-    .slot {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 14px;
-        height: 118px;
-        color: #b5b5b5;
-        font-size: 1.15rem;
-        text-decoration: none;
-        border-bottom: 2px solid #3a3a3a;
-    }
+        /* left column of each block gets the vertical divider */
+        .slot:nth-child(odd) {
+            border-right: 2px solid #3a3a3a;
+        }
 
-    /* left column of each block gets the vertical divider */
-    .slot:nth-child(odd) {
-        border-right: 2px solid #3a3a3a;
-    }
+        a.slot:hover {
+            background-color: rgba(255, 255, 255, 0.04);
+            color: #fff;
+        }
 
-    a.slot:hover {
-        background-color: rgba(255, 255, 255, 0.04);
-        color: #fff;
-    }
+        .slot-dot {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            flex-shrink: 0;
+            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.06);
+            /* outer halo */
+        }
 
-    .slot-dot {
-        width: 20px;
-        height: 20px;
-        border-radius: 50%;
-        flex-shrink: 0;
-        box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.06);
-        /* outer halo */
-    }
+        .slot-dot.available {
+            background-color: #1f3a2d;
+            border: 2px solid #6fd49b;
+        }
 
-    .slot-dot.available {
-        background-color: #1f3a2d;
-        border: 2px solid #6fd49b;
-    }
-
-    .slot-dot.taken {
-        background-color: #5a1f22;
-        border: 2px solid #e57373;
-    }
-</style>
-
-<body>
+        .slot-dot.taken {
+            background-color: #5a1f22;
+            border: 2px solid #e57373;
+        }
+    </style>
+    
     <!-- Wrapper: sidebar + right column side by side -->
     <div class="d-flex">
 
-        <!-- Sidebar -->
-        <?php include __DIR__ . '/../layouts/sidebar.php'; ?>
-
-
         <!-- Right column: topbar + main content -->
         <div class="flex-grow-1 d-flex flex-column" style="background: var(--panel);">
-
-            <!-- Topbar -->
-            <?php include __DIR__ . '/../layouts/topbar.php'; ?>
 
             <!-- Main content -->
             <main class="d-flex flex-grow flex-column-1 py-4 ms-4 me-4">
@@ -225,6 +214,4 @@
 
     </div>
 
-</body>
-
-</html>
+</main>

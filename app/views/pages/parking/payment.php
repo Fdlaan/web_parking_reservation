@@ -1,21 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-
-<?php include __DIR__ . '/../layouts/header.php'; ?>
-
-<body>
+<main class="main-content d-flex flex-column">
     <!-- Wrapper: sidebar + right column side by side -->
     <div class="d-flex">
 
-        <!-- Sidebar -->
-        <?php include __DIR__ . '/../layouts/sidebar.php'; ?>
-
-
         <!-- Right column: topbar + main content -->
         <div class="flex-grow-1 d-flex flex-column" style="background: var(--panel);">
-
-            <!-- Topbar -->
-            <?php include __DIR__ . '/../layouts/topbar.php'; ?>
 
             <!-- Main content -->
             <main class="d-flex flex-grow flex-column-1 py-3 ms-4 me-4">
@@ -160,12 +148,8 @@
 
                 </div>
 
+            </main>
         </div>
-        </main>
 
     </div>
-    </div>
-
-</body>
-
-</html>
+</main>
