@@ -28,9 +28,23 @@
 
     $previously_parking = array_slice($previously_parking, 0, 3);
 
-    $reservation_status = 'none'; // none, unpaid, paid
-    $reservation = [];
-    $can_cancel = false;
+    $reservation_status = 'paid'; // none, unpaid, paid
+
+    $reservation = [
+        'id' => 1,
+        'mall_name' => 'Grand Indonesia Mall',
+        'parking_slot' => 'GF67',
+        'plate_number' => 'B 3012 JAV',
+        'parking_type' => 'Regular',
+        'start_time' => '2026-10-20 16:00:00',
+    ];
+
+    $startTime = new DateTimeImmutable($reservation['start_time']);
+    $reservation['time'] = $startTime->format('d M Y, H:i');
+
+    $now = new DateTimeImmutable('now');
+
+    $can_cancel = $now->modify('+2 hours') <= $startTime;
 ?>
 
 <!-- Main Content -->
@@ -56,7 +70,7 @@
         <div class="reservation-card">
             <div class="reservation-header">
                 <span style="font:var(--text-H4);">
-                    <?= htmlspecialchars($reservation['mall_name']) ?>
+                    <?= htmlspecialchars($reservation['mall_name'] ?? '-', ENT_QUOTES, 'UTF-8') ?>
                 </span>
                 <span class="reservation-status <?= $reservation_status?>">
                     <span class="status-dot"></span>
@@ -71,28 +85,28 @@
                 <div class="reservation-detail">
                     <span class="reservation-label">Parking Slot</span>
                     <strong>
-                        <?= htmlspecialchars($reservation['parking_slot']) ?>
+                        <?= htmlspecialchars($reservation['parking_slot'] ?? '-', ENT_QUOTES, 'UTF-8') ?>
                     </strong>
                 </div>
 
                 <div class="reservation-detail">
                     <span class="reservation-label">Time</span>
                     <strong>
-                        <?= htmlspecialchars($reservation['time']) ?>
+                        <?= htmlspecialchars($reservation['time'] ?? '-', ENT_QUOTES, 'UTF-8') ?>
                     </strong>
                 </div>
 
                 <div class="reservation-detail">
                     <span class="reservation-label">Plate Number</span>
                     <strong>
-                        <?= htmlspecialchars($reservation['plate_number']) ?>
+                        <?= htmlspecialchars($reservation['plate_number'] ?? '-', ENT_QUOTES, 'UTF-8') ?>
                     </strong>
                 </div>
 
                 <div class="reservation-detail">
                     <span class="reservation-label">Parking Type</span>
                     <strong>
-                        <?= htmlspecialchars($reservation['parking_type']) ?>
+                        <?= htmlspecialchars($reservation['parking_type'] ?? '-', ENT_QUOTES, 'UTF-8') ?>
                     </strong>
                 </div>
 
@@ -110,7 +124,7 @@
                 <?php else: ?>
                 <?php if ($can_cancel): ?>
                 <form action="?page=cancel-reservation" method="POST">
-                    <input type="hidden" name="reservation_id" value="1">
+                    <input type="hidden" name="reservation_id" value="<?= (int) $reservation['id'] ?>">
                     <button type="submit" class="reservation-button cancel-button">
                         Cancel Reservation
                     </button>
