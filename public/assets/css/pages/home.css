@@ -178,3 +178,28 @@
     scroll-snap-align: start;
   }
 }
+
+.prev-mall {
+  display: flex;
+  align-items: stretch;
+  gap: 16px;
+  width: 100%;
+  min-width: 0;
+}
+
+.prev-mall .parking-card-item {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .prev-mall {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .prev-mall .parking-card-item {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+}
