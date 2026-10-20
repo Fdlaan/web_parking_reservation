@@ -1,0 +1,16 @@
+.user-location {
+    gap: 4px;
+}
+
+.location-header {
+    font: var(--text-label);
+    color: var(--secondary-text);
+    gap: 8px;
+}
+
+.location-dropdown {
+    font: var(--text-H4);
+    color: var(--primary-text);
+    gap: 8px;
+    text-decoration: none;
+}

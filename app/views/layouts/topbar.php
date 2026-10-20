@@ -1,16 +1,59 @@
-<header class="p-3 border-bottom sticky-top" style="--bs-border-color: var(--line);">
-        <div class="container-fluid">
-            <div class="d-flex align-items-center">
-                <p class="px-2 mb-0 me-auto link-secondary">Home</p>
+<?php
 
-                <a href="">
-                    <i class="fa-solid fa-bell text-light me-4"></i>
-                </a>
+    // breadcrumb for the current page
+    $breadcrumb = $breadcrumb ?? [];
 
-                <a href="#" class="d-flex align-items-center text-uppercase text-decoration-none text-light fw-medium">
-                    <img src="https://github.com/mdo.png" alt="mdo" width="36" height="36" class="rounded me-2">
-                    Placeholder Name
-                </a>
-            </div>
-        </div>
+?>
+
+<!-- topbar container -->
+<header class="topbar d-flex flex-row sticky-top">
+
+    <!-- left section -->
+    <div class="topbar-item-left">
+
+        <!-- breadcrumb navigation -->
+        <nav aria-label="Breadcrumb">
+
+            <ol class="breadcrumb">
+
+                <?php foreach ($breadcrumb as $item): ?>
+                <li class="breadcrumb-item">
+
+                    <?php if (($item['url'] ?? null) !== null): ?>
+                    <a href="<?= htmlspecialchars($item['url'], ENT_QUOTES, 'UTF-8') ?>">
+                        <?= htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8') ?>
+                    </a>
+
+                    <?php else: ?>
+                    <span aria-current="page">
+                        <?= htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8') ?> / 
+                    </span>
+
+                    <?php endif; ?>
+
+                </li>
+                <?php endforeach; ?>
+
+            </ol>
+
+        </nav>
+
+    </div>
+
+    <!-- right section -->
+    <div class="topbar-item-right">
+
+        <!-- notification button -->
+        <a href="#" class="notification" aria-label="Notifications">
+            <span class="notification-icon" aria-hidden="true"></span>
+        </a>
+
+        <!-- user profile -->
+        <a href="?page=profile" class="profile text-uppercase text-decoration-none">
+            <img src="https://github.com/mdo.png" alt="Profile picture" width="36" height="36">
+            <span>Placeholder Name</span>
+        </a>
+
+    </div>
+
 </header>

@@ -1,0 +1,98 @@
+/* Topbar container */
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  width: 100%;
+  height: 56px;
+  min-width: 0;
+  gap: 16px;
+  padding: 0 48px;
+
+  background-color: var(--canvas-background);
+  border-bottom: 1px solid var(--border-divider);
+  box-sizing: border-box;
+
+  z-index: 10;
+}
+
+/* Left section */
+.topbar-item-left {
+  display: flex;
+  align-items: center;
+
+  min-width: 0;
+}
+
+/* Breadcrumb navigation */
+.topbar .breadcrumb {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  font: var(--text-button);
+  color: var(--secondary-text);
+  margin: 0;
+}
+
+/* Right section */
+.topbar-item-right {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+
+  gap: 12px;
+  flex-shrink: 0;
+}
+
+/* Notification button */
+.notification {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: 36px;
+  height: 36px;
+
+  color: var(--primary-text);
+  background-color: var(--raised-secondary-action);
+
+  text-decoration: none;
+  border-radius: var(--radius-full);
+
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.notification:hover {
+  color: var(--brand-gold);
+  border: 1px solid var(--brand-gold);
+}
+
+/* Notification icon */
+.notification-icon {
+  width: 12px;
+  height: 14px;
+}
+
+/* Profile link */
+.profile {
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  color: var(--primary-text);
+  font: var(--text-body-S);
+}
+
+/* Profile image */
+.profile img {
+  display: block;
+  flex-shrink: 0;
+
+  border-radius: var(--radius-xs);
+}

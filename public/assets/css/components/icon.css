@@ -1,0 +1,81 @@
+.sidebar-icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  background-color: currentColor;
+  -webkit-mask: center / contain no-repeat;
+  mask: center / contain no-repeat;
+}
+
+.logo-icon {
+  display: inline-block;
+  flex-shrink: 0;
+
+  width: 1em;
+  height: 1em;
+
+  background-color: currentColor;
+
+  -webkit-mask: center / contain no-repeat;
+  mask: center / contain no-repeat;
+
+  -webkit-mask-image: url("/web_parking_reservation/public/assets/images/icons/logo.svg");
+  mask-image: url("/web_parking_reservation/public/assets/images/icons/logo.svg");
+}
+
+.home-icon {
+  -webkit-mask-image: url("/web_parking_reservation/public/assets/images/icons/home-icon.svg");
+  mask-image: url("/web_parking_reservation/public/assets/images/icons/home-icon.svg");
+}
+
+.search-icon {
+  -webkit-mask-image: url("/web_parking_reservation/public/assets/images/icons/search-icon.svg");
+  mask-image: url("/web_parking_reservation/public/assets/images/icons/search-icon.svg");
+}
+
+.history-icon {
+  -webkit-mask-image: url("/web_parking_reservation/public/assets/images/icons/history-icon.svg");
+  mask-image: url("/web_parking_reservation/public/assets/images/icons/history-icon.svg");
+}
+
+.profile-icon {
+  -webkit-mask-image: url("/web_parking_reservation/public/assets/images/icons/profile-icon.svg");
+  mask-image: url("/web_parking_reservation/public/assets/images/icons/profile-icon.svg");
+}
+
+.logout-icon {
+  -webkit-mask-image: url("/web_parking_reservation/public/assets/images/icons/logout-icon.svg");
+  mask-image: url("/web_parking_reservation/public/assets/images/icons/logout-icon.svg");
+}
+
+.notification-icon {
+  display: inline-block;
+  flex-shrink: 0;
+
+  background-color: currentColor;
+
+  -webkit-mask: center / contain no-repeat;
+  mask: center / contain no-repeat;
+
+  -webkit-mask: url("/web_parking_reservation/public/assets/images/icons/notification-icon.svg")
+    center / contain no-repeat;
+  mask: url("/web_parking_reservation/public/assets/images/icons/notification-icon.svg")
+    center / contain no-repeat;
+}
+
+.location-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+
+  background-color: currentColor;
+
+  -webkit-mask: center / contain no-repeat;
+  mask: center / contain no-repeat;
+
+  -webkit-mask: url("/web_parking_reservation/public/assets/images/icons/location-icon.svg")
+    center / contain no-repeat;
+  mask: url("/web_parking_reservation/public/assets/images/icons/location-icon.svg")
+    center / contain no-repeat;
+}
