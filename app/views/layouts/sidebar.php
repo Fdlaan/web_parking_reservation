@@ -37,7 +37,7 @@
 ?>
 
 <!-- sidebar containr -->
-<aside class="sidebar d-flex flex-column min-vh-100 p-3">
+<aside class="sidebar d-flex flex-column p-3">
 
     <a href="?page=home" class="sidebar-brand d-flex align-items-center text-decoration-none">
         <span class="sidebar-brand-icon logo-icon" aria-hidden="true"></span>

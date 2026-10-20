@@ -11,11 +11,7 @@
     // file JS yang terhubung
     $file_js = [];
 
-    // ambil dummy data
-    $parking_data = require __DIR__ . '/../../../../database/dummy_data/parking.php';
-
-    // data yang di ambil (parking area, nanti masih on going dummy data nya)
-    $parking_area = $parking_data['parking_area'] ?? [];
+    $parking_area = [];
 
     // apa ya, ini tuh lebih ke ngasih tau lokasi user
     $breadcrumb = [
@@ -38,27 +34,21 @@
 <main class="main-content">
 
     <!-- Section | Location -->
-    <section>
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/components/user-location.php'; ?>
 
-        <div class="d-flex justify-items-center align-items-center">
-            <span style="font: var(--text-body); color: var(--secondary-text); ">Current Location</span>
-            <i class="d-flex fa-solid fa-location-dot" style="color: var(--secondary-text);"></i>
-        </div>
-
-        <a href="#" class="d-flex justify-items-center align-items-center">
-            <span style="font: var(--text-H4); color: var(--primary-text);">Universitas Indonesia, Depok, Indonesia</span>
-            <i class="fa-solid fa-caret-down" style="color: var(--primary-text);"></i>
-        </a>
-
-    </section>
 
     <!-- Section | Area Mall Section -->
     <section>
+        <button type="button" class="d-flex align-items-center search-section" style="" data-bs-toggle="dialog" data-bs-target="#bdSearchDialog" aria-haspopup="dialog" aria-label="Search">
+            <i class="fa-solid fa-magnifying-glass" style="color: var(--secondary-text);"></i>
+            <span class="" style="color: var(--secondary-text); font: var(--text-body);">Search Here</span>
+        </button>
 
         <span class="section-header">
             Recommended Parking
             <button type="button" class="view-more-button">View More</button>
         </span>
+
 
         <div class="parking-list area-mall">
 

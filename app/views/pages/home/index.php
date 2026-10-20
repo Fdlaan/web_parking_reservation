@@ -5,39 +5,35 @@
     // file CSS yang terhubung
     $file_css = [
         'pages/home.css',
-        'components/parking-card.css'
+        'components/card-parking.css'
     ];
 
     // file JS yang terhubung
     $file_js = [];
 
-    // ambil dummy data
-    $parking_data = require __DIR__ . '/../../../../database/dummy_data/parking.php';
+    require_once $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/models/Mall.php';
+    $locations = require $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/database/dummy_data/locations.php';
 
-    // data yang di ambil (recommended parking, nanti masih on going dummy data nya)
-    $recommended_parking = $parking_data ['recommended_parking'] ?? [];
+    $selectedLocation = $locations[2];
 
-    // data yang di ambil (previously parking, nanti masih on going dummy data nya)
-    $previously_parking = $parking_data ['previously_parking'] ?? [];
+    $recommended_parking = Mall::getRecommended(
+        (float) $selectedLocation['latitude'],
+        (float) $selectedLocation['longitude']
+    );
+
+    $recommended_parking = array_slice($recommended_parking, 0, 4);
+
+    $previously_parking = [];
+    $reservation_status = 'none'; // none, unpaid, paid
+    $reservation = [];
+    $can_cancel = false;
 ?>
 
 <!-- Main Content -->
-<main class="main-content">
+<main class="main-content d-flex flex-column">
 
     <!-- Section | Location -->
-    <section>
-
-        <div class="d-flex justify-items-center align-items-center">
-            <span style="font: var(--text-body); color: var(--secondary-text); ">Current Location</span>
-            <i class="d-flex fa-solid fa-location-dot" style="color: var(--secondary-text);"></i>
-        </div>
-
-        <a href="#" class="d-flex justify-items-center align-items-center">
-            <span style="font: var(--text-H4); color: var(--primary-text);">Universitas Indonesia, Depok, Indonesia</span>
-            <i class="fa-solid fa-caret-down" style="color: var(--primary-text);"></i>
-        </a>
-
-    </section>
+    <?php include $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/components/user-location.php'; ?>
 
     <!-- Section | Reservation -->
     <section>
@@ -48,7 +44,7 @@
         <?php if ($reservation_status === 'none'): ?>
         <div class="reservation-card reservation-empty">
             <i class="fa-regular fa-calendar-xmark reservation-empty-icon"></i>
-            <p style="font: var(--text-subtitle);">You currently have no reservations.</p>
+            <span style="font: var(--text-label);">You currently have no reservations.</span>
         </div>
 
         <!-- Reservation: paid -->
@@ -140,13 +136,12 @@
             <button type="button" class="view-more-button">View More</button>
         </span>
         
-        <div class="parking-list recommended-mall">
-
-            <?php foreach ($recommended_parking as $field) ?>
+        <div class="rec-mall">
+            <?php foreach ($recommended_parking as $field): ?>
                 <?php
                 $variant = 'recommended';
                 
-                include __DIR__ . '/../../components/card-parking.php';
+                require $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/components/card-parking.php';
                 ?>
             <?php endforeach; ?>
 
@@ -164,11 +159,11 @@
         
         <div class="parking-list previously-mall">
 
-            <?php foreach ($previously_parking as $field) ?>
+            <?php foreach ($previously_parking as $field): ?>
                 <?php
-                $variant = 'previously';
+                $variant = 'previous';
                 
-                include __DIR__ . '/../../components/card-parking.php';
+                require $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/components/card-parking.php';
                 ?>
             <?php endforeach; ?>
 

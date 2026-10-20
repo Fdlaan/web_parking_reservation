@@ -2,8 +2,13 @@
 .sidebar {
   flex: 0 0 250px;
 
+  position: sticky;
+  align-self: flex-start;
+  top: 0;
+
   width: 250px;
   min-width: 250px;
+  height: 100vh;
   gap: 40px;
   
   background-color: var(--navigation);
@@ -14,21 +19,17 @@
 .sidebar-brand {
   gap: 12px;
   color: var(--primary-text);
+  font: var(--text-H3);
 }
 
 .sidebar-brand-icon {
-  width: 30px;
-  height: 30px;
   align-items: center;
   justify-content: center;
-  /* flex-shrink: 0; */
 
   color: var(--brand-gold);
-  /* border-radius: var(--radius-lg); */
 }
 
 .sidebar-brand-name {
-  font: var(--text-H3);
   white-space: nowrap;
 }
 
@@ -46,11 +47,12 @@
 .main-nav .nav-item:hover {
   background-color: var(--surface-card);
   color: var(--brand-gold);
-  border: 1px solid var(--brand-gold);
+  border: 1px solid var(--active-navigation-background);
 }
 
 .main-nav .nav-item.active {
   background-color: var(--active-navigation-background);
+  border: 1px solid var(--brand-gold);
   color: var(--brand-gold);
 }
 

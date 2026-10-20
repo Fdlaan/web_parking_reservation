@@ -71,24 +71,11 @@
     $malls = array_slice($malls, 0, 8);
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-
-<?php include __DIR__ . '/../../includes/head.php'; ?>
-
-<body>
     <!-- Wrapper: sidebar + right column side by side -->
     <div class="layout">
 
-        <!-- Sidebar -->
-        <?php include __DIR__ . '/../../layouts/sidebar.php'; ?>
-
-
         <!-- Right column: topbar + main content -->
         <div class="content">
-
-            <!-- Topbar -->
-            <?php include __DIR__ . '/../../layouts/topbar.php'; ?>
 
             <!-- Main content -->
             <main class="main-content">
