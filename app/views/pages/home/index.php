@@ -23,8 +23,12 @@
 
     $recommended_parking = array_slice($recommended_parking, 0, 4);
 
-    $previously_parking = [];
-    $reservation_status = 'none'; // none, unpaid, paid
+    $previously_parking = require $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/database/dummy_data/previous-reservations.php';
+    usort($previously_parking, fn($a, $b) => strtotime($b['reserved_at']) <=> strtotime($a['reserved_at']));
+
+    $previously_parking = array_slice($previously_parking, 0, 3);
+
+    $reservation_status = 'unpaid'; // none, unpaid, paid
     $reservation = [];
     $can_cancel = false;
 ?>
@@ -150,6 +154,7 @@
     </section>
 
     <!-- Section | Previously Mall -->
+    <?php if (!empty($previously_parking)): ?>
     <section>
 
         <span class="section-header">
@@ -157,7 +162,7 @@
             <button type="button" class="view-more-button">View More</button>
         </span>
         
-        <div class="parking-list previously-mall">
+        <div class="prev-mall">
 
             <?php foreach ($previously_parking as $field): ?>
                 <?php
@@ -170,5 +175,6 @@
         </div>
 
     </section>
+    <?php endif; ?>
 
 </main>
