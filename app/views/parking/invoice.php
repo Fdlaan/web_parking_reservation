@@ -61,8 +61,8 @@
                                         <p class="col-9 fs-5 mb-2 fw-medium">Plate Number:</p>
                                         <p class="col-3 fs-5 mb-2 text-end">B 1234 FSD</p>
 
-                                        <p class="col-9 fs-5 mb-2 fw-medium">Reservation Date:</p>
-                                        <p class="col-3 fs-5 mb-2 text-end">22 Sept 2026</p>
+                                        <p class="col-8 fs-5 mb-2 fw-medium">Reservation Date:</p>
+                                        <p class="col-4 fs-5 mb-2 text-end">22 Sept 2026</p>
 
                                         <p class="col-9 fs-5 mb-2 fw-medium">Reserved Time:</p>
                                         <p class="col-3 fs-5 text-end mb-2">16:00</p>
