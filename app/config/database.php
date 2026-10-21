@@ -1,7 +1,7 @@
 <?php
     $servername = "localhost";
     $username = "root";
-    $password = "Brian1703.";
+    $password = "";
     $database = "parking_db";
 
     $conn = mysqli_connect (

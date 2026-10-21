@@ -1,0 +1,155 @@
+.table-history-wrapper {
+  width: 100%;
+
+  overflow: hidden;
+
+  border: 1px solid var(--border-divider);
+  border-radius: var(--radius-xl);
+
+  background-color: var(--surface-card);
+}
+
+.table-history {
+  width: 100%;
+  min-width: 0;
+
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.table-history-head th {
+  padding: 16px 16px;
+
+  background-color: var(--raised-secondary-action);
+  color: var(--secondary-text);
+  border-bottom: 1px solid var(--border-divider);
+  white-space: nowrap;
+
+  font: var(--text-label);
+  text-align: left;
+}
+
+.table-history-body td {
+  padding: 16px 16px;
+
+  color: var(--primary-text);
+  font: var(--text-body);
+  border-bottom: 1px solid var(--border-divider);
+
+  vertical-align: middle;
+}
+
+.table-history-body tr:last-child td {
+  border-bottom: none;
+}
+
+.table-history-body tr:hover {
+  background-color: var(--overlay-scrim);
+  cursor: pointer;
+}
+
+.status-badge {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 6px 12px;
+
+  border-radius: var(--radius-full);
+
+  font: var(--text-label);
+
+  width: 100%;
+  min-width: 0;
+}
+
+.status-badge.text-bg-success {
+  background: var(--success-background) !important;
+  color: var(--success-foreground) !important;
+  border: 1px solid var(--success-foreground) !important;
+}
+
+.status-badge.text-bg-danger {
+  background: var(--danger-background) !important;
+  color: var(--danger-foreground) !important;
+  border: 1px solid var(--danger-foreground) !important;
+}
+
+.status-badge.text-bg-warning {
+  background: var(--active-navigation-background) !important;
+  color: var(--brand-gold) !important;
+  border: 1px solid var(--brand-gold) !important;
+}
+
+.history-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.history-page-arrow {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  flex: 0 0 36px;
+  width: 36px;
+  height: 36px;
+
+  background-color: var(--active-navigation-background);
+  color: var(--brand-gold);
+  border:1px solid var(--brand-gold);
+  border-radius: var(--radius-full);
+
+  text-decoration: none;
+
+  transition: background-color 0.2s ease;
+}
+
+.history-page-arrow:hover:not(.is-disabled) {
+  background-color: var(--brand-gold);
+  color: var(--active-navigation-background);
+}
+
+.history-page-arrow.is-disabled {
+  opacity: 0.4;
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.history-page-numbers {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.history-page-number,
+.history-page-ellipsis {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  color: var(--primary-text);
+  font: var(--text-label);
+  text-decoration: none;
+}
+
+.history-page-number {
+  transition: color 0.2s ease;
+}
+
+.history-page-number:hover {
+  color: var(--brand-gold);
+}
+
+.history-page-number.is-active {
+  color: var(--brand-gold);
+}
+
+.history-page-ellipsis {
+  cursor: default;
+}
