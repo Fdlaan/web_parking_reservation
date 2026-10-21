@@ -190,6 +190,7 @@ section {
   background-color: transparent;
   color: var(--brand-gold);
   font: var(--text-button);
+  text-decoration: none;
 }
 
 .view-more-button:hover {

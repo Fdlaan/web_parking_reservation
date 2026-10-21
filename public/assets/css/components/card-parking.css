@@ -5,6 +5,8 @@
   border: 1px solid var(--border-divider);
   border-radius: var(--radius-lg);
   text-decoration: none;
+  background-color: var(--surface-card);
+    color: var(--primary-text);
 }
 
 .parking-card {
@@ -39,4 +41,6 @@
 .parking-card-meta {
     font: var(--text-label);
     color: var(--secondary-text);
+    display: flex;
+    justify-content: space-between;
 }

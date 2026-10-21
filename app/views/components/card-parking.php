@@ -10,7 +10,7 @@
     $url = (string) ($field['url'] ?? '#');
     $alt = (string) ($field['alt'] ?? $name);
     $distance = (string) ($field['distance'] ?? '');
-    $price = (string) ($field['price'] ?? '');
+    $price = isset($field['price']) ? 'Rp. ' . number_format((float) $field['price'], 0, ',', '.') . ' per Slot' : '';
 
     $show_distance = in_array($variant, ['recommended', 'area'], true) && $distance !== '';
     $show_price = $variant === 'area' && $price !== '';

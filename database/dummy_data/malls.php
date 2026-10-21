@@ -373,7 +373,7 @@ return [
     ],
     [
         'id' => 34,
-        'name' => 'D Mall Depok',
+        'name' => 'Depok Mall Depok',
         'address' => 'Jl. Margonda Raya No. 88',
         'city' => 'Depok',
         'latitude' => -6.3910,
@@ -529,7 +529,7 @@ return [
     ],
     [
         'id' => 48,
-        'name' => 'Mall@Bassura',
+        'name' => 'Mall Bassura',
         'address' => 'Jl. Jenderal Basuki Rachmat No. 1A',
         'city' => 'Jakarta Timur',
         'latitude' => -6.2240,

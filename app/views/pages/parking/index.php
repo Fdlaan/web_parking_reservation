@@ -11,28 +11,31 @@
     // file JS yang terhubung
     $file_js = [];
 
-    $parking_area = [];
-
     require_once $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/models/Mall.php';
     $locations = require $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/database/dummy_data/locations.php';
 
-    $selectedLocation = $locations[2];
+    $selectedLocation = $locations[5];
 
-    // apa ya, ini tuh lebih ke ngasih tau lokasi user
-    // $breadcrumb = [
-    //     [
-    //         'label' => 'Search Parking',
-    //         'url' => '?page=parking',
-    //     ],
-    //     [
-    //         'label' => 'South Jakarta',
-    //         'url' => '?page=parking$city=south-jakarta',
-    //     ],
-    //     [
-    //         'label' => 'Grand Indonesia',
-    //         'url' => null,
-    //     ],
-    // ];
+    $malls = Mall::getRecommended(
+        (float) $selectedLocation['latitude'],
+        (float) $selectedLocation['longitude']
+    );
+
+    $mallsByCity = [];
+    foreach ($malls as $mall) {
+        $city = $mall['city'];
+
+        if (!isset($mallsByCity[$city])) {
+            $mallsByCity[$city] = [];
+        }
+
+        $mallsByCity[$city][] = $mall;
+    }
+    
+    foreach ($mallsByCity as $city => $cityMalls) {
+        $mallsByCity[$city] = array_slice($cityMalls, 0, 5);
+    }
+
 ?>
 
 <!-- Main Content -->
@@ -41,32 +44,35 @@
     <!-- Section | Location -->
     <?php include $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/components/user-location.php'; ?>
 
-    <button type="button" class="d-flex align-items-center search-section" style="" data-bs-toggle="dialog" data-bs-target="#bdSearchDialog" aria-haspopup="dialog" aria-label="Search">
-        <i class="fa-solid fa-magnifying-glass" style="color: var(--secondary-text);"></i>
-        <span class="" style="color: var(--secondary-text); font: var(--text-body);">Search Here</span>
+    <button type="button" class="d-flex align-items-center search-section" data-bs-toggle="dialog" data-bs-target="#bdSearchDialog" aria-haspopup="dialog" aria-label="Search">
+        <i class="fa-solid fa-magnifying-glass"></i>
+        <span>Search Here</span>
     </button>
 
     <!-- Section | Area Mall Section -->
     <section>
-        
 
-        <span class="section-header">
-            Recommended Parking
-            <button type="button" class="view-more-button">View More</button>
-        </span>
+        <?php foreach ($mallsByCity as $city => $cityMalls): ?>
 
+            <div class="section-header">
+                <?= htmlspecialchars($city, ENT_QUOTES, 'UTF-8') ?>
+                <a href="?page=parking&city=<?= urlencode($city) ?>" class="view-more-button" aria-label="View more parking in <?= htmlspecialchars($city, ENT_QUOTES, 'UTF-8') ?>">
+                    View More
+                </a>
+            </div>
 
-        <div class="parking-list area-mall">
+            <div class="parking-list mall-list">
 
-            <?php foreach ($parking_area as $field): ?>
-                <?php 
-                $variant = 'area';
+                <?php foreach ($cityMalls as $field): ?>
+                    <?php
+                    $variant = 'area';
+                    require $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/components/card-parking.php';
+                    ?>
+                <?php endforeach; ?>
 
-                include __DIR__ . '/../../components/card-parking.php';
-                ?>
-            <?php endforeach; ?>
+            </div>
 
-        </div>
+        <?php endforeach; ?>
 
     </section>
 
