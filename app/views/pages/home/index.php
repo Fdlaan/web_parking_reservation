@@ -50,7 +50,9 @@
 <main class="main-content">
 
     <!-- Section | Location -->
-    <?php include $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/components/user-location.php'; ?>
+    <section>     
+        <?php include $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/components/user-location.php'; ?>
+    </section>
 
     <!-- Section | Reservation -->
     <section>

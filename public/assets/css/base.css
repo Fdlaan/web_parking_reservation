@@ -158,7 +158,7 @@ label {
   min-height: 0;
 
   gap: 24px;
-  padding: 24px 48px;
+  padding: 24px 0;
 
   background-color: var(--canvas-background);
 
@@ -198,6 +198,7 @@ section {
   display: flex;
   flex-direction: column;
 
+  padding: 0 48px;
   gap: 12px;
 
   max-height: none;

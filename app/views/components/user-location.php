@@ -2,7 +2,7 @@
     $file_css[] = 'components/user-location.css';
 ?>
 
-<div class="user-location d-flex flex-column">
+<div class="user-location">
 
     <div class="location-header d-flex justify-items-center align-items-center">
         <span>Current Location</span>
