@@ -1,48 +1,103 @@
 <?php
-    // setting title page
-    $title_page = 'Home | Parkeasy';
+    
+// setting title page
+$title_page = 'Home | Parkeasy';
 
-    // file CSS yang terhubung
-    $file_css = [
-        'pages/home.css',
-        'components/card-parking.css'
-    ];
+// file CSS yang terhubung
+$file_css = [
+    'pages/home.css',
+    'components/card-parking.css'
+];
 
-    // file JS yang terhubung
-    $file_js = [];
+// file JS yang terhubung
+$file_js = [];
 
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/models/Mall.php';
-    $locations = require $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/database/dummy_data/locations.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/models/Mall.php';
 
-    $selectedLocation = $locations[2];
-
+$recommended_parking = [];
+if ($selectedLocation !== null) {
     $recommended_parking = Mall::getRecommended(
         (float) $selectedLocation['latitude'],
-        (float) $selectedLocation['longitude']
+        (float) $selectedLocation['longitude'],
+        $malls
+    );
+}
+$recommended_parking = array_slice(
+    $recommended_parking,
+    0,
+    4
+);
+
+$userReservations = array_values(array_filter(
+    $reservations,
+    fn($reservation) => (int) $reservation['user_id'] === $currentUserId && $reservation['status'] === 'COMPLETED'
+));
+
+usort (
+    $userReservations,
+    fn($a, $b) => strtotime($b['reserved_at']) <=> strtotime($a['reserved_at'])
+);
+
+$previously_parking = [];
+foreach (array_slice($userReservations, 0, 3) as $reservation) {
+    $mall = parkEasyFindMall(
+        (int) $reservation['mall_id'],
+        $malls
     );
 
-    $recommended_parking = array_slice($recommended_parking, 0, 4);
+    if ($mall === null) {
+        continue;
+    }
 
-    $previously_parking = require $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/database/dummy_data/previous-reservations.php';
-    usort($previously_parking, fn($a, $b) => strtotime($b['reserved_at']) <=> strtotime($a['reserved_at']));
+    $previously_parking[] = array_merge($mall, [
+        'url' => '?page=parking',
+        'alt' => $mall['name'],
+        'reserved_at' => $reservation['reserved_at'],
+        'slot_code' => $reservation['slot_code'],
+        'plate_number' => $reservation['plate_number'],
+    ]);
+}
 
-    $previously_parking = array_slice($previously_parking, 0, 3);
+$activeReservations = array_values(array_filter(
+    $reservations,
+    fn($reservation) => (int) $reservation['user_id'] === $currentUserId && in_array($reservation['status'],['CONFIRMED', 'PENDING_PAYMENT'], true)
+));
 
-    
-    $reservation = [
-        'id' => 1,
-        'mall_name' => 'Grand Indonesia Mall',
-        'parking_slot' => 'GF67',
-        'plate_number' => 'B 3012 JAV',
-        'parking_type' => 'Regular',
-        'start_time' => '2026-10-20 16:00:00',
-    ];
-    
-    $startTime = new DateTimeImmutable($reservation['start_time']);
-    $reservation['time'] = $startTime->format('d M Y, H:i');
+usort(
+    $activeReservations,
+    fn($a, $b) =>
+        strtotime($a['reserved_at']) <=> strtotime($b['reserved_at'])
+);
+
+$reservation = $activeReservations[0] ?? null;
+
+$reservation_status = match ($reservation['status'] ?? null) {
+    'CONFIRMED' => 'paid',
+    'PENDING_PAYMENT' => 'unpaid',
+    default => 'none',
+};
+
+if ($reservation !== null) {
+    $mall = parkEasyFindMall(
+        (int) $reservation['mall_id'],
+        $malls
+    );
+
+    $startTime = new DateTimeImmutable($reservation['reserved_at']);
+
+    $reservation = array_merge($reservation, [
+        'mall_name' => $mall['name'] ?? 'Unknown Mall',
+        'parking_slot' => $reservation['slot_code'],
+        'time' => $startTime->format('d M Y, H:i'),
+        'plate_number' => $reservation['plate_number']
+            ?: ($user['plate_number'] ?? '-'),
+        'parking_type' => $reservation['parking_type'],
+    ]);
+
     $now = new DateTimeImmutable('now');
+
     $can_cancel = $now->modify('+2 hours') <= $startTime;
-    $reservation_status = 'paid'; // none, unpaid, paid
+}
 
 ?>
 
@@ -152,7 +207,7 @@
 
         <span class="section-header">
             Recommended Parking
-            <button type="button" class="view-more-button">View More</button>
+            <button onclick="window.location.href='?page=parking'" type="button" class="view-more-button">View More</button>
         </span>
         
         <div class="rec-mall">
@@ -174,7 +229,7 @@
 
         <span class="section-header">
             Previously Parked
-            <button type="button" class="view-more-button">View More</button>
+            <button type="button" onclick="window.location.href='?page=history'" class="view-more-button">View More</button>
         </span>
         
         <div class="prev-mall">

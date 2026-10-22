@@ -9,10 +9,11 @@ class Mall
 
     public static function getRecommended(
         float $userLat,
-        float $userLng
+        float $userLng,
+        array $malls
     ): array {
         $malls = array_filter(
-            self::getAll(),
+            $malls,
             fn($mall) => !empty($mall['is_active'])
         );
 

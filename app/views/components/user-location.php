@@ -10,7 +10,7 @@
     </div>
 
     <a href="#" class="location-dropdown d-flex justify-items-center align-items-center">
-        <?= htmlspecialchars($selectedLocation['address'] ?? '') ?>
+        <?= htmlspecialchars($selectedLocation['address'] ?? 'Unknown location', ENT_QUOTES, 'UTF-8') ?>
         <i class="fa-solid fa-caret-down" style="color: var(--primary-text);"></i>
     </a>
 

@@ -1,8 +1,15 @@
 <?php
 
+// setting title page
+$title_page = 'History | Parkeasy';
+    
+// file CSS yang terhubung
 $file_css = [
     'pages/history.css',
 ];
+    
+// file JS yang terhubung
+$file_js = [];
 
 const PER_PAGE = 6;
 
@@ -18,6 +25,37 @@ const STATUS = [
     'CONFIRMED'       => ['Confirmed', 'success'],
     'EXPIRED'         => ['Expired', 'danger'],
 ];
+
+$rows = [];
+
+foreach ($reservations as $reservation) {
+    if ((int) $reservation['user_id'] !== $currentUserId) {
+        continue;
+    }
+
+    $mall = parkEasyFindMall(
+        (int) $reservation['mall_id'],
+        $malls
+    );
+
+    if ($mall === null) {
+        continue;
+    }
+
+    $rows[] = [
+        'location' => $mall['name'],
+        'slot_code' => $reservation['slot_code'],
+        'reserved_at' => $reservation['reserved_at'],
+        'plate_number' => $reservation['plate_number'],
+        'status' => $reservation['status'],
+    ];
+}
+
+usort(
+    $rows,
+    fn($a, $b) =>
+        strtotime($b['reserved_at']) <=> strtotime($a['reserved_at'])
+);
 
 function h($s)
 {
@@ -47,417 +85,6 @@ function pageList(int $cur, int $total): array
 
     return [1, '…', $cur - 1, $cur, $cur + 1, '…', $total];
 }
-
-// Temporary dummy data for UI development.
-// Replace this with database queries when the tables are ready.
-$rows = [
-    [
-        'location' => 'Grand Indonesia Mall',
-        'slot_code' => 'A-012',
-        'reserved_at' => '2026-10-21 09:30:00',
-        'plate_number' => 'B 1234 ABC',
-        'status' => 'COMPLETED'
-    ],
-    [
-        'location' => 'Plaza Indonesia',
-        'slot_code' => 'B-025',
-        'reserved_at' => '2026-10-20 14:15:00',
-        'plate_number' => 'B 5678 DEF',
-        'status' => 'CANCELLED'
-    ],
-    [
-        'location' => 'Central Park Mall',
-        'slot_code' => 'C-008',
-        'reserved_at' => '2026-10-19 11:00:00',
-        'plate_number' => 'B 9012 GHI',
-        'status' => 'PENDING_PAYMENT'
-    ],
-    [
-        'location' => 'Grand Indonesia Mall',
-        'slot_code' => 'A-012',
-        'reserved_at' => '2026-10-21 09:30:00',
-        'plate_number' => 'B 1234 ABC',
-        'status' => 'CONFIRMED'
-    ],
-    [
-        'location' => 'Plaza Indonesia',
-        'slot_code' => 'B-025',
-        'reserved_at' => '2026-10-20 14:15:00',
-        'plate_number' => 'B 5678 DEF',
-        'status' => 'EXPIRED'
-    ],
-    [
-        'location' => 'Plaza Indonesia',
-        'slot_code' => 'B-025',
-        'reserved_at' => '2026-10-20 14:15:00',
-        'plate_number' => 'B 5678 DEF',
-        'status' => 'EXPIRED'
-    ],
-    [
-        'location' => 'Grand Indonesia Mall',
-        'slot_code' => 'A-012',
-        'reserved_at' => '2026-10-21 09:30:00',
-        'plate_number' => 'B 1234 ABC',
-        'status' => 'COMPLETED'
-    ],
-    [
-        'location' => 'Plaza Indonesia',
-        'slot_code' => 'B-025',
-        'reserved_at' => '2026-10-20 14:15:00',
-        'plate_number' => 'B 5678 DEF',
-        'status' => 'CANCELLED'
-    ],
-    [
-        'location' => 'Central Park Mall',
-        'slot_code' => 'C-008',
-        'reserved_at' => '2026-10-19 11:00:00',
-        'plate_number' => 'B 9012 GHI',
-        'status' => 'PENDING_PAYMENT'
-    ],
-    [
-        'location' => 'Grand Indonesia Mall',
-        'slot_code' => 'A-012',
-        'reserved_at' => '2026-10-21 09:30:00',
-        'plate_number' => 'B 1234 ABC',
-        'status' => 'CONFIRMED'
-    ],
-    [
-        'location' => 'Plaza Indonesia',
-        'slot_code' => 'B-025',
-        'reserved_at' => '2026-10-20 14:15:00',
-        'plate_number' => 'B 5678 DEF',
-        'status' => 'EXPIRED'
-    ],
-    [
-        'location' => 'Plaza Indonesia',
-        'slot_code' => 'B-025',
-        'reserved_at' => '2026-10-20 14:15:00',
-        'plate_number' => 'B 5678 DEF',
-        'status' => 'EXPIRED'
-    ],
-    [
-        'location' => 'Grand Indonesia Mall',
-        'slot_code' => 'A-012',
-        'reserved_at' => '2026-10-21 09:30:00',
-        'plate_number' => 'B 1234 ABC',
-        'status' => 'COMPLETED'
-    ],
-    [
-        'location' => 'Plaza Indonesia',
-        'slot_code' => 'B-025',
-        'reserved_at' => '2026-10-20 14:15:00',
-        'plate_number' => 'B 5678 DEF',
-        'status' => 'CANCELLED'
-    ],
-    [
-        'location' => 'Central Park Mall',
-        'slot_code' => 'C-008',
-        'reserved_at' => '2026-10-19 11:00:00',
-        'plate_number' => 'B 9012 GHI',
-        'status' => 'PENDING_PAYMENT'
-    ],
-    [
-        'location' => 'Grand Indonesia Mall',
-        'slot_code' => 'A-012',
-        'reserved_at' => '2026-10-21 09:30:00',
-        'plate_number' => 'B 1234 ABC',
-        'status' => 'CONFIRMED'
-    ],
-    [
-        'location' => 'Plaza Indonesia',
-        'slot_code' => 'B-025',
-        'reserved_at' => '2026-10-20 14:15:00',
-        'plate_number' => 'B 5678 DEF',
-        'status' => 'EXPIRED'
-    ],
-    [
-        'location' => 'Plaza Indonesia',
-        'slot_code' => 'B-025',
-        'reserved_at' => '2026-10-20 14:15:00',
-        'plate_number' => 'B 5678 DEF',
-        'status' => 'EXPIRED'
-    ],
-    [
-        'location' => 'Grand Indonesia Mall',
-        'slot_code' => 'A-012',
-        'reserved_at' => '2026-10-21 09:30:00',
-        'plate_number' => 'B 1234 ABC',
-        'status' => 'COMPLETED'
-    ],
-    [
-        'location' => 'Plaza Indonesia',
-        'slot_code' => 'B-025',
-        'reserved_at' => '2026-10-20 14:15:00',
-        'plate_number' => 'B 5678 DEF',
-        'status' => 'CANCELLED'
-    ],
-    [
-        'location' => 'Central Park Mall',
-        'slot_code' => 'C-008',
-        'reserved_at' => '2026-10-19 11:00:00',
-        'plate_number' => 'B 9012 GHI',
-        'status' => 'PENDING_PAYMENT'
-    ],
-    [
-        'location' => 'Grand Indonesia Mall',
-        'slot_code' => 'A-012',
-        'reserved_at' => '2026-10-21 09:30:00',
-        'plate_number' => 'B 1234 ABC',
-        'status' => 'CONFIRMED'
-    ],
-    [
-        'location' => 'Plaza Indonesia',
-        'slot_code' => 'B-025',
-        'reserved_at' => '2026-10-20 14:15:00',
-        'plate_number' => 'B 5678 DEF',
-        'status' => 'EXPIRED'
-    ],
-    [
-        'location' => 'Plaza Indonesia',
-        'slot_code' => 'B-025',
-        'reserved_at' => '2026-10-20 14:15:00',
-        'plate_number' => 'B 5678 DEF',
-        'status' => 'EXPIRED'
-    ],
-    [
-        'location' => 'Grand Indonesia Mall',
-        'slot_code' => 'A-012',
-        'reserved_at' => '2026-10-21 09:30:00',
-        'plate_number' => 'B 1234 ABC',
-        'status' => 'COMPLETED'
-    ],
-    [
-        'location' => 'Plaza Indonesia',
-        'slot_code' => 'B-025',
-        'reserved_at' => '2026-10-20 14:15:00',
-        'plate_number' => 'B 5678 DEF',
-        'status' => 'CANCELLED'
-    ],
-    [
-        'location' => 'Central Park Mall',
-        'slot_code' => 'C-008',
-        'reserved_at' => '2026-10-19 11:00:00',
-        'plate_number' => 'B 9012 GHI',
-        'status' => 'PENDING_PAYMENT'
-    ],
-    [
-        'location' => 'Grand Indonesia Mall',
-        'slot_code' => 'A-012',
-        'reserved_at' => '2026-10-21 09:30:00',
-        'plate_number' => 'B 1234 ABC',
-        'status' => 'CONFIRMED'
-    ],
-    [
-        'location' => 'Plaza Indonesia',
-        'slot_code' => 'B-025',
-        'reserved_at' => '2026-10-20 14:15:00',
-        'plate_number' => 'B 5678 DEF',
-        'status' => 'EXPIRED'
-    ],
-    [
-        'location' => 'Plaza Indonesia',
-        'slot_code' => 'B-025',
-        'reserved_at' => '2026-10-20 14:15:00',
-        'plate_number' => 'B 5678 DEF',
-        'status' => 'EXPIRED'
-    ],
-    [
-        'location' => 'Grand Indonesia Mall',
-        'slot_code' => 'A-012',
-        'reserved_at' => '2026-10-21 09:30:00',
-        'plate_number' => 'B 1234 ABC',
-        'status' => 'COMPLETED'
-    ],
-    [
-        'location' => 'Plaza Indonesia',
-        'slot_code' => 'B-025',
-        'reserved_at' => '2026-10-20 14:15:00',
-        'plate_number' => 'B 5678 DEF',
-        'status' => 'CANCELLED'
-    ],
-    [
-        'location' => 'Central Park Mall',
-        'slot_code' => 'C-008',
-        'reserved_at' => '2026-10-19 11:00:00',
-        'plate_number' => 'B 9012 GHI',
-        'status' => 'PENDING_PAYMENT'
-    ],
-    [
-        'location' => 'Grand Indonesia Mall',
-        'slot_code' => 'A-012',
-        'reserved_at' => '2026-10-21 09:30:00',
-        'plate_number' => 'B 1234 ABC',
-        'status' => 'CONFIRMED'
-    ],
-    [
-        'location' => 'Plaza Indonesia',
-        'slot_code' => 'B-025',
-        'reserved_at' => '2026-10-20 14:15:00',
-        'plate_number' => 'B 5678 DEF',
-        'status' => 'EXPIRED'
-    ],
-    [
-        'location' => 'Plaza Indonesia',
-        'slot_code' => 'B-025',
-        'reserved_at' => '2026-10-20 14:15:00',
-        'plate_number' => 'B 5678 DEF',
-        'status' => 'EXPIRED'
-    ],
-    [
-        'location' => 'Grand Indonesia Mall',
-        'slot_code' => 'A-012',
-        'reserved_at' => '2026-10-21 09:30:00',
-        'plate_number' => 'B 1234 ABC',
-        'status' => 'COMPLETED'
-    ],
-    [
-        'location' => 'Plaza Indonesia',
-        'slot_code' => 'B-025',
-        'reserved_at' => '2026-10-20 14:15:00',
-        'plate_number' => 'B 5678 DEF',
-        'status' => 'CANCELLED'
-    ],
-    [
-        'location' => 'Central Park Mall',
-        'slot_code' => 'C-008',
-        'reserved_at' => '2026-10-19 11:00:00',
-        'plate_number' => 'B 9012 GHI',
-        'status' => 'PENDING_PAYMENT'
-    ],
-    [
-        'location' => 'Grand Indonesia Mall',
-        'slot_code' => 'A-012',
-        'reserved_at' => '2026-10-21 09:30:00',
-        'plate_number' => 'B 1234 ABC',
-        'status' => 'CONFIRMED'
-    ],
-    [
-        'location' => 'Plaza Indonesia',
-        'slot_code' => 'B-025',
-        'reserved_at' => '2026-10-20 14:15:00',
-        'plate_number' => 'B 5678 DEF',
-        'status' => 'EXPIRED'
-    ],
-    [
-        'location' => 'Plaza Indonesia',
-        'slot_code' => 'B-025',
-        'reserved_at' => '2026-10-20 14:15:00',
-        'plate_number' => 'B 5678 DEF',
-        'status' => 'EXPIRED'
-    ],
-    [
-        'location' => 'Grand Indonesia Mall',
-        'slot_code' => 'A-012',
-        'reserved_at' => '2026-10-21 09:30:00',
-        'plate_number' => 'B 1234 ABC',
-        'status' => 'COMPLETED'
-    ],
-    [
-        'location' => 'Plaza Indonesia',
-        'slot_code' => 'B-025',
-        'reserved_at' => '2026-10-20 14:15:00',
-        'plate_number' => 'B 5678 DEF',
-        'status' => 'CANCELLED'
-    ],
-    [
-        'location' => 'Central Park Mall',
-        'slot_code' => 'C-008',
-        'reserved_at' => '2026-10-19 11:00:00',
-        'plate_number' => 'B 9012 GHI',
-        'status' => 'PENDING_PAYMENT'
-    ],
-    [
-        'location' => 'Grand Indonesia Mall',
-        'slot_code' => 'A-012',
-        'reserved_at' => '2026-10-21 09:30:00',
-        'plate_number' => 'B 1234 ABC',
-        'status' => 'CONFIRMED'
-    ],
-    [
-        'location' => 'Plaza Indonesia',
-        'slot_code' => 'B-025',
-        'reserved_at' => '2026-10-20 14:15:00',
-        'plate_number' => 'B 5678 DEF',
-        'status' => 'EXPIRED'
-    ],
-    [
-        'location' => 'Plaza Indonesia',
-        'slot_code' => 'B-025',
-        'reserved_at' => '2026-10-20 14:15:00',
-        'plate_number' => 'B 5678 DEF',
-        'status' => 'EXPIRED'
-    ],
-    [
-        'location' => 'Grand Indonesia Mall',
-        'slot_code' => 'A-012',
-        'reserved_at' => '2026-10-21 09:30:00',
-        'plate_number' => 'B 1234 ABC',
-        'status' => 'COMPLETED'
-    ],
-    [
-        'location' => 'Plaza Indonesia',
-        'slot_code' => 'B-025',
-        'reserved_at' => '2026-10-20 14:15:00',
-        'plate_number' => 'B 5678 DEF',
-        'status' => 'CANCELLED'
-    ],
-    [
-        'location' => 'Central Park Mall',
-        'slot_code' => 'C-008',
-        'reserved_at' => '2026-10-19 11:00:00',
-        'plate_number' => 'B 9012 GHI',
-        'status' => 'PENDING_PAYMENT'
-    ],
-    [
-        'location' => 'Grand Indonesia Mall',
-        'slot_code' => 'A-012',
-        'reserved_at' => '2026-10-21 09:30:00',
-        'plate_number' => 'B 1234 ABC',
-        'status' => 'CONFIRMED'
-    ],
-    [
-        'location' => 'Plaza Indonesia',
-        'slot_code' => 'B-025',
-        'reserved_at' => '2026-10-20 14:15:00',
-        'plate_number' => 'B 5678 DEF',
-        'status' => 'EXPIRED'
-    ],
-    [
-        'location' => 'Plaza Indonesia',
-        'slot_code' => 'B-025',
-        'reserved_at' => '2026-10-20 14:15:00',
-        'plate_number' => 'B 5678 DEF',
-        'status' => 'EXPIRED'
-    ],
-    [
-        'location' => 'Grand Indonesia Mall',
-        'slot_code' => 'A-012',
-        'reserved_at' => '2026-10-21 09:30:00',
-        'plate_number' => 'B 1234 ABC',
-        'status' => 'COMPLETED'
-    ],
-    [
-        'location' => 'Plaza Indonesia',
-        'slot_code' => 'B-025',
-        'reserved_at' => '2026-10-20 14:15:00',
-        'plate_number' => 'B 5678 DEF',
-        'status' => 'CANCELLED'
-    ],
-    [
-        'location' => 'Central Park Mall',
-        'slot_code' => 'C-008',
-        'reserved_at' => '2026-10-19 11:00:00',
-        'plate_number' => 'B 9012 GHI',
-        'status' => 'PENDING_PAYMENT'
-    ],
-    [
-        'location' => 'Grand Indonesia Mall',
-        'slot_code' => 'A-012',
-        'reserved_at' => '2026-10-21 09:30:00',
-        'plate_number' => 'B 1234 ABC',
-        'status' => 'CONFIRMED'
-    ],
-];
 
 // Temporary pagination for dummy data.
 $totalPages = max(1, (int) ceil(count($rows) / PER_PAGE));

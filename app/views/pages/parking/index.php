@@ -1,40 +1,37 @@
 <?php
-    // setting title page
-    $title_page = 'Search Parking | Parkeasy';
 
-    // file CSS yang terhubung
-    $file_css = [
-        'pages/parking.css',
-        'components/card-parking.css',
-    ];
+// setting title page
+$title_page = 'Search Parking | Parkeasy';
 
-    // file JS yang terhubung
-    $file_js = [];
+// file CSS yang terhubung
+$file_css = [
+    'pages/parking.css',
+    'components/card-parking.css',
+];
 
-    require_once $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/models/Mall.php';
-    $locations = require $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/database/dummy_data/locations.php';
+// file JS yang terhubung
+$file_js = [];
 
-    $selectedLocation = $locations[5];
+require_once $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/models/Mall.php';
 
+$mallsByCity = [];
+
+if ($selectedLocation !== null) {
     $malls = Mall::getRecommended(
         (float) $selectedLocation['latitude'],
-        (float) $selectedLocation['longitude']
+        (float) $selectedLocation['longitude'],
+        $malls
     );
 
-    $mallsByCity = [];
     foreach ($malls as $mall) {
         $city = $mall['city'];
-
-        if (!isset($mallsByCity[$city])) {
-            $mallsByCity[$city] = [];
-        }
-
         $mallsByCity[$city][] = $mall;
     }
-    
+
     foreach ($mallsByCity as $city => $cityMalls) {
         $mallsByCity[$city] = array_slice($cityMalls, 0, 5);
     }
+}
 
 ?>
 

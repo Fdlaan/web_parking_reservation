@@ -43,8 +43,8 @@
 
         <!-- user profile -->
         <a href="?page=profile" class="profile text-uppercase text-decoration-none">
-            <img src="https://github.com/mdo.png" alt="Profile picture" width="36" height="36">
-            <span>Placeholder Name</span>
+            <img src="<?= htmlspecialchars($user['avatar_url'] ?? 'http://github.com/mdo.png', ENT_QUOTES, 'UTF-8' ) ?>" alt="Profile picture" width="36" height="36">
+            <span><?= htmlspecialchars($user['username'] ?? 'User', ENT_QUOTES, 'UTF-8') ?></span>
         </a>
 
     </div>

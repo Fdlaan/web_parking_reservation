@@ -147,3 +147,20 @@
   mask: url("/web_parking_reservation/public/assets/images/icons/next-icon.svg")
     center / contain no-repeat;
 }
+
+.edit-profile-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+
+  background-color: currentColor;
+
+  -webkit-mask: center / contain no-repeat;
+  mask: center / contain no-repeat;
+
+  -webkit-mask: url("/web_parking_reservation/public/assets/images/icons/edit-profile-icon.svg")
+  center / contain no-repeat;
+  mask: url("/web_parking_reservation/public/assets/images/icons/edit-profile-icon.svg")
+    center / contain no-repeat;
+}
