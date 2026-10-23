@@ -30,7 +30,7 @@ class Mall
                 1
             ) . ' KM';
 
-            $mall['url'] = '?page=parking';
+            $mall['url'] = '?page=detail&mall_id=' . (int) $mall['id'];
             $mall['alt'] = $mall['name'];
         }
 

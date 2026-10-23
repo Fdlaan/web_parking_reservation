@@ -1,3 +1,20 @@
+<?php
+
+$mallId = filter_input(INPUT_GET, 'mall_id', FILTER_VALIDATE_INT);
+
+$selectedMall = null;
+
+if ($mallId !== false && $mallId !== null && $mallId > 0) {
+    $selectedMall = parkEasyFindMall($mallId, $malls);
+}
+
+if ($selectedMall === null) {
+    http_response_code(404);
+    exit('Parking location not found');
+}
+
+?>
+
 <main class="main-content d-flex flex-column">
     <!-- Wrapper: sidebar + right column side by side -->
     <div class="d-flex">
