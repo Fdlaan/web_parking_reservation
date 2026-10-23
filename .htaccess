@@ -1,0 +1,8 @@
+Options -Indexes
+
+RewriteEngine On
+
+RewriteRule ^$ public/ [R=302,L]
+
+RewriteRule ^(app|database|z-design-references|\.git)(/|$) - [F,L]
+RewriteRule ^(\.gitignore|README\.md)$ - [F,L]
