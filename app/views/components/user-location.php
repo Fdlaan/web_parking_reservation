@@ -1,5 +1,5 @@
 <?php
-    $file_css[] = 'components/user-location.css';
+    $fileCss[] = 'components/user-location.css';
 ?>
 
 <div class="user-location">

@@ -1,29 +1,29 @@
 <?php
     
 // setting title page
-$title_page = 'Home | Parkeasy';
+$titlePage = 'Home | Parkeasy';
 
 // file CSS yang terhubung
-$file_css = [
+$fileCss = [
     'pages/home.css',
     'components/card-parking.css'
 ];
 
 // file JS yang terhubung
-$file_js = [];
+$fileJs = [];
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/models/Mall.php';
 
-$recommended_parking = [];
+$recommendedParking = [];
 if ($selectedLocation !== null) {
-    $recommended_parking = Mall::getRecommended(
+    $recommendedParking = Mall::getRecommended(
         (float) $selectedLocation['latitude'],
         (float) $selectedLocation['longitude'],
         $malls
     );
 }
-$recommended_parking = array_slice(
-    $recommended_parking,
+$recommendedParking = array_slice(
+    $recommendedParking,
     0,
     4
 );
@@ -38,7 +38,7 @@ usort (
     fn($a, $b) => strtotime($b['reserved_at']) <=> strtotime($a['reserved_at'])
 );
 
-$previously_parking = [];
+$previouslyParking = [];
 foreach (array_slice($userReservations, 0, 3) as $reservation) {
     $mall = parkEasyFindMall(
         (int) $reservation['mall_id'],
@@ -49,7 +49,7 @@ foreach (array_slice($userReservations, 0, 3) as $reservation) {
         continue;
     }
 
-    $previously_parking[] = array_merge($mall, [
+    $previouslyParking[] = array_merge($mall, [
         'url' => '?page=parking',
         'alt' => $mall['name'],
         'reserved_at' => $reservation['reserved_at'],
@@ -71,7 +71,7 @@ usort(
 
 $reservation = $activeReservations[0] ?? null;
 
-$reservation_status = match ($reservation['status'] ?? null) {
+$reservationStatus = match ($reservation['status'] ?? null) {
     'CONFIRMED' => 'paid',
     'PENDING_PAYMENT' => 'unpaid',
     default => 'none',
@@ -96,7 +96,7 @@ if ($reservation !== null) {
 
     $now = new DateTimeImmutable('now');
 
-    $can_cancel = $now->modify('+2 hours') <= $startTime;
+    $canCancel = $now->modify('+2 hours') <= $startTime;
 }
 
 ?>
@@ -115,7 +115,7 @@ if ($reservation !== null) {
         <span class="section-header">Reservations</span>
 
         <!-- Reservation: none  -->
-        <?php if ($reservation_status === 'none'): ?>
+        <?php if ($reservationStatus === 'none'): ?>
         <div class="reservation-card reservation-empty">
             <i class="fa-regular fa-calendar-xmark reservation-empty-icon"></i>
             <span style="font: var(--text-label);">You currently have no reservations.</span>
@@ -128,9 +128,9 @@ if ($reservation !== null) {
                 <span style="font:var(--text-H4);">
                     <?= htmlspecialchars($reservation['mall_name'] ?? '-', ENT_QUOTES, 'UTF-8') ?>
                 </span>
-                <span class="reservation-status <?= $reservation_status?>">
+                <span class="reservation-status <?= $reservationStatus?>">
                     <span class="status-dot"></span>
-                    <?= $reservation_status === 'paid' ? 'Paid' : 'Unpaid' ?>
+                    <?= $reservationStatus === 'paid' ? 'Paid' : 'Unpaid' ?>
                 </span>
             </div>
 
@@ -171,14 +171,14 @@ if ($reservation !== null) {
             <div class="reservation-actions">
 
                 <!-- Reservation: unpaid -->
-                <?php if($reservation_status === 'unpaid'): ?>
+                <?php if($reservationStatus === 'unpaid'): ?>
                 <a href="?page=payment" class="reservation-button pay-button">
                     Pay Now
                 </a>
                 
                 <!-- Reservation:  -->
                 <?php else: ?>
-                <?php if ($can_cancel): ?>
+                <?php if ($canCancel): ?>
                 <form action="?page=cancel-reservation" method="POST">
                     <input type="hidden" name="reservation_id" value="<?= (int) $reservation['id'] ?>">
                     <button type="submit" class="reservation-button cancel-button">
@@ -211,7 +211,7 @@ if ($reservation !== null) {
         </span>
         
         <div class="rec-mall">
-            <?php foreach ($recommended_parking as $field): ?>
+            <?php foreach ($recommendedParking as $field): ?>
                 <?php
                 $variant = 'recommended';
                 
@@ -224,7 +224,7 @@ if ($reservation !== null) {
     </section>
 
     <!-- Section | Previously Mall -->
-    <?php if (!empty($previously_parking)): ?>
+    <?php if (!empty($previouslyParking)): ?>
     <section>
 
         <span class="section-header">
@@ -234,7 +234,7 @@ if ($reservation !== null) {
         
         <div class="prev-mall">
 
-            <?php foreach ($previously_parking as $field): ?>
+            <?php foreach ($previouslyParking as $field): ?>
                 <?php
                 $variant = 'previous';
                 

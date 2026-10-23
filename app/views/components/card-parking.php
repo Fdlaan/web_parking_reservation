@@ -2,7 +2,7 @@
     $field = $field ?? [];
     $variant = $variant ?? 'recommended';
 
-    $file_css[] = 'components/card-parking.css';
+    $fileCss[] = 'components/card-parking.css';
 
     $id = (string) ($field['id'] ?? '');
     $name = (string) ($field['name'] ?? '');
@@ -12,9 +12,9 @@
     $distance = (string) ($field['distance'] ?? '');
     $price = isset($field['price']) ? 'Rp. ' . number_format((float) $field['price'], 0, ',', '.') . ' per Slot' : '';
 
-    $show_distance = in_array($variant, ['recommended', 'area'], true) && $distance !== '';
-    $show_price = $variant === 'area' && $price !== '';
-    $show_external_icon = in_array($variant, ['recommended', 'previous'], true);
+    $showDistance = in_array($variant, ['recommended', 'area'], true) && $distance !== '';
+    $showPrice = $variant === 'area' && $price !== '';
+    $showExternalIcon = in_array($variant, ['recommended', 'previous'], true);
 ?>
 
 <a href="<?= htmlspecialchars($url, ENT_QUOTES, 'UTF-8') ?>" class="parking-card-item parking-card-item--<?= htmlspecialchars($variant, ENT_QUOTES, 'UTF-8') ?>" <?= $id !== '' ? 'id="' . htmlspecialchars($id, ENT_QUOTES, 'UTF-8') . '"' : '' ?>>
@@ -32,20 +32,20 @@
 
             <div class="parking-card-heading">
                 <span class="parking-card-title"><?= htmlspecialchars($name, ENT_QUOTES, 'UTF-8') ?></span>
-                <?php if ($show_external_icon): ?>
+                <?php if ($showExternalIcon): ?>
                     <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
                 <?php endif; ?>
             </div>
 
-            <?php if ($show_distance || $show_price): ?>
+            <?php if ($showDistance || $showPrice): ?>
 
             <div class="parking-card-meta">
 
-                <?php if ($show_price): ?>
+                <?php if ($showPrice): ?>
                     <span class="parking-card-price"><?= htmlspecialchars($price, ENT_QUOTES, 'UTF-8') ?></span>
                 <?php endif; ?>
 
-                <?php if ($show_distance): ?>
+                <?php if ($showDistance): ?>
                     <span class="parking-card-distance">
                         <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
                         <?= htmlspecialchars($distance, ENT_QUOTES, 'UTF-8') ?>

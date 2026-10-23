@@ -1,16 +1,16 @@
 <?php
 
 // setting title page
-$title_page = 'Search Parking | Parkeasy';
+$titlePage = 'Search Parking | Parkeasy';
 
 // file CSS yang terhubung
-$file_css = [
+$fileCss = [
     'pages/parking.css',
     'components/card-parking.css',
 ];
 
 // file JS yang terhubung
-$file_js = [];
+$fileJs = [];
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/models/Mall.php';
 

@@ -1,7 +1,7 @@
 <?php
-    $title_page = 'Search | Parkeasy';
+    $titlePage = 'Search | Parkeasy';
 
-    $file_css = [
+    $fileCss = [
         'components/icon.css',
         'pages/parking.css',
         'layouts/sidebar.css',

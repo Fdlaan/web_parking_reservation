@@ -99,13 +99,13 @@ $routes = [
     'payment' => $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/pages/parking/payment.php',
 ];
 
-$show_layout = ($page !== 'login');
+$showLayout = ($page !== 'login');
 
 if (!isset($routes[$page])) {
     http_response_code(400);
-    $title_page = 'Page not Found | Parkeasy';
-    $file_css = [];
-    $file_js = [];
+    $titlePage = 'Page not Found | Parkeasy';
+    $fileCss = [];
+    $fileJs = [];
 
     ob_start();
     echo '<main class="main-content">';
@@ -113,13 +113,13 @@ if (!isset($routes[$page])) {
     echo '<p>The page you requested could not be found.</p>';
     echo '<a href="?page=home">Back to home.</a>';
     echo '</main>';
-    $page_content = ob_get_clean();
+    $pageContent = ob_get_clean();
 
-    $show_layout = false;
+    $showLayout = false;
 
 } else {
     $currentPage = $page;
-    $show_layout = ($page !== 'login');
+    $showLayout = ($page !== 'login');
 
     $breadcrumb = [
         [
@@ -128,16 +128,16 @@ if (!isset($routes[$page])) {
         ],
     ];
 
-    $title_page = 'Parkeasy';
-    $file_css = [];
-    $file_js = [];
+    $titlePage = 'Parkeasy';
+    $fileCss = [];
+    $fileJs = [];
 
     ob_start();
     require $routes[$page];
-    $page_content = ob_get_clean();
+    $pageContent = ob_get_clean();
 
-    if ($show_layout) {
-        $file_css = array_merge($file_css, [
+    if ($showLayout) {
+        $fileCss = array_merge($fileCss, [
             '/components/icon.css',
             '/layouts/sidebar.css',
             '/layouts/topbar.css',
@@ -156,7 +156,7 @@ if (!isset($routes[$page])) {
 
 <body>
 
-<?php if ($show_layout): ?>
+<?php if ($showLayout): ?>
 
 <div class="layout d-flex align-items-stretch">
 <?php require $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/layouts/sidebar.php'; ?>
@@ -165,14 +165,14 @@ if (!isset($routes[$page])) {
 
     <?php require $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/layouts/topbar.php'; ?>
 
-        <?= $page_content ?>
+        <?= $pageContent ?>
 
     </div>
 </div>
 
 <?php else: ?>
     
-    <?= $page_content ?>
+    <?= $pageContent ?>
 
 <?php endif; ?>
     

@@ -1,12 +1,12 @@
 <?php
 
-$title_page = 'Profile | Parkeasy';
+$titlePage = 'Profile | Parkeasy';
 
-$file_css = [
+$fileCss = [
     'pages/profile.css',
 ];
 
-$file_js = [
+$fileJs = [
     'pages/profile.js',
 ];
 
@@ -16,7 +16,7 @@ unset($_SESSION['profile_message']);
 $avatarUrl = trim($user['avatar_url'] ?? '');
 
 if ($avatarUrl === '') {
-    $avatarUrl = $asset_url . '/images/icons/profile-icon.svg';
+    $avatarUrl = $assetUrl . '/images/icons/profile-icon.svg';
 }
 
 $profileFields = [

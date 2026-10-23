@@ -1,7 +1,7 @@
 <?php
-    $title_page = $title_page ?? 'Parkeasy';
-    $file_css = $file_css ?? [];
-    $file_js = $file_js ?? [];
+    $titlePage = $titlePage ?? 'Parkeasy';
+    $fileCss = $fileCss ?? [];
+    $fileJs = $fileJs ?? [];
 
 ?>
 
@@ -9,10 +9,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title><?= htmlspecialchars($title_page, ENT_QUOTES, 'UTF-8') ?></title>
+    <title><?= htmlspecialchars($titlePage, ENT_QUOTES, 'UTF-8') ?></title>
 
     <!-- Global CSS -->
-    <link rel="stylesheet" href="<?= $asset_url ?>/css/base.css">
+    <link rel="stylesheet" href="<?= $assetUrl ?>/css/base.css">
 
     <!-- Font Awesome Icons -->
     <script src="https://kit.fontawesome.com/5ba89cd74f.js" crossorigin="anonymous"></script>
@@ -23,13 +23,13 @@
 
 
     <!-- Layout CSS -->
-    <?php foreach ($file_css as $css): ?>
-        <link rel="stylesheet" href="<?= $asset_url ?>/css/<?= htmlspecialchars($css, ENT_QUOTES, 'UTF-8') ?>">
+    <?php foreach ($fileCss as $css): ?>
+        <link rel="stylesheet" href="<?= $assetUrl ?>/css/<?= htmlspecialchars($css, ENT_QUOTES, 'UTF-8') ?>">
     <?php endforeach; ?>
 
     <!-- Custom JS -->
-    <?php foreach ($file_js as $js): ?>
-        <script src="<?= $asset_url ?>/js/<?= htmlspecialchars($js, ENT_QUOTES,'UTF-8') ?>"defer></script>
+    <?php foreach ($fileJs as $js): ?>
+        <script src="<?= $assetUrl ?>/js/<?= htmlspecialchars($js, ENT_QUOTES,'UTF-8') ?>"defer></script>
     <?php endforeach; ?>
 
 </head>

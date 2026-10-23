@@ -1,15 +1,15 @@
 <?php
 
 // setting title page
-$title_page = 'History | Parkeasy';
+$titlePage = 'History | Parkeasy';
     
 // file CSS yang terhubung
-$file_css = [
+$fileCss = [
     'pages/history.css',
 ];
     
 // file JS yang terhubung
-$file_js = [];
+$fileJs = [];
 
 const PER_PAGE = 6;
 
