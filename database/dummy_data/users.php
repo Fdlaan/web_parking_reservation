@@ -19,14 +19,14 @@ return [
 
     2 => [
         'id' => '2',
-        'username' => 'Brian Zakariya',
+        'username' => '',
         'email' => 'brian@example.com',
         'phone' => '',
         'password_hash' => null,
         'avatar_url' => null,
 
         'location_id' => '4',
-        'plate_number' => '5',
+        'plate_number' => '',
 
         'created_at' => '2026-09-15 09:00:00',
         'updated_at' => '2026-10-20 12:00:00',

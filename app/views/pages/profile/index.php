@@ -1,90 +1,157 @@
 <?php
-    // setting title page
-    $title_page = 'Profile | Parkeasy';
 
-    // file CSS yang terhubung
-    $file_css = [
-        'pages/profile.css',
-    ];
+$title_page = 'Profile | Parkeasy';
 
-    // file JS yang terhubung
-    $file_js = [];
-    
+$file_css = [
+    'pages/profile.css',
+];
+
+$file_js = [
+    'pages/profile.js',
+];
+
+$profileMessage = $_SESSION['profile_message'] ?? null;
+unset($_SESSION['profile_message']);
+
+$avatarUrl = trim($user['avatar_url'] ?? '');
+
+if ($avatarUrl === '') {
+    $avatarUrl = $asset_url . '/images/icons/profile-icon.svg';
+}
+
+$profileFields = [
+    'username' => [
+        'label' => 'Username:',
+        'type' => 'text',
+        'placeholder' => 'Enter your username',
+    ],
+    'email' => [
+        'label' => 'Email:',
+        'type' => 'email',
+        'placeholder' => 'Enter your email',
+    ],
+    'phone' => [
+        'label' => 'Phone:',
+        'type' => 'tel',
+        'placeholder' => 'Enter your phone number',
+    ],
+    'plate_number' => [
+        'label' => 'Plate Number:',
+        'type' => 'text',
+        'placeholder' => 'B 1234 FSD',
+    ],
+];
+
 ?>
 
 <main class="main-content">
 
     <section>
-
         <span class="section-header">Manage Profile</span>
 
-        <div class="profile-section d-flex">
+        <?php if ($profileMessage !== null): ?>
+            <div class="profile-message" role="status">
+                <?= parkEasyEscape($profileMessage) ?>
+            </div>
+        <?php endif; ?>
+
+        <div class="profile-section">
 
             <div class="profile-image">
                 <img
-                    src="/web_parking_reservation/img/grand-indonesia-mall.jpg"
-                    alt="Profile Picture"
+                    src="<?= parkEasyEscape($avatarUrl) ?>"
+                    alt="Profile picture"
                 >
             </div>
 
-            <div class="profile-information d-flex flex-column">
+            <form
+                class="profile-information profile-form"
+                action="?page=profile"
+                method="POST"
+            >
+                <input
+                    type="hidden"
+                    name="profile_action"
+                    value="save"
+                >
 
-                <div class="profile-fields d-grid">
+                <div class="profile-fields">
 
-                    <?php $usernameMissing = trim($user['username'] ?? '') === ''; ?>
+                    <?php foreach ($profileFields as $name => $field): ?>
+                        <?php
+                            $value = trim((string) ($user[$name] ?? ''));
+                            $isMissing = $value === '';
+                        ?>
 
-                    <div class="form-field <?= $usernameMissing ? 'is-incomplete' : ''?>">
-                        <label for="username" class="form-label">Username:</label>
-                        <input type="text" class="form-control" id="username" name="username" placeholder="Brian Adli" disabled required value="<?= parkEasyEscape($user['username'] ?? '') ?>" <?= $usernameMissing ? 'aria-invalid="true"' : '' ?>>
-                        <?php if ($usernameMissing): ?>
-                            <small class="field-error">Username is required.</small>
-                        <?php endif; ?>
-                    </div>
+                        <div class="form-field <?= $name === 'plate_number' ? 'plate-field' : '' ?> <?= $isMissing ? 'is-incomplete' : '' ?>">
 
-                    <?php $emailMissing = trim($user['email'] ?? '') === ''; ?>
+                            <label
+                                for="<?= parkEasyEscape($name) ?>"
+                                class="form-label"
+                            >
+                                <?= parkEasyEscape($field['label']) ?>
+                            </label>
 
-                    <div class="form-field <?= $emailMissing ? 'is-incomplete' : ''?>">
-                        <label for="email" class="form-label">Email:</label>
-                        <input type="email" class="form-control" id="email" name="email" placeholder="brianadli@example.com" disabled required value="<?= parkEasyEscape($user['email' ?? '']) ?>" <?= $emailMissing ? 'aria-invalid="true"' : '' ?>>
-                        <?php if ($emailMissing): ?>
-                            <small class="field-error">Email is required.</small>
-                        <?php endif; ?>
-                    </div>
+                            <input
+                                type="<?= parkEasyEscape($field['type']) ?>"
+                                class="form-control"
+                                id="<?= parkEasyEscape($name) ?>"
+                                name="<?= parkEasyEscape($name) ?>"
+                                placeholder="<?= parkEasyEscape($field['placeholder']) ?>"
+                                value="<?= parkEasyEscape($value) ?>"
+                                autocomplete="<?= $name === 'username' ? 'username' : ($name === 'email' ? 'email' : 'off') ?>"
+                                <?= $name === 'email' ? 'readonly' : '' ?>
+                                disabled
+                                required
+                                <?= $isMissing ? 'aria-invalid="true"' : '' ?>
+                            >
 
-                    <?php $phoneMissing = trim($user['phone'] ?? '') === ''; ?>
+                            <?php if ($isMissing): ?>
+                                <small class="field-error">
+                                    <?= parkEasyEscape($field['label']) ?> is required.
+                                </small>
+                            <?php endif; ?>
 
-                    <div class="form-field <?= $phoneMissing ? 'is-incomplete' : ''?>">
-                        <label for="phone" class="form-label">Phone:</label>
-                        <input type="tel" class="form-control" id="phone" name="phone" placeholder="8582535461" disabled required value="<?= parkEasyEscape($user['phone'] ?? '') ?>" <?= $phoneMissing ? 'aria-invalid="true"' : '' ?>>
-                        <?php if ($phoneMissing): ?>
-                            <small class="field-error">Phone number is required.</small>
-                        <?php endif; ?>
-                    </div>
-
-                    <?php $plateMissing = trim($user['plate_number'] ?? '') === ''; ?>
-
-                    <div class="form-field plate-field <?= $plateMissing ? 'is-incomplete' : ''?>">
-                        <label for="plate" class="form-label">Plate Number:</label>
-                        <input type="text" class="form-control" id="plate" name="plate_number" placeholder="B 1234 FSD" disabled required value="<?= parkEasyEscape($user['plate_number'] ?? '') ?> <?= $plateMissing ? 'aria-invalid="true"' : '' ?>">
-                        <?php if ($plateMissing): ?>
-                            <small class="field-error">Plate Number is required.</small>
-                        <?php endif; ?>
-                    </div>
+                        </div>
+                    <?php endforeach; ?>
 
                 </div>
 
                 <div class="profile-actions">
-                    <button type="button" class="btn-edit-profile">
+
+                    <button
+                        type="button"
+                        class="btn-edit-profile"
+                    >
                         Edit Profile
-                        <i class="fa-solid fa-pen-to-square"></i>
+                        <i class="fa-solid fa-pen-to-square" aria-hidden="true"></i>
                     </button>
+
+                    <div class="profile-edit-actions" hidden>
+
+                        <button
+                            type="button"
+                            class="btn-cancel-profile"
+                        >
+                            Cancel
+                            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="btn-save-profile"
+                        >
+                            Save Profile
+                            <i class="fa-solid fa-check" aria-hidden="true"></i>
+                        </button>
+
+                    </div>
+
                 </div>
 
-            </div>
+            </form>
 
         </div>
-
-
     </section>
 
 </main>

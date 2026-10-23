@@ -21,7 +21,7 @@ if (!isset($_SESSION['demo_users'])) {
 $users = &$_SESSION['demo_users'];
 
 // kalau mau test user lain
-$currentUserId = (int) ($_SESSION['user_id'] ?? 1);
+$currentUserId = (int) ($_SESSION['user_id'] ?? 2);
 
 $user = $users[$currentUserId] ?? [];
 
@@ -36,18 +36,53 @@ $selectedLocation = parkEasyFindLocation(
     $locations
 );
 
-// echo '<pre>';
-// var_dump([
-//     'current_user_id' => $currentUserId,
-//     'username' => $user['username'] ?? null,
-//     'location_id' => $user['location_id'] ?? null,
-//     'selected_location' => $selectedLocation['address'] ?? null,
-// ]);
-// echo '</pre>';
-
 if ($selectedLocation === null) {
     $selectedLocation = $locations[0] ?? null;
 }   
+
+if (
+    $_SERVER['REQUEST_METHOD'] === 'POST'
+    && ($_GET['page'] ?? '') === 'profile'
+    && ($_POST['profile_action'] ?? '') === 'save'
+) {
+    $username = trim($_POST['username'] ?? '');
+    $email = trim($user['email'] ?? '');
+    $phone = trim($_POST['phone'] ?? '');
+    $plateNumber = trim($_POST['plate_number'] ?? '');
+
+    $errors = [];
+
+    if ($username === '') {
+        $errors[] = 'Username is required.';
+    }
+
+    if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $errors[] = 'A valid email is required.';
+    }
+
+    if ($phone === '') {
+        $errors[] = 'Phone number is required.';
+    }
+
+    if ($plateNumber === '') {
+        $errors[] = 'Plate number is required.';
+    }
+
+    if (empty($errors)) {
+        $users[$currentUserId]['username'] = $username;
+        $users[$currentUserId]['email'] = $email;
+        $users[$currentUserId]['phone'] = $phone;
+        $users[$currentUserId]['plate_number'] = $plateNumber;
+        $users[$currentUserId]['updated_at'] = date('Y-m-d H:i:s');
+
+        $_SESSION['profile_message'] = 'Profile updated successfully.';
+    } else {
+        $_SESSION['profile_message'] = implode(' ', $errors);
+    }
+
+    header('Location: ?page=profile');
+    exit;
+}
 
 // Router buat ngatur halaman
 $page = $_GET['page'] ?? 'home';
