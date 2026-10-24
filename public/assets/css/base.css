@@ -223,6 +223,14 @@ section {
   min-width: 0;
 }
 
+.horizontal-card {
+    padding: 0;    
+}
+
+.horizontal-card .section-header {
+    padding: 0 48px;
+}
+
 .view-more-button {
   padding: 3px 12px;
   border: 1px solid var(--brand-gold);

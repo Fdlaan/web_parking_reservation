@@ -1,6 +1,10 @@
 <?php
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/models/Mall.php';
+// file CSS yang terhubung
+$fileCss = [
+    'pages/parking.css',
+];
 
 $mallId = filter_input(
     INPUT_GET,
@@ -53,108 +57,90 @@ $chooseSpotUrl = '?page=slot&mall_id=' . (int) $selectedMall['id'];
 
 ?>
 
-<main class="main-content d-flex flex-column">
-    <div class="d-flex">
+<main class="main-content">
 
-        <div class="flex-grow-1 d-flex flex-column" style="background: var(--panel);">
+    <section>
+        <a href="?page=home" class="back-button">
+            <i class="back-icon"></i>
+            <span>
+                Back
+            </span>
+        </a>
+    </section>
 
-            <main class="d-flex flex-grow flex-column-1 py-4 ms-4 me-4">
-                <div class="container py-4">
+    <section>
+        <span class="card-parking-detail-name"><?= parkEasyEscape($selectedMall['name']) ?></span>
 
-                    <div class="d-flex flex-column">
-                        <a href="?page=home" class="text-decoration-none fw-bold" style="width: fit-content;">
-                            <p style="color: var(--text)">
-                                <i class="fa-solid fa-arrow-left-long me-2"></i>
-                                Back
-                            </p>
+        <div class="card-parking-detail-mall">
+
+            <img class="parking-detail-image" src="<?= parkEasyEscape($selectedMall['image']) ?>"
+                alt="<?= parkEasyEscape($selectedMall['name']) ?>">
+
+            <div class="card-parking-detail-information d-flex flex-column justify-content-evenly">
+
+                <div class="card-parking-detail-address d-flex flex-column">
+
+                    <span style="font: var(--text-label); color: var(--secondary-text)">Address:</span>
+                    <span style="font: var(--text-body); color: var(--primary-text)"><?= parkEasyEscape($selectedMall['address']) ?></span>
+
+                    <div class="card-parking-detail-location d-flex flex-row">
+                        <span class="d-flex flex-row align-items-center" style="gap: 6px;">
+                            <i class="location-icon"></i>
+                            <?= parkEasyEscape($distanceLabel) ?>
+                        </span>
+
+                        <a href="<?= parkEasyEscape($mapsUrl) ?>"  class="button-maps" target="_blank" rel="noopener">
+                            <i class="maps-icon"></i>
+                            Open with Maps
                         </a>
                     </div>
-
-                    <div class="row">
-
-                        <div class="col p-3">
-                            <p class="fs-1 fw-medium text-white"><?= parkEasyEscape($selectedMall['name']) ?></p>
-
-                            <img
-                                src="<?= parkEasyEscape($selectedMall['image']) ?>"
-                                alt="<?= parkEasyEscape($selectedMall['name']) ?>"
-                                class="parking-detail-image">
-
-                            <div class="card text-light rounded-4 mt-4" style="background-color: #2C2C2C;">
-                                <div class="card-body p-4">
-
-                                    <p class="mb-2 text-secondary">Address:</p>
-
-                                    <p class="fs-5 mb-0">
-                                        <?= parkEasyEscape($selectedMall['address']) ?>
-                                    </p>
-
-                                    <hr class="my-3 border-secondary opacity-50">
-
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <span class="text-secondary">
-                                            <i class="fa-solid fa-location-dot me-2"></i>
-                                            <?= parkEasyEscape($distanceLabel) ?>
-                                        </span>
-
-                                        <a href="<?= parkEasyEscape($mapsUrl) ?>" target="_blank" rel="noopener"
-                                            class="btn d-flex align-items-center px-4 py-2 fw-medium rounded-3"
-                                            style="background-color: #1b3f2b; border: 1px solid #6fd49b; color: #6fd49b;">
-                                            <i class="fa-regular fa-map me-3"></i>Open with Maps
-                                        </a>
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col p-3">
-                            <div class="d-flex row container-fluid p-3 justify-content-end">
-
-                                <div class="card text-light rounded-4"
-                                    style="background-color: #2C2C2C; max-width: 480px;">
-                                    <div class="card-body p-4">
-
-                                        <h2 class="fw-bold fs-3 mb-0">Slot Available</h2>
-                                        <hr class="my-4 border-secondary opacity-50">
-
-                                        <div class="d-flex flex-column gap-3">
-
-                                            <?php foreach ($floorAvailability as $floor): ?>
-                                                <div class="row g-0 align-items-center rounded-3 px-4 py-4"
-                                                    style="background-color: #343434;">
-                                                    <div class="col fs-5 fw-semibold">
-                                                        <?= parkEasyEscape($floor['floor_code']) ?>
-                                                    </div>
-                                                    <div class="col text-center fs-5 fw-bold"
-                                                        style="color: #6fd49b;">
-                                                        <?= (int) $floor['available'] ?>
-                                                    </div>
-                                                    <div class="col text-end fs-3">
-                                                        <i class="fa-solid fa-car"></i>
-                                                    </div>
-                                                </div>
-                                            <?php endforeach; ?>
-
-                                        </div>
-
-                                        <a href="<?= parkEasyEscape($chooseSpotUrl) ?>"
-                                            class="btn w-100 mt-4 py-3 fw-semibold rounded-3"
-                                            style="background-color: #1b3f2b; color: #6fd49b;">
-                                            Choose Parking Spot
-                                        </a>
-
-                                    </div>
-                                </div>
-
-                            </div>
-                        </div>
-
-                    </div>
-
                 </div>
-            </main>
-        </div>
 
-    </div>
+                <hr style="background-color: var(--secondary-text); height: 1px; border: var(--radius-xs);">
+                
+                <a href="<?= parkEasyEscape($chooseSpotUrl) ?>" class="slot-button">
+                    Choose Parking Spot
+                </a>
+            </div>
+
+        </div>
+    </section>
+
+    <section>
+        <span class="card-parking-detail-name">Slot Available</span>
+
+        <div class="parking-slot-table">
+            <div class="parking-slot-table-heading">
+                <span>Floors</span>
+                <span>Available</span>
+                <span>Status</span>
+            </div>
+            <div class="parking-slot-item">
+                <?php foreach ($floorAvailability as $floor): ?>
+                <div class="parking-slot-table-row">
+                    <div class="parking-slot-floor">
+                        <?= parkEasyEscape($floor['floor_code']) ?>
+                    </div>
+                    <div class="parking-slot-available">
+                        <?= (int) $floor['available'] ?>
+                    </div>
+                    <div class="parking-slot-status">
+                        <?php if ((int) $floor['available'] > 0): ?>
+                            <span class="status-available">
+                                <i class="dot-icon"></i>
+                                Available
+                            </span>
+                        <?php else: ?>
+                            <span class="status-full">
+                                <i class="dot-icon"></i>
+                                Full
+                            </span>
+                        <?php endif; ?>
+                    </div>
+                </div>
+                <?php endforeach; ?>
+            </div>
+
+        </div>
+    </section>
 </main>
