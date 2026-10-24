@@ -4,7 +4,7 @@
     $label = $field['label'] ?? '';
     $type = $field['type'] ?? 'text';
     $placeholder = $field['placeholder'] ?? '';
-    $required = $field['require'] ?? false;
+    $required = $field['required'] ?? false;
     $autocomplete = $field['autocomplete'] ?? null;
 ?>
 

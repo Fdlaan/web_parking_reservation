@@ -1,6 +1,5 @@
 <?php
 
-// kite panggil dummy data dulu, nanti tinggal hapus kalau sudah connect ke database
 if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
@@ -17,19 +16,61 @@ $reservations = require $dummyDataPath . 'reservations.php';
 if (!isset($_SESSION['demo_users'])) {
     $_SESSION['demo_users'] = require $dummyDataPath . 'users.php';
 }
-    
+
 $users = &$_SESSION['demo_users'];
 
-// kalau mau test user lain
-$currentUserId = (int) ($_SESSION['user_id'] ?? 2);
+$page = $_GET['page'] ?? 'home';
+$step = $_GET['step'] ?? 'login';
+$requestMethod = $_SERVER['REQUEST_METHOD'];
 
-$user = $users[$currentUserId] ?? [];
+if ($page === 'logout') {
+    $_SESSION = [];
+    session_destroy();
 
-if (empty($user) && !empty($users)) {
-    $user = reset($users);
+    header('Location: ?page=auth&step=login');
+    exit;
 }
 
-$currentUserId = (int) ($user['id'] ?? 0);
+if ($requestMethod === 'POST' && $page === 'auth' && $step === 'login') {
+    $email = strtolower(trim($_POST['email'] ?? ''));
+    $matchedUserId = null;
+
+    foreach ($users as $candidate) {
+        if (strtolower((string) $candidate['email']) === $email) {
+            $matchedUserId = (int) $candidate['id'];
+            break;
+        }
+    }
+
+    if ($matchedUserId === null) {
+        $_SESSION['login_message'] = 'Email is not registered.';
+
+        header('Location: ?page=auth&step=login');
+        exit;
+    }
+
+    session_regenerate_id(true);
+    $_SESSION['user_id'] = $matchedUserId;
+
+    header('Location: ?page=home');
+    exit;
+}
+
+$currentUserId = (int) ($_SESSION['user_id'] ?? 0);
+$user = $users[$currentUserId] ?? null;
+$isLoggedIn = $user !== null;
+
+if (!$isLoggedIn && $page !== 'auth') {
+    unset($_SESSION['user_id']);
+
+    header('Location: ?page=auth&step=login');
+    exit;
+}
+
+if ($isLoggedIn && $page === 'auth' && $step === 'login') {
+    header('Location: ?page=home');
+    exit;
+}
 
 $selectedLocation = parkEasyFindLocation(
     (int) ($user['location_id'] ?? 0),
@@ -38,11 +79,11 @@ $selectedLocation = parkEasyFindLocation(
 
 if ($selectedLocation === null) {
     $selectedLocation = $locations[0] ?? null;
-}   
+}
 
 if (
-    $_SERVER['REQUEST_METHOD'] === 'POST'
-    && ($_GET['page'] ?? '') === 'profile'
+    $requestMethod === 'POST'
+    && $page === 'profile'
     && ($_POST['profile_action'] ?? '') === 'save'
 ) {
     $username = trim($_POST['username'] ?? '');
@@ -84,28 +125,25 @@ if (
     exit;
 }
 
-// Router buat ngatur halaman
-$page = $_GET['page'] ?? 'home';
-
 $routes = [
     'home' => $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/pages/home/index.php',
     'parking' => $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/pages/parking/index.php',
     'history' => $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/pages/history/index.php',
     'profile' => $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/pages/profile/index.php',
-    'login' => $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/pages/auth/login.php',
+    'auth' => $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/pages/auth/index.php',
     'detail' => $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/pages/parking/detail.php',
     'slot' => $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/pages/parking/slot.php',
     'invoice' => $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/pages/parking/invoice.php',
     'payment' => $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/pages/parking/payment.php',
 ];
 
-$showLayout = ($page !== 'login');
-
 if (!isset($routes[$page])) {
     http_response_code(400);
+
     $titlePage = 'Page not Found | Parkeasy';
     $fileCss = [];
     $fileJs = [];
+    $showLayout = false;
 
     ob_start();
     echo '<main class="main-content">';
@@ -114,12 +152,9 @@ if (!isset($routes[$page])) {
     echo '<a href="?page=home">Back to home.</a>';
     echo '</main>';
     $pageContent = ob_get_clean();
-
-    $showLayout = false;
-
 } else {
     $currentPage = $page;
-    $showLayout = ($page !== 'login');
+    $showLayout = $page !== 'auth';
 
     $breadcrumb = [
         [
@@ -151,7 +186,6 @@ if (!isset($routes[$page])) {
 <!DOCTYPE html>
 <html lang="en">
 
-<!-- Head Section -->
 <?php require $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/includes/head.php'; ?>
 
 <body>
@@ -159,11 +193,11 @@ if (!isset($routes[$page])) {
 <?php if ($showLayout): ?>
 
 <div class="layout d-flex align-items-stretch">
-<?php require $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/layouts/sidebar.php'; ?>
-    
+    <?php require $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/layouts/sidebar.php'; ?>
+
     <div class="content d-flex flex-column">
 
-    <?php require $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/layouts/topbar.php'; ?>
+        <?php require $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/layouts/topbar.php'; ?>
 
         <?= $pageContent ?>
 
@@ -171,10 +205,10 @@ if (!isset($routes[$page])) {
 </div>
 
 <?php else: ?>
-    
+
     <?= $pageContent ?>
 
 <?php endif; ?>
-    
+
 </body>
 </html>

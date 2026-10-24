@@ -1,79 +1,84 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Log in | Parkeasy</title>
-    <link rel="stylesheet" href="/web_parking_reservation/public/assets/css/auth.css">
-    <link rel="stylesheet" href="/web_parking_reservation/public/assets/css/base.css">
-    <script src="https://kit.fontawesome.com/5ba89cd74f.js" crossorigin="anonymous"></script>
-</head>
+$titlePage = 'Log in | Parkeasy';
 
-<body>
-    <main class="container">
+$loginMessage = $_SESSION['login_message'] ?? null;
+unset($_SESSION['login_message']);
 
-        <div class="photo-background" role="img" aria-label="Parking garage entrance">
-            <img src="" alt="">
-        </div>
+$fields = [
+    [
+        'id' => 'email',
+        'name' => 'email',
+        'label' => 'Email',
+        'type' => 'email',
+        'placeholder' => 'brianfadlan@example.com',
+        'require' => true,
+        'autocomplete' => 'email',
+    ],
+    [
+        'id' => 'password',
+        'name' => 'password',
+        'label' => 'Password',
+        'type' => 'password',
+        'placeholder' => 'Brianfadlan123.',
+        'require' => true,
+        'autocomplete' => 'new-password',
+    ],
+];
 
-        <section class="form-side">
-            <div class="form-wrap">
+?>
 
-                <h1>Welcome back</h1>
-                
-                <form class= "input-form" action="../backend/login_process.php" method="POST">
-                    <?php
-                        $field = [
-                        'id' => 'email',
-                        'name' => 'email',
-                        'label' => 'Email',
-                        'type' => 'email',
-                        'placeholder' => 'brianfadlan@example.com',
-                        'required' => true,
-                        'autocomplete' => 'email'
-                        ];
+<main class="auth-content">
 
-                        require __DIR__ . '/../components/input.php';
-                    ?>
+    <div class="auth-image" role="img" aria-label="Parking garage entrance">
+        <img src="" alt="">
+    </div>
 
-                    <?php
-                        $field = [
-                        'id' => 'password',
-                        'name' => 'password',
-                        'label' => 'Password',
-                        'type' => 'password',
-                        'placeholder' => 'Brianfadlan123.',
-                        'required' => true,
-                        'autocomplete' => 'current-email'
-                        ];
+    <section class="form-side">
+        <div class="form-wrap">
 
-                        require __DIR__ . '/../components/input.php';
-                    ?>
+            <span class="auth-header">Welcome back</span>
 
-                    <div class="forgot-password">
-                        <a class="forgot" href="forgot-password.html">Forgot Password?</a><br>
-                    </div>
+            <?php if ($loginMessage !== null): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?= parkEasyEscape($loginMessage) ?>
 
-                    <div class="form-check">
-                        <input class="form-check-input" type="checkbox" value="1" id="checkDefault">
-                        <label class="form-check-label" for="checkDefault">Remember me</label>
-                    </div>
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Close">
+                    </button>
+                </div>
+            <?php endif; ?>
 
-                    <button class="continue-button" type="submit">Continue</button>
+            <form class="input-form" action="?page=auth&step=login" method="POST">
 
-                </form>
-            
-                <div class="links">
-                    <span>
-                        Don't have an account?
-                    </span>
-                    <a href="signup.php">Sign up here.</a>
+                <?php foreach ($fields as $field): ?>
+                    <?php require $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/components/auth-user-input.php'; ?>
+                <?php endforeach; ?>
+
+                <div class="forgot-password">
+                    <a class="forgot" href="?page=auth&step=forgot-email">Forgot Password?</a><br>
                 </div>
 
-            </div>
-        </section>
-    </main>
-</body>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="1" id="checkDefault">
+                    <label class="form-check-label" for="checkDefault">Remember me</label>
+                </div>
 
-</html>
+                <button class="continue-button" type="submit">Continue</button>
+
+            </form>
+
+            <div class="links">
+                <span>
+                    Don't have an account?
+                </span>
+                <a href="?page=auth&step=signup">Sign up here.</a>
+            </div>
+
+        </div>
+    </section>
+
+</main>

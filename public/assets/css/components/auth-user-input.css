@@ -1,0 +1,25 @@
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.form-group label {
+    font: var(--text-body);
+    color: var(--primary-text);
+}
+
+input {
+  padding: 9px 12px 9px 12px;
+  border-radius: 6px;
+  background: var(--surface-card);
+  color: var(--primary-text);
+  border: 1px solid var(--border-divider);
+}
+
+input::placeholder {
+  color: var(--secondary-text);
+  font: var(--text-body);
+  font-style: italic;
+  opacity: 1;
+}
