@@ -4,67 +4,43 @@ class Mall
 {
     public static function getAll(): array
     {
-        return require $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/database/dummy_data/malls.php';
+        return require $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/database/dummy-data/parking-malls.php';
     }
 
     public static function getRecommended(
         float $userLat,
         float $userLng,
-        array $malls
+        array $parkingMalls
     ): array {
-        $malls = array_filter(
-            $malls,
-            fn($mall) => !empty($mall['is_active'])
-        );
+        $parkingMalls = array_values(array_filter(
+            $parkingMalls,
+            fn($parkingMall) => !empty($parkingMall['is_active'])
+        ));
 
-        foreach ($malls as &$mall) {
-            $mall['distance_km'] = self::calculateDistance(
+        foreach ($parkingMalls as &$parkingMall) {
+            $parkingMall['distance_km'] = parkEasyCalculateDistance(
                 $userLat,
                 $userLng,
-                (float) $mall['latitude'],
-                (float) $mall['longitude']
+                (float) $parkingMall['latitude'],
+                (float) $parkingMall['longitude']
             );
 
-            $mall['distance'] = number_format(
-                $mall['distance_km'],
-                1
-            ) . ' KM';
+            $parkingMall['distance'] =
+                number_format($parkingMall['distance_km'], 1) . ' KM';
 
-            $mall['url'] = '?page=detail&mall_id=' . (int) $mall['id'];
-            $mall['alt'] = $mall['name'];
+            $parkingMall['url'] =
+                '?page=detail&mall_id=' . (int) $parkingMall['id'];
+
+            $parkingMall['alt'] = $parkingMall['name'];
         }
 
-        unset($mall);
+        unset($parkingMall);
 
         usort(
-            $malls,
+            $parkingMalls,
             fn($a, $b) => $a['distance_km'] <=> $b['distance_km']
         );
 
-        return array_values($malls);
-    }
-
-    private static function calculateDistance(
-        float $userLat,
-        float $userLng,
-        float $mallLat,
-        float $mallLng
-    ): float {
-        $earthRadius = 6371;
-
-        $latDifference = deg2rad($mallLat - $userLat);
-        $lngDifference = deg2rad($mallLng - $userLng);
-
-        $a = sin($latDifference / 2) ** 2
-            + cos(deg2rad($userLat))
-            * cos(deg2rad($mallLat))
-            * sin($lngDifference / 2) ** 2;
-
-        $a = min(1, max(0, $a));
-
-        return $earthRadius * 2 * atan2(
-            sqrt($a),
-            sqrt(1 - $a)
-        );
+        return $parkingMalls;
     }
 }

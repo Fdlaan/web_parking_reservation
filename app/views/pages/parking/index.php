@@ -17,15 +17,15 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/models/Ma
 $mallsByCity = [];
 
 if ($selectedLocation !== null) {
-    $malls = Mall::getRecommended(
+    $recommendedMalls = Mall::getRecommended(
         (float) $selectedLocation['latitude'],
         (float) $selectedLocation['longitude'],
-        $malls
+        $parkingMalls
     );
 
-    foreach ($malls as $mall) {
-        $city = $mall['city'];
-        $mallsByCity[$city][] = $mall;
+    foreach ($recommendedMalls as $parkingMall) {
+        $city = $parkingMall['city'];
+        $mallsByCity[$city][] = $parkingMall;
     }
 
     foreach ($mallsByCity as $city => $cityMalls) {

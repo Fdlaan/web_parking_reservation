@@ -94,3 +94,12 @@
     flex-shrink: 0;
     white-space: nowrap;
 }
+
+/* parking detail */
+.parking-detail-image {
+    display: block;
+    width: 100%;
+    height: 300px;
+    object-fit: cover;
+    border-radius: var(--radius-card);
+}

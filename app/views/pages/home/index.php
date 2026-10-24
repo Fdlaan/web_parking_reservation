@@ -15,11 +15,12 @@ $fileJs = [];
 require_once $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/models/Mall.php';
 
 $recommendedParking = [];
+
 if ($selectedLocation !== null) {
     $recommendedParking = Mall::getRecommended(
         (float) $selectedLocation['latitude'],
         (float) $selectedLocation['longitude'],
-        $malls
+        $parkingMalls
     );
 }
 $recommendedParking = array_slice(
@@ -42,7 +43,7 @@ $previouslyParking = [];
 foreach (array_slice($userReservations, 0, 3) as $reservation) {
     $mall = parkEasyFindMall(
         (int) $reservation['mall_id'],
-        $malls
+        $parkingMalls
     );
 
     if ($mall === null) {
@@ -50,7 +51,7 @@ foreach (array_slice($userReservations, 0, 3) as $reservation) {
     }
 
     $previouslyParking[] = array_merge($mall, [
-        'url' => '?page=parking',
+        'url' => '?page=detail&mall_id=' . (int) $mall['id'],
         'alt' => $mall['name'],
         'reserved_at' => $reservation['reserved_at'],
         'slot_code' => $reservation['slot_code'],
@@ -80,7 +81,7 @@ $reservationStatus = match ($reservation['status'] ?? null) {
 if ($reservation !== null) {
     $mall = parkEasyFindMall(
         (int) $reservation['mall_id'],
-        $malls
+        $parkingMalls
     );
 
     $startTime = new DateTimeImmutable($reservation['reserved_at']);

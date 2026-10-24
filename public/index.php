@@ -6,12 +6,13 @@ if (session_status() === PHP_SESSION_NONE) {
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/config/app.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/helpers/dummy-data.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/helpers/auth.app';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/helpers/auth.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/helpers/parking-functions.php';
 
-$dummyDataPath = $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/database/dummy_data/';
+$dummyDataPath = $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/database/dummy-data/';
 
-$locations = require $dummyDataPath . 'locations.php';
-$malls = require $dummyDataPath . 'malls.php';
+$userLocations = require $dummyDataPath . 'user-locations.php';
+$parkingMalls = require $dummyDataPath . 'parking-malls.php';
 $reservations = require $dummyDataPath . 'reservations.php';
 
 if (!isset($_SESSION['demo_users'])) {
@@ -66,11 +67,11 @@ if ($isLoggedIn && $page === 'auth' && $step === 'login') {
 
 $selectedLocation = parkEasyFindLocation(
     (int) ($user['location_id'] ?? 0),
-    $locations
+    $userLocations
 );
 
 if ($selectedLocation === null) {
-    $selectedLocation = $locations[0] ?? null;
+    $selectedLocation = $userLocations[0] ?? null;
 }
 
 if (

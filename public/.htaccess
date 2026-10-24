@@ -3,4 +3,4 @@ Options -Indexes
 RewriteEngine On
 
 RewriteCond %{THE_REQUEST} /index\.php[\s?] [NC]
-RewriteRule ^index\.php$ /web_parking_reservation/public/ [R=301,L, Q5A]
+RewriteRule ^index\.php$ /web_parking_reservation/public/ [R=301,L,QSA]

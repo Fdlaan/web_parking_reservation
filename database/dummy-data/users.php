@@ -18,7 +18,7 @@ return [
     ],
 
     2 => [
-        'id' => '2',
+        'id' => 2,
         'username' => '',
         'email' => 'brian@example.com',
         'phone' => '',
