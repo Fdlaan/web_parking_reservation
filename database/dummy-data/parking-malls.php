@@ -4,7 +4,7 @@ return [
     [
         'id' => 1,
         'name' => 'Grand Indonesia Mall',
-        'address' => 'Jl. M.H. Thamrin No. 1',
+        'address' => 'Jalan M.H. Thamrin No.1, RT.1/RW.5, Kelurahan Menteng, Kecamatan Menteng, dan Kelurahan Kebon Melati, Kecamatan Tanah Abang, Jakarta Pusat 10310',
         'city' => 'Jakarta Pusat',
         'latitude' => -6.1952,
         'longitude' => 106.8208,
