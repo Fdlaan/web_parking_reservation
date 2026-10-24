@@ -35,7 +35,7 @@ foreach ($reservations as $reservation) {
 
     $mall = parkEasyFindMall(
         (int) $reservation['mall_id'],
-        $malls
+        $parkingMalls
     );
 
     if ($mall === null) {
