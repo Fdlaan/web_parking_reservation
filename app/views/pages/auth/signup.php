@@ -9,7 +9,7 @@ $fields = [
         'label' => 'Username',
         'type' => 'text',
         'placeholder' => 'brianfadlan',
-        'require' => true,
+        'required' => true,
         'autocomplete' => 'username',
     ],
     [
@@ -18,7 +18,7 @@ $fields = [
         'label' => 'Email',
         'type' => 'email',
         'placeholder' => 'brianfadlan@example.com',
-        'require' => true,
+        'required' => true,
         'autocomplete' => 'email',
     ],
     [
@@ -27,7 +27,7 @@ $fields = [
         'label' => 'Phone Number',
         'type' => 'tel',
         'placeholder' => '08123456789',
-        'require' => true,
+        'required' => true,
         'autocomplete' => 'tel',
     ],
     [
@@ -36,7 +36,7 @@ $fields = [
         'label' => 'Create Password',
         'type' => 'password',
         'placeholder' => 'Brianfadlan123.',
-        'require' => true,
+        'required' => true,
         'autocomplete' => 'new-password',
     ],
     [
@@ -45,7 +45,7 @@ $fields = [
         'label' => 'Confirm Password',
         'type' => 'password',
         'placeholder' => 'Brianfadlan123.',
-        'require' => true,
+        'required' => true,
         'autocomplete' => 'new-password',
     ],
 ];

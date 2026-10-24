@@ -6,6 +6,7 @@ if (session_status() === PHP_SESSION_NONE) {
 
 require_once $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/config/app.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/helpers/dummy-data.php';
+require_once $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/helpers/auth.app';
 
 $dummyDataPath = $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/database/dummy_data/';
 
@@ -24,25 +25,16 @@ $step = $_GET['step'] ?? 'login';
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 
 if ($page === 'logout') {
-    $_SESSION = [];
-    session_destroy();
+    parkEasyLogout();
 
     header('Location: ?page=auth&step=login');
     exit;
 }
 
 if ($requestMethod === 'POST' && $page === 'auth' && $step === 'login') {
-    $email = strtolower(trim($_POST['email'] ?? ''));
-    $matchedUserId = null;
+    $matchedUser = parkEasyFindUserByEmail(trim($_POST['email'] ?? ''), $users);
 
-    foreach ($users as $candidate) {
-        if (strtolower((string) $candidate['email']) === $email) {
-            $matchedUserId = (int) $candidate['id'];
-            break;
-        }
-    }
-
-    if ($matchedUserId === null) {
+    if ($matchedUser === null) {
         $_SESSION['login_message'] = 'Email is not registered.';
 
         header('Location: ?page=auth&step=login');
@@ -50,13 +42,13 @@ if ($requestMethod === 'POST' && $page === 'auth' && $step === 'login') {
     }
 
     session_regenerate_id(true);
-    $_SESSION['user_id'] = $matchedUserId;
+    $_SESSION['user_id'] = (int) $matchedUser['id'];
 
     header('Location: ?page=home');
     exit;
 }
 
-$currentUserId = (int) ($_SESSION['user_id'] ?? 0);
+$currentUserId = parkEasyCurrentUserId() ?? 0;
 $user = $users[$currentUserId] ?? null;
 $isLoggedIn = $user !== null;
 

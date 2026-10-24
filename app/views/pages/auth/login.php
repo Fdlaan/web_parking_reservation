@@ -12,7 +12,7 @@ $fields = [
         'label' => 'Email',
         'type' => 'email',
         'placeholder' => 'brianfadlan@example.com',
-        'require' => true,
+        'required' => true,
         'autocomplete' => 'email',
     ],
     [
@@ -21,7 +21,7 @@ $fields = [
         'label' => 'Password',
         'type' => 'password',
         'placeholder' => 'Brianfadlan123.',
-        'require' => true,
+        'required' => true,
         'autocomplete' => 'new-password',
     ],
 ];
