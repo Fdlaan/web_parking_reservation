@@ -48,6 +48,7 @@ function parkEasyPrepareHistoryPageData(
         $status = (string) ($reservation['status'] ?? 'UNKNOWN');
 
         $rows[] = [
+            'reservation_id' => (string) $reservation['reservation_id'],
             'location' => $mall['name'],
             'slot_code' => $reservation['slot_code'] ?? '-',
             'reserved_at' => $reservedAt,
