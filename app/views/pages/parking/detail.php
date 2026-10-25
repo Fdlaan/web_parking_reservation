@@ -5,7 +5,8 @@ $titlePage = isset($selectedMall['name'])
     : 'Parking Detail | Parkeasy';
 
 $fileCss = [
-    'pages/parking.css',
+    'pages/parking/detail.css',
+    'pages/parking/index.css',
 ];
 
 ?>
@@ -18,7 +19,7 @@ $fileCss = [
                 <i class="back-icon"></i>
                 <span>Back</span>
             </a>
-            <p><?= parkEasyEscape($detailPageData['error']) ?></p>
+            <span><?= parkEasyEscape($detailPageData['error']) ?></span>
         </section>
     <?php else: ?>
 

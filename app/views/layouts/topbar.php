@@ -9,19 +9,29 @@
 <header class="topbar d-flex flex-row sticky-top">
 
     <!-- breadcrumb nav -->
-    <div class="topbar-item-breadcrumb">
+    <nav class="topbar-item-breadcrumb" aria-label="Breadcrumb">
+        <?php foreach($breadcrumb as $index => $item):?>
+            <?php if ($index > 0): ?>
+                <span class="breadcrumb-separator" aria-current="true">
+                    <i class="breadcrumb-icon" aria-hidden="true"></i>
+                </span>
+            <?php endif; ?>
 
-        <?php $lastIndex = count($breadcrumb) - 1; ?>
-        <?php foreach ($breadcrumb as $index => $item): ?>
-            <?php if ($index === $lastIndex || ($item['url'] ?? null) === null): ?>
-                <span class="breadcrumb-current" aria-current="page"><?= htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8') ?></span>
+            <?php if ($index === array_key_last($breadcrumb)): ?>
+                <span class="breadcrumb-current" aria-current="page">
+                    <?= parkEasyEscape($item['label'] ?? '') ?>
+                </span>
+            <?php elseif (!empty($item['url'])): ?>
+                <a href="<?= parkEasyEscape($item['url'] ?? '') ?>" class="breadcrumb-link">
+                    <?= parkEasyEscape($item['label']) ?>
+                </a>
             <?php else: ?>
-                <a class="breadcrumb-link" href="<?= htmlspecialchars($item['url'], ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8') ?></a>
-                <i class="breadcrumb-icon" aria-hidden="true"></i>
+                <span class="breadcrumb-label">
+                    <?= parkEasyEscape($item['label'] ?? '') ?>
+                </span>
             <?php endif; ?>
         <?php endforeach; ?>
-
-    </div>
+    </nav>
 
     <!-- right section -->
     <div class="topbar-item-right">

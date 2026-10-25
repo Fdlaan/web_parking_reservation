@@ -5,7 +5,7 @@ $titlePage = 'Search Parking | Parkeasy';
 
 // file CSS yang terhubung
 $fileCss = [
-    'pages/parking.css',
+    'pages/parking/index.css',
     'components/card-parking.css',
 ];
 

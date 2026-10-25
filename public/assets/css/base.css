@@ -245,3 +245,20 @@ section {
   background-color: var(--active-navigation-background);
   border: 1px solid var(--active-navigation-background);
 }
+
+.back-button {
+  text-decoration: none;
+  color: var(--primary-text);
+  font: var(--text-button);
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+
+  width: fit-content;
+
+  transition: all 0.2s ease-in-out;
+}
+.back-button:hover {
+  color: var(--brand-gold);
+}

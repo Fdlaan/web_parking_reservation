@@ -1,155 +1,258 @@
-<main class="main-content d-flex flex-column">
-    <!-- Wrapper: sidebar + right column side by side -->
-    <div class="d-flex">
+<?php
 
-        <!-- Right column: topbar + main content -->
-        <div class="flex-grow-1 d-flex flex-column" style="background: var(--panel);">
+$titlePage = isset($paymentPageData['mall']['name'])
+    ? 'Payment | ' . $paymentPageData['mall']['name']
+    : 'Payment | Parkeasy';
 
-            <!-- Main content -->
-            <main class="d-flex flex-grow flex-column-1 py-3 ms-4 me-4">
-                <div class="container py-4">
+$fileCss = [
+    'pages/parking/payment.css',
+];
 
+$fileJs = [];
 
-                    <div class="d-flex flex-column">
-                        <a href="/web_parking_reservation/app/views/parking/slot.php" class="text-decoration-none fw-bold"
-                            style="width: fit-content;">
-                            <p for="back-icon" style="color: var(--text)">
-                                <i class="fa-solid fa-arrow-left-long me-2"></i>
-                                Back
-                            </p>
-                        </a>
+?>
+
+<main class="main-content payment-page">
+
+    <?php if (($paymentPageData['error'] ?? null) !== null): ?>
+
+        <section class="payment-error">
+            <a href="?page=parking" class="back-button">
+                <i class="back-icon"></i>
+                <span>Back</span>
+            </a>
+
+            <div class="payment-card">
+                <i
+                    class="fa-solid fa-circle-exclamation payment-error-icon"
+                    aria-hidden="true"
+                ></i>
+
+                <h2>Unable to Open Payment</h2>
+
+                <p>
+                    <?= parkEasyEscape($paymentPageData['error']) ?>
+                </p>
+
+                <a href="?page=history" class="payment-button payment-button-secondary">
+                    Back to History
+                </a>
+            </div>
+        </section>
+
+    <?php else: ?>
+
+        <?php
+            $reservation = $paymentPageData['reservation'] ?? null;
+            $mall = $paymentPageData['mall'] ?? [];
+            $floor = $paymentPageData['floor'] ?? [];
+            $slot = $paymentPageData['slot'] ?? [];
+            $rate = $paymentPageData['rate'] ?? [];
+
+            $reservationFee = (int) ($rate['price_per_slot'] ?? 0);
+            $serviceFee = (int) ($rate['admin_fee'] ?? 0);
+            $total = $reservationFee + $serviceFee;
+
+            $reservedAt = null;
+
+            if (!empty($reservation['reserved_at'])) {
+                try {
+                    $reservedAt = new DateTimeImmutable(
+                        $reservation['reserved_at']
+                    );
+                } catch (Exception $exception) {
+                    $reservedAt = null;
+                }
+            }
+
+            $parkingType = strtoupper(
+                (string) (
+                    $reservation['parking_type']
+                    ?? $paymentPageData['parking_type']
+                    ?? 'REGULER'
+                )
+            );
+
+            $reservationId = $reservation['reservation_id'] ?? null;
+            $slotCode = $reservation['slot_code']
+                ?? $slot['slot_code']
+                ?? $slot['slot_number']
+                ?? '-';
+
+            $floorCode = $floor['floor_code'] ?? '-';
+        ?>
+
+        <section class="payment-header">
+
+            <a href="?page=history" class="back-button">
+                <i class="back-icon"></i>
+                <span>Back</span>
+            </a>
+
+            <div>
+                <h1>Payment</h1>
+                <p>Complete your payment to confirm your reservation.</p>
+            </div>
+
+        </section>
+
+        <div class="payment-layout">
+
+            <!-- Payment method and fee breakdown -->
+            <section class="payment-card payment-method-card">
+
+                <div class="payment-card-header">
+
+                    <div class="payment-eyebrow">
+                        <span>PAYMENT METHOD:</span>
+                        <img src="<?= $assetUrl ?>/images/qris-logo.svg" alt="">
                     </div>
 
-                    <div class="row">
+                    <span class="payment-type-badge">
+                        <?= $parkingType === 'VALET' ? 'Valet' : 'Regular' ?>
+                    </span>
 
-                        <div class="col p-3">
+                </div>
 
-                            <div class="card text-light rounded-4 mt-4" style="background-color: #2C2C2C;">
-                                <div class="card-body p-4">
+                <div class="payment-qr-placeholder">
 
-                                    <div class="row justify-content-between align-items-center">
-                                        <p class="col-10 fw-medium">Payment Method:
-                                            <img class="ms-2" src="/web_parking_reservation/img/qris-logo.png"
-                                                alt="QRIS Logo" style="width: 3.5rem; height: 1.5rem;">
-                                        </p>
-                                        <p class="col-2 d-flex justify-content-center me-2 align-items-center rounded-2 border fw-medium"
-                                            style="color: #D9B061; background-color: #3D3527; height: 26px; width: min-content; font-size: 14px; --bs-border-color: #D9B061;">
-                                            Regular
-                                        </p>
-                                    </div>
+                    <img src="<?= $assetUrl ?>/images/qr_example.png" alt="">
 
-                                    <img src="/web_parking_reservation/img/qr-example.png" alt="QR Code"
-                                        class="w-100 object-fit-contain rounded-4 mb-4" style="height: 520px;">
+                </div>
 
-                                    <p class="fs-5 mb-2 fw-medium" style="color: #B5B5AD;">Payment Details:</p>
+                <div class="payment-breakdown">
 
-                                    <hr class="my-3 border-secondary opacity-50">
+                    <h3>Payment Details</h3>
 
-                                    <div class="row">
+                    <div class="payment-detail-row">
+                        <span>Reservation Fee</span>
+                        <strong>
+                            Rp <?= number_format($reservationFee, 0, ',', '.') ?>
+                        </strong>
+                    </div>
 
-                                        <p class="col-9 fs-5 mb-0 fw-medium">Reservation Fee:</p>
-                                        <p class="col-3 fs-5 mb-0 text-end">Rp 15.000</p>
-
-                                        <p class="col-9 fs-5 mb-0 fw-medium">Service Fee:</p>
-                                        <p class="col-3 fs-5 mb-0 text-end">Rp 2.500</p>
-
-                                    </div>
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="col p-3">
-                            <div class="d-flex row container-fluid p-3 justify-content-end">
-
-                                <div class="card text-light rounded-4"
-                                    style="background-color: #343434; max-width: 480px;">
-                                    <div class="card-body p-4">
-                                        <p class="fs-5 mb-2 fw-medium" style="color: #B5B5AD;">Parking Details:</p>
-
-                                        <hr class="my-3 border-secondary opacity-50">
-
-                                        <div class="row">
-
-                                            <p class="col-6 fs-5 mb-0 fw-medium">Parking Lot:</p>
-                                            <p class="col-6 fs-5 mb-0 text-end">LG-12</p>
-
-                                            <p class="col-6 fs-5 mb-0 fw-medium">Floor:</p>
-                                            <p class="col-6 fs-5 mb-0 text-end">LG</p>
-
-                                            <p class="col-6 fs-5 mb-0 fw-medium">Reserved Time:</p>
-                                            <p class="col-6 fs-5 mb-0 text-end">16:00</p>
-
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                                <div class="card text-light rounded-4 mt-4"
-                                    style="background-color: #343434; max-width: 480px;">
-                                    <div class="card-body p-4">
-                                        <p class="fs-5 mb-2 fw-medium" style="color: #B5B5AD;">Pay Before:</p>
-
-                                        <p class="fs-5 mb-2 fw-medium text-white">22 Sept 2026, 15.59 WIB</p>
-
-                                        <hr class="my-3 border-secondary opacity-50">
-
-                                        <div class="row justify-content-between align-items-center">
-
-                                            <p class="col-9 fs-5 mb-0 fw-medium">Payment Status:</p>
-                                            <p class="col-3 d-flex justify-content-center align-items-center mb-0 rounded-2 border fw-medium"
-                                                style="color: #F19C9C; background-color: #470909; height: 26px; width: min-content; font-size: 14px; --bs-border-color: #F19C9C;">
-                                                Unpaid
-                                            </p>
-
-                                        </div>
-
-                                    </div>
-                                </div>
-
-                                <div class="card text-light rounded-4 mt-4"
-                                    style="background-color: #343434; max-width: 480px;">
-                                    <div class="card-body p-4">
-                                        <p class="fs-5 mb-2 fw-medium" style="color: #B5B5AD;">Total:</p>
-
-                                        <hr class="my-3 border-secondary opacity-50">
-
-                                        <p class="fs-5 mb-0 fw-medium">Rp. 17.500,00</p>
-
-                                    </div>
-                                </div>
-
-                                <div class="text-light mt-4" style="max-width: 480px;">
-                                        <div class="row">
-
-                                            <a href="/web_parking_reservation/app/views/home/index.php"
-                                                class="btn col btn-primary rounded-4 fw-medium pb-2 me-2"
-                                                style="background-color: #3D3527; color: #D9B061; border: 1px solid #D9B061; height: 48px; padding-top: 0.65rem;">
-                                                Back to Home
-                                            </a>
-
-                                            <a href="/web_parking_reservation/app/views/parking/invoice.php"
-                                                class="btn col btn-primary rounded-4 fw-medium pb-2 ms-2"
-                                                style="background-color: #D9B061; color: #3D3527; border: none; height: 48px; padding-top: 0.65rem;">
-                                                Check Invoice
-                                                <i class="fa-solid fa-receipt"></i>
-                                            </a>
-
-                                        </div>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-
+                    <div class="payment-detail-row">
+                        <span>Admin Fee</span>
+                        <strong>
+                            Rp <?= parkEasyEscape($mall['name'] ?? '-') ?>
+                        </strong>
                     </div>
 
                 </div>
 
-            </main>
+            </section>
+
+            <!-- Reservation summary -->
+            <aside class="payment-summary">
+
+                <section class="payment-card">
+
+                    <h3>Parking Details</h3>
+
+                    <div class="payment-divider"></div>
+
+                    <div class="payment-detail-row">
+                        <span>Reservation ID</span>
+                        <strong>
+                            <?= $reservationId !== null ? parkEasyEscape($reservationId) : "Not created yet" ?>
+                        </strong>
+                    </div>
+
+                    <div class="payment-detail-row">
+                        <span>Parking Location</span>
+                        <strong>
+                            <?= parkEasyEscape($mall['name']) ?>
+                        </strong>
+                    </div>
+
+                    <div class="payment-detail-row">
+                        <span>Parking Slot</span>
+                        <strong>
+                            <?= parkEasyEscape($slotCode) ?>
+                        </strong>
+                    </div>
+
+                    <div class="payment-detail-row">
+                        <span>Floor</span>
+                        <strong>
+                            <?= parkEasyEscape($floor['floor_code']) ?>
+                        </strong>
+                    </div>
+
+                    <div class="payment-detail-row">
+                        <span>Reserved Date</span>
+                        <strong>
+                            <?= $reservedAt !== null
+                                ? parkEasyEscape($reservedAt->format('d M Y'))
+                                : 'Not scheduled' ?>
+                        </strong>
+                    </div>
+
+                    <div class="payment-detail-row">
+                        <span>Reserved Time</span>
+                        <strong>
+                            <?= $reservedAt !== null
+                                ? parkEasyEscape($reservedAt->format('H:i'))
+                                : 'Not scheduled' ?>
+                        </strong>
+                    </div>
+
+                    <div class="payment-detail-row">
+                        <span>Parking Type</span>
+                        <strong>
+                            <?= $parkingType === 'VALET' ? 'Valet' : 'Regular' ?>
+                        </strong>
+                    </div>
+
+                </section>
+
+                <section class="payment-card">
+
+                    <div class="payment-card-header">
+                        <h3>Payment Status</h3>
+
+                        <span class="payment-status payment-status-unpaid">
+                            Unpaid
+                        </span>
+                    </div>
+
+                    <p class="payment-status-description">
+                        Complete your payment to receive your invoice.
+                    </p>
+
+                    <div class="payment-divider"></div>
+
+                    <div class="payment-summary-total">
+                        <span>Total</span>
+                        <strong>
+                            Rp <?= number_format($total, 0, ',', '.') ?>
+                        </strong>
+                    </div>
+
+                    <!-- Payment action will be connected after payment verification is implemented. -->
+                    <button
+                        type="button"
+                        class="payment-button payment-button-primary"
+                        disabled
+                    >
+                        Payment Gateway Not Available
+                    </button>
+
+                    <p class="payment-footnote">
+                        Invoice access will be available after payment has
+                        been successfully verified.
+                    </p>
+
+                </section>
+
+                <a href="?page=home" class="payment-button payment-button-secondary">
+                    Back to Home
+                </a>
+
+            </aside>
+
         </div>
 
-    </div>
+    <?php endif; ?>
+
 </main>

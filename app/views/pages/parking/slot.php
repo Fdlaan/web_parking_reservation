@@ -5,7 +5,8 @@ $titlePage = isset($selectedMall['name'])
     : 'Parking Slots | Parkeasy';
 
 $fileCss = [
-    'pages/parking.css',
+    'pages/parking/slot.css',
+    'pages/parking/index.css',
 ];
 
 ?>
@@ -20,7 +21,7 @@ $fileCss = [
                 <span>Back</span>
             </a>
 
-            <p><?= parkEasyEscape($slotPageData['error']) ?></p>
+            <span><?= parkEasyEscape($slotPageData['error']) ?></span>
         </section>
 
     <?php else: ?>
@@ -109,7 +110,7 @@ $fileCss = [
                                     <?php
                                         $isOccupied = (bool) $slot['is_occupied'];
 
-                                        $slotUrl = '?page=invoice'
+                                        $slotUrl = '?page=payment'
                                             . '&mall_id=' . rawurlencode($selectedMall['mall_id'])
                                             . '&floor_id=' . rawurlencode($selectedFloor['floor_id'])
                                             . '&slot_id=' . rawurlencode($slot['slot_id'])

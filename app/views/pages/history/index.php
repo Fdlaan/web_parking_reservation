@@ -6,7 +6,9 @@ $fileCss = [
     'pages/history.css',
 ];
 
-$fileJs = [];
+$fileJs = [
+    'pages/history.js',
+];
 
 ?>
 
@@ -32,7 +34,10 @@ $fileJs = [];
 
                 <tbody class="table-history-body">
                     <?php foreach ($paginatedRows as $r): ?>
-                        <tr>
+                        <?php
+                            $invoiceUrl = '?page=invoice&reservation_id=' . rawurldecode($r['reservation_id']);
+                        ?>
+                        <tr class="history-row" data-href="<?= parkEasyEscape($invoiceUrl) ?>" tabIndex="0" role="link" aria-label="View invoice for reservation <?= parkEasyEscape($r['reservation_id']) ?>">
                             <td>
                                 <?= parkEasyEscape($r['location']) ?>
                             </td>

@@ -178,6 +178,151 @@ if ($page === 'parking') {
     $mallsByCity = $parkingIndexData['malls_by_city'];
 }
 
+if ($page === 'payment') {
+    $paymentPageData = [
+        'error' => null,
+        'reservation' => null,
+        'mall' => null,
+        'floor' => null,
+        'slot' => null,
+        'rate' => null,
+    ];
+
+    $reservationId = trim(
+        (string) ($_GET['reservation_id'] ?? '')
+    );
+
+    // Flow 1: payment for an existing reservation.
+    if ($reservationId !== '') {
+        $selectedReservation = null;
+
+        foreach ($reservations as $item) {
+            if (
+                (string) ($item['reservation_id'] ?? '') === $reservationId
+                && (int) ($item['user_id'] ?? 0) === $currentUserId
+            ) {
+                $selectedReservation = $item;
+                break;
+            }
+        }
+
+        if ($selectedReservation === null) {
+            http_response_code(404);
+            $paymentPageData['error'] = 'Reservation not found.';
+        } elseif (
+            strtoupper((string) ($selectedReservation['status'] ?? ''))
+            !== 'PENDING_PAYMENT'
+        ) {
+            $paymentPageData['error'] =
+                'This reservation is not awaiting payment.';
+        } else {
+            $mall = parkEasyFindMall(
+                (string) $selectedReservation['mall_id'],
+                $parkingMalls
+            );
+
+            $floor = null;
+
+            foreach ($parkingFloors as $item) {
+                if (
+                    (string) ($item['floor_id'] ?? '')
+                    === (string) $selectedReservation['floor_id']
+                ) {
+                    $floor = $item;
+                    break;
+                }
+            }
+
+            $slot = null;
+
+            foreach ($parkingSlots as $item) {
+                if (
+                    (string) ($item['slot_id'] ?? '')
+                    === (string) $selectedReservation['slot_id']
+                    && (string) ($item['floor_id'] ?? '')
+                    === (string) $selectedReservation['floor_id']
+                ) {
+                    $slot = $item;
+                    break;
+                }
+            }
+
+            $rate = parkEasyFindRate(
+                (string) $selectedReservation['mall_id'],
+                (string) $selectedReservation['parking_type'],
+                $parkingRates
+            );
+
+            if (
+                $mall === null
+                || $floor === null
+                || $slot === null
+                || $rate === null
+            ) {
+                http_response_code(404);
+                $paymentPageData['error'] =
+                    'Some reservation details are unavailable.';
+            } else {
+                $paymentPageData = [
+                    'error' => null,
+                    'reservation' => $selectedReservation,
+                    'mall' => $mall,
+                    'floor' => $floor,
+                    'slot' => $slot,
+                    'rate' => $rate,
+                ];
+            }
+        }
+    } else {
+        // Flow 2: user arrives from the slot selection page.
+        $slotPageData = parkEasyPrepareSlotPageData(
+            $_GET,
+            $parkingMalls,
+            $parkingRates,
+            $parkingFloors,
+            $parkingSlots,
+            $reservations
+        );
+
+        $requestedSlotId = trim(
+            (string) ($_GET['slot_id'] ?? '')
+        );
+
+        $selectedSlot = null;
+
+        foreach ($slotPageData['slots'] as $item) {
+            if (
+                (string) ($item['slot_id'] ?? '') === $requestedSlotId
+            ) {
+                $selectedSlot = $item;
+                break;
+            }
+        }
+
+        if (
+            $slotPageData['error'] !== null
+            || $selectedSlot === null
+            || !empty($selectedSlot['is_occupied'])
+            || $slotPageData['selected_floor'] === null
+            || $slotPageData['rate'] === null
+        ) {
+            http_response_code(404);
+            $paymentPageData['error'] =
+                'The selected parking slot is unavailable.';
+        } else {
+            $paymentPageData = [
+                'error' => null,
+                'reservation' => null,
+                'mall' => $slotPageData['mall'],
+                'floor' => $slotPageData['selected_floor'],
+                'slot' => $selectedSlot,
+                'rate' => $slotPageData['rate'],
+                'parking_type' => $slotPageData['parking_type'],
+            ];
+        }
+    }
+}
+
 if ($page === 'history') {
     $historyPageData = parkEasyPrepareHistoryPageData(
         $currentUserId,
@@ -193,6 +338,119 @@ if ($page === 'history') {
     $paginatedRows = $historyPageData['paginatedRows'];
     $pageNumbers = $historyPageData['pageNumbers'];
     $months = $historyPageData['months'];
+}
+
+if ($page === 'invoice') {
+    $invoiceError = null;
+    $invoiceData = null;
+
+    $reservationId = trim(
+        (string) ($_GET['reservation_id'] ?? '')
+    );
+
+    if ($reservationId !== '') {
+        // Invoice dibuka dari History.
+        // Cari reservasi milik pengguna yang sedang login.
+        $selectedReservation = null;
+
+        foreach ($reservations as $item) {
+            if (
+                (string) ($item['reservation_id'] ?? '') === $reservationId
+                && (int) ($item['user_id'] ?? 0) === $currentUserId
+            ) {
+                $selectedReservation = $item;
+                break;
+            }
+        }
+
+        if ($selectedReservation === null) {
+            http_response_code(404);
+            $invoiceError = 'Reservation not found.';
+        } else {
+            $invoiceMall = parkEasyFindMall(
+                (string) $selectedReservation['mall_id'],
+                $parkingMalls
+            );
+
+            $invoiceFloor = null;
+
+            foreach ($parkingFloors as $floor) {
+                if (
+                    (string) $floor['floor_id']
+                    === (string) $selectedReservation['floor_id']
+                ) {
+                    $invoiceFloor = $floor;
+                    break;
+                }
+            }
+
+            $invoiceRate = parkEasyFindRate(
+                (string) $selectedReservation['mall_id'],
+                (string) $selectedReservation['parking_type'],
+                $parkingRates
+            );
+
+            $invoiceData = [
+                'reservation' => $selectedReservation,
+                'mall' => $invoiceMall,
+                'floor' => $invoiceFloor,
+                'rate' => $invoiceRate,
+                'source' => 'history',
+            ];
+
+            if (
+                $invoiceMall === null
+                || $invoiceFloor === null
+                || $invoiceRate === null
+            ) {
+                http_response_code(404);
+                $invoiceError = 'Some reservation details are unavailable.';
+                $invoiceData = null;
+            }
+        }
+    } else {
+        // Invoice dibuka setelah pengguna memilih slot.
+        // Pada tahap ini, tampilkan preview slot, bukan reservasi tersimpan.
+        $slotPageData = parkEasyPrepareSlotPageData(
+            $_GET,
+            $parkingMalls,
+            $parkingRates,
+            $parkingFloors,
+            $parkingSlots,
+            $reservations
+        );
+
+        $requestedSlotId = trim((string) ($_GET['slot_id'] ?? ''));
+        $selectedSlot = null;
+
+        foreach ($slotPageData['slots'] as $slot) {
+            if ((string) $slot['slot_id'] === $requestedSlotId) {
+                $selectedSlot = $slot;
+                break;
+            }
+        }
+
+        if (
+            $slotPageData['error'] !== null
+            || $selectedSlot === null
+            || !empty($selectedSlot['is_occupied'])
+            || $slotPageData['selected_floor'] === null
+            || $slotPageData['rate'] === null
+        ) {
+            http_response_code(404);
+            $invoiceError = 'The selected parking slot is unavailable.';
+        } else {
+            $invoiceData = [
+                'reservation' => null,
+                'mall' => $slotPageData['mall'],
+                'floor' => $slotPageData['selected_floor'],
+                'slot' => $selectedSlot,
+                'rate' => $slotPageData['rate'],
+                'parking_type' => $slotPageData['parking_type'],
+                'source' => 'slot',
+            ];
+        }
+    }
 }
 
 if ($page === 'profile') {
@@ -233,12 +491,110 @@ if (!isset($routes[$page])) {
     $currentPage = $page;
     $showLayout = $page !== 'auth';
 
-    $breadcrumb = [
-        [
-            'label' => ucfirst($page),
-            'url' => null,
-        ],
-    ];
+    $breadcrumb = [];
+
+    $parkingMallId = trim((string) ($_GET['mall_id'] ?? ''));
+    $parkingMallName = $selectedMall['name'] ?? null;
+
+    // breadcrumb based on current page
+    switch ($page) {
+        case 'home':
+            $breadcrumb = [
+                [
+                    'label' => 'Home',
+                    'url' => null,
+                ],
+            ];
+            break;
+
+        case 'parking':
+            $breadcrumb = [
+                [
+                    'label' => 'Search Park',
+                    'url' => null,
+                ],
+            ];
+            break;
+
+        case 'detail':
+        case 'slot':
+            $parkingMallName = $selectedMall['name'] ?? null;
+
+            $breadcrumb = [
+                [
+                    'label' => 'Search Park',
+                    'url' => '?page=parking',
+                ],
+            ];
+
+            if ($parkingMallName !== null) {
+                $breadcrumb[] = [
+                    'label' => $parkingMallName,
+                    'url' => '?page=detail&mall_id=' . rawurlencode(
+                        (string) $selectedMall['mall_id']
+                    ),
+                ];
+            }
+
+            if ($page === 'slot') {
+                $breadcrumb[] = [
+                    'label' => 'Select Parking Area',
+                    'url' => null,
+                ];
+            } elseif (!empty($breadcrumb)) {
+                $breadcrumb[count($breadcrumb) - 1]['url'] = null;
+            }
+            break;
+
+        case 'payment':
+            $breadcrumb = [
+                [
+                    'label' => 'Payment',
+                    'url' => null,
+                ],
+            ];
+            break;
+
+        case 'invoice':
+            $breadcrumb = [
+                [
+                    'label' => 'Invoice',
+                    'url' => null,
+                ],
+            ];
+            break;
+
+        case 'history':
+            $breadcrumb = [
+                [
+                    'label' => 'History',
+                    'url' => null,
+                ],
+            ];
+            break;
+
+        case 'profile':
+            $breadcrumb = [
+                [
+                    'label' => 'Profile',
+                    'url' => null,
+                ],
+            ];
+            break;
+
+        default:
+            $breadcrumb = [
+                [
+                    'label' => 'Home',
+                    'url' => '?page=home',
+                ],
+                [
+                    'label' => ucfirst($page),
+                    'url' => null,
+                ],
+            ];
+            break;
+    }
 
     $titlePage = 'Parkeasy';
     $fileCss = [];

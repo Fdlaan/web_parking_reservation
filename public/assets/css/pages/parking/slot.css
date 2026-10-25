@@ -1,0 +1,206 @@
+/* Slot Page */
+.parking-type-switch {
+  display: flex;
+  align-items: center;
+
+  padding: 6px 6px;
+  gap: 6px;
+
+  background: var(--active-navigation-background);
+  border: 1px solid var(--brand-gold);
+  border-radius: var(--radius-lg);
+  font: var(--text-button);
+}
+
+.parking-type-switch a {
+  color: var(--brand-gold);
+  text-decoration: none;
+  padding: 6px 12px;
+}
+
+.parking-type-switch .is-active {
+  background: var(--brand-gold);
+  color: var(--active-navigation-background);
+  border-radius: var(--radius-md);
+}
+
+.parking-selected-rate {
+  font: var(--text-label);
+  color: var(--secondary-text);
+}
+.parking-selected-rate strong {
+  color: var(--brand-gold);
+}
+
+.parking-selected-floor {
+  display: flex;
+  flex-direction: row;
+  padding: 12px;
+  gap: 12px;
+  border: 1px solid var(--border-divider);
+  border-radius: var(--radius-sm);
+  align-items: center;
+  background-color: var(--surface-card);
+}
+
+.parking-selected-floor-header {
+  font: var(--text-H4);
+  color: var(--primary-text);
+}
+
+.parking-selected-floor-section {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  gap: 12px;
+  padding: 12px;
+  background-color: var(--raised-secondary-action);
+  border: 1px solid var(--border-divider);
+  border-radius: var(--radius-md);
+}
+
+.parking-selected-floor-section > .floor-divider {
+  width: 2px;
+  min-width: 1px;
+  height: auto;
+  margin: 0;
+  background-color: var(--border-divider);
+  opacity: 1;
+  align-self: stretch;
+  flex-shrink: 0;
+}
+
+.floor-btn {
+  color: var(--secondary-text);
+  text-decoration: none;
+  border: 1px solid transparent;
+  border-radius: var(--radius-md);
+  flex: 1 1 0;
+  padding: 12px 0;
+  text-align: center;
+  font: var(--text-button);
+  transition: 0.3s ease;
+}
+
+.floor-btn:hover {
+  color: var(--primary-text);
+}
+
+.floor-btn.active {
+  color: #e0b45a;
+  background-color: #4a3b24;
+  border-color: #e0b45a;
+}
+
+.parking-area-floor {
+  display: flex;
+  /* width: 100%; */
+  border: 1px solid var(--border-divider);
+  border-radius: var(--radius-lg);
+  background: var(--surface-card);
+  padding: 48px;
+}
+
+.parking-slots-track {
+  display: grid;
+  grid-template-columns: repeat(3, max-content);
+  grid-auto-rows: max-content;
+  justify-content: space-between;
+  align-content: start;
+  gap: 48px;
+  padding-bottom: 24px;
+
+  width: 100%;
+  max-height: 450px;
+  min-width: 0;
+
+  overflow: auto;
+  box-sizing: border-box;
+
+  scrollbar-width: thin;
+}
+
+.slot-group {
+  display: grid;
+
+  width: 100%;
+
+  grid-template-columns: repeat(2, 155px);
+  grid-template-rows: repeat(3, 59px);
+
+  flex: 0 0 auto;
+  width: max-content;
+
+  border-top: 2px solid var(--border-divider);
+  border-bottom: 2px solid var(--border-divider);
+}
+
+.parking-slot {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+
+  min-width: 0;
+  box-sizing: border-box;
+
+  color: var(--secondary-text);
+  text-decoration: none;
+
+  border-right: 2px solid var(--border-divider);
+  border-bottom: 2px solid var(--border-divider);
+}
+
+.slot-group .parking-slot:nth-child(2n) {
+  border-right: none;
+}
+
+.slot-group .parking-slot:nth-child(n + 5) {
+  border-bottom: none;
+}
+
+.parking-slot.is-empty {
+  pointer-events: none;
+}
+
+.parking-slot.is-available {
+  cursor: pointer;
+}
+
+.parking-slot.is-available:hover {
+  background-color: rgba(255, 255, 255, 0.04);
+  color: var(--primary-text);
+}
+
+.parking-slot.is-occupied {
+  cursor: not-allowed;
+  background-color: var(--overlay-scrim);
+  opacity: 0.7;
+}
+
+.parking-slot.is-empty {
+  pointer-events: none;
+}
+
+.slot-label {
+  font: var(--text-label);
+}
+
+.slot-dot {
+  width: 1em;
+  height: 1em;
+
+  border-radius: var(--radius-full);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.06);
+}
+
+.slot-dot.available {
+  background-color: var(--success-background);
+  border: 2px solid var(--success-foreground);
+}
+
+.slot-dot.taken {
+  background-color: var(--danger-background);
+  border: 2px solid var(--danger-foreground);
+}
