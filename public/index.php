@@ -4,50 +4,69 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/config/app.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/helpers/dummy-data.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/helpers/auth.php';
-require_once $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/helpers/parking-functions.php';
+$projectRoot = $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation';
 
-$dummyDataPath = $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/database/dummy-data/';
+require_once $projectRoot . '/app/config/app.php';
+require_once $projectRoot . '/app/helpers/dummy-data.php';
+require_once $projectRoot . '/app/helpers/auth.php';
+require_once $projectRoot . '/app/helpers/parking-functions.php';
+require_once $projectRoot . '/app/controllers/ParkingController.php';
+require_once $projectRoot . '/app/controllers/HomeController.php';
+require_once $projectRoot . '/app/controllers/HistoryController.php';
+require_once $projectRoot . '/app/controllers/AuthController.php';
+require_once $projectRoot . '/app/controllers/ProfileController.php';
+require_once $projectRoot . '/app/models/Mall.php';
 
-$userLocations = require $dummyDataPath . 'user-locations.php';
-$parkingMalls = require $dummyDataPath . 'parking-malls.php';
-$reservations = require $dummyDataPath . 'reservations.php';
+/*
+ * Change this value when the real database provider is ready.
+ * Page templates and controllers consume the same variable names regardless
+ * of where the data comes from.
+ */
+$dataSource = 'dummy';
 
-if (!isset($_SESSION['demo_users'])) {
-    $_SESSION['demo_users'] = require $dummyDataPath . 'users.php';
+if ($dataSource === 'dummy') {
+    $dummyDataPath = $projectRoot . '/database/dummy-data/';
+
+    $userLocations = require $dummyDataPath . 'user-locations.php';
+    $parkingMalls = require $dummyDataPath . 'parking-malls.php';
+    $parkingRates = require $dummyDataPath . 'parking-rates.php';
+    $parkingFloors = require $dummyDataPath . 'parking-floors.php';
+    $parkingSlots = require $dummyDataPath . 'parking-slots.php';
+    $reservations = require $dummyDataPath . 'reservations.php';
+    $vehicles = require $dummyDataPath . 'vehicles.php';
+
+    if (!isset($_SESSION['demo_users'])) {
+        $_SESSION['demo_users'] = require $dummyDataPath . 'users.php';
+    }
+
+    $users = &$_SESSION['demo_users'];
+} elseif ($dataSource === 'database') {
+    /*
+     * Database provider must return the same dataset contract as the dummy
+     * source above. Implement it here when the real schema is ready, then
+     * switch only $dataSource to 'database'.
+     */
+    require_once $projectRoot . '/app/config/database.php';
+    require_once $projectRoot . '/database/DatabaseDataProvider.php';
+
+    $databaseData = parkEasyLoadDatabaseData($conn);
+    $userLocations = $databaseData['userLocations'];
+    $parkingMalls = $databaseData['parkingMalls'];
+    $parkingRates = $databaseData['parkingRates'];
+    $parkingFloors = $databaseData['parkingFloors'];
+    $parkingSlots = $databaseData['parkingSlots'];
+    $reservations = $databaseData['reservations'];
+    $vehicles = $databaseData['vehicles'];
+    $users = $databaseData['users'];
+} else {
+    throw new RuntimeException('Unknown Parkeasy data source.');
 }
-
-$users = &$_SESSION['demo_users'];
 
 $page = $_GET['page'] ?? 'home';
 $step = $_GET['step'] ?? 'login';
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 
-if ($page === 'logout') {
-    parkEasyLogout();
-
-    header('Location: ?page=auth&step=login');
-    exit;
-}
-
-if ($requestMethod === 'POST' && $page === 'auth' && $step === 'login') {
-    $matchedUser = parkEasyFindUserByEmail(trim($_POST['email'] ?? ''), $users);
-
-    if ($matchedUser === null) {
-        $_SESSION['login_message'] = 'Email is not registered.';
-
-        header('Location: ?page=auth&step=login');
-        exit;
-    }
-
-    session_regenerate_id(true);
-    $_SESSION['user_id'] = (int) $matchedUser['id'];
-
-    header('Location: ?page=home');
-    exit;
-}
+parkEasyHandleAuthRequest($page, $step, $requestMethod, $users);
 
 $currentUserId = parkEasyCurrentUserId() ?? 0;
 $user = $users[$currentUserId] ?? null;
@@ -74,60 +93,125 @@ if ($selectedLocation === null) {
     $selectedLocation = $userLocations[0] ?? null;
 }
 
-if (
-    $requestMethod === 'POST'
-    && $page === 'profile'
-    && ($_POST['profile_action'] ?? '') === 'save'
-) {
-    $username = trim($_POST['username'] ?? '');
-    $email = trim($user['email'] ?? '');
-    $phone = trim($_POST['phone'] ?? '');
-    $plateNumber = trim($_POST['plate_number'] ?? '');
+parkEasyHandleProfileUpdate(
+    $page,
+    $requestMethod,
+    $currentUserId,
+    $user,
+    $users
+);
 
-    $errors = [];
+// Prepare parking page data outside the view templates.
+if ($page === 'slot') {
+    $slotPageData = parkEasyPrepareSlotPageData(
+        $_GET,
+        $parkingMalls,
+        $parkingRates,
+        $parkingFloors,
+        $parkingSlots,
+        $reservations
+    );
 
-    if ($username === '') {
-        $errors[] = 'Username is required.';
-    }
-
-    if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = 'A valid email is required.';
-    }
-
-    if ($phone === '') {
-        $errors[] = 'Phone number is required.';
-    }
-
-    if ($plateNumber === '') {
-        $errors[] = 'Plate number is required.';
-    }
-
-    if (empty($errors)) {
-        $users[$currentUserId]['username'] = $username;
-        $users[$currentUserId]['email'] = $email;
-        $users[$currentUserId]['phone'] = $phone;
-        $users[$currentUserId]['plate_number'] = $plateNumber;
-        $users[$currentUserId]['updated_at'] = date('Y-m-d H:i:s');
-
-        $_SESSION['profile_message'] = 'Profile updated successfully.';
+    if ($slotPageData['error'] !== null) {
+        http_response_code(404);
     } else {
-        $_SESSION['profile_message'] = implode(' ', $errors);
+        $selectedMall = $slotPageData['mall'];
+        $parkingType = $slotPageData['parking_type'];
+        $selectedRate = $slotPageData['rate'];
+        $selectedPrice = $slotPageData['selected_price'];
+        $selectedAdminFee = $slotPageData['selected_admin_fee'];
+        $parkingPageFloors = $slotPageData['floors'];
+        $selectedFloor = $slotPageData['selected_floor'];
+        $parkingPageSlots = $slotPageData['slots'];
+        $floorAvailability = $slotPageData['availability'];
     }
+}
 
-    header('Location: ?page=profile');
-    exit;
+if ($page === 'detail') {
+    $detailPageData = parkEasyPrepareMallDetailData(
+        trim((string) ($_GET['mall_id'] ?? '')),
+        $selectedLocation,
+        $parkingMalls,
+        $parkingRates,
+        $parkingFloors,
+        $parkingSlots,
+        $reservations
+    );
+
+    if ($detailPageData['error'] !== null) {
+        http_response_code(404);
+    } else {
+        $selectedMall = $detailPageData['mall'];
+        $regularRate = $detailPageData['regular_rate'];
+        $valetRate = $detailPageData['valet_rate'];
+        $distanceLabel = $detailPageData['distance_label'];
+        $floorAvailability = $detailPageData['floor_availability'];
+        $mapsUrl = $detailPageData['maps_url'];
+        $chooseSpotUrl = $detailPageData['choose_spot_url'];
+    }
+}
+
+// Prepare page data in controllers. View files only render the prepared values.
+if ($page === 'home') {
+    $homePageData = parkEasyPrepareHomePageData(
+        $currentUserId,
+        $selectedLocation,
+        $user,
+        $parkingMalls,
+        $parkingRates,
+        $reservations
+    );
+
+    $recommendedParking = $homePageData['recommendedParking'];
+    $previouslyParking = $homePageData['previouslyParking'];
+    $reservation = $homePageData['reservation'];
+    $reservationStatus = $homePageData['reservationStatus'];
+    $canCancel = $homePageData['canCancel'];
+}
+
+if ($page === 'parking') {
+    $parkingIndexData = parkEasyPrepareParkingIndexData(
+        $selectedLocation,
+        $parkingMalls,
+        $parkingRates
+    );
+    $mallsByCity = $parkingIndexData['malls_by_city'];
+}
+
+if ($page === 'history') {
+    $historyPageData = parkEasyPrepareHistoryPageData(
+        $currentUserId,
+        $reservations,
+        $parkingMalls,
+        $_GET
+    );
+
+    $rows = $historyPageData['rows'];
+    $statusLabels = $historyPageData['statusLabels'];
+    $totalPages = $historyPageData['totalPages'];
+    $historyPage = $historyPageData['historyPage'];
+    $paginatedRows = $historyPageData['paginatedRows'];
+    $pageNumbers = $historyPageData['pageNumbers'];
+    $months = $historyPageData['months'];
+}
+
+if ($page === 'profile') {
+    $profilePageData = parkEasyPrepareProfilePageData($user, $assetUrl);
+    $profileMessage = $profilePageData['profileMessage'];
+    $avatarUrl = $profilePageData['avatarUrl'];
+    $profileFields = $profilePageData['profileFields'];
 }
 
 $routes = [
-    'home' => $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/pages/home/index.php',
-    'parking' => $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/pages/parking/index.php',
-    'history' => $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/pages/history/index.php',
-    'profile' => $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/pages/profile/index.php',
-    'auth' => $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/pages/auth/index.php',
-    'detail' => $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/pages/parking/detail.php',
-    'slot' => $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/pages/parking/slot.php',
-    'invoice' => $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/pages/parking/invoice.php',
-    'payment' => $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/pages/parking/payment.php',
+    'home' => $projectRoot . '/app/views/pages/home/index.php',
+    'parking' => $projectRoot . '/app/views/pages/parking/index.php',
+    'history' => $projectRoot . '/app/views/pages/history/index.php',
+    'profile' => $projectRoot . '/app/views/pages/profile/index.php',
+    'auth' => $projectRoot . '/app/views/pages/auth/index.php',
+    'detail' => $projectRoot . '/app/views/pages/parking/detail.php',
+    'slot' => $projectRoot . '/app/views/pages/parking/slot.php',
+    'invoice' => $projectRoot . '/app/views/pages/parking/invoice.php',
+    'payment' => $projectRoot . '/app/views/pages/parking/payment.php',
 ];
 
 if (!isset($routes[$page])) {
@@ -179,18 +263,18 @@ if (!isset($routes[$page])) {
 <!DOCTYPE html>
 <html lang="en">
 
-<?php require $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/includes/head.php'; ?>
+<?php require $projectRoot . '/app/views/includes/head.php'; ?>
 
 <body>
 
 <?php if ($showLayout): ?>
 
 <div class="layout d-flex align-items-stretch">
-    <?php require $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/layouts/sidebar.php'; ?>
+    <?php require $projectRoot . '/app/views/layouts/sidebar.php'; ?>
 
     <div class="content d-flex flex-column">
 
-        <?php require $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/layouts/topbar.php'; ?>
+        <?php require $projectRoot . '/app/views/layouts/topbar.php'; ?>
 
         <?= $pageContent ?>
 

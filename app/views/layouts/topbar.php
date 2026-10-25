@@ -11,23 +11,14 @@
     <!-- breadcrumb nav -->
     <div class="topbar-item-breadcrumb">
 
-        <?php foreach ($breadcrumb as $item): ?>
-        <div class="breadcrumb-item">
-
-            <?php if (($item['url'] ?? null) !== null): ?>
-            <a href="<?= htmlspecialchars($item['url'], ENT_QUOTES, 'UTF-8') ?>">
-                <?= htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8') ?>
-            </a>
-
+        <?php $lastIndex = count($breadcrumb) - 1; ?>
+        <?php foreach ($breadcrumb as $index => $item): ?>
+            <?php if ($index === $lastIndex || ($item['url'] ?? null) === null): ?>
+                <span class="breadcrumb-current" aria-current="page"><?= htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8') ?></span>
             <?php else: ?>
-            <a href="<?= htmlspecialchars($item['url'], ENT_QUOTES, 'UTF-8') ?>">
-                <?= htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8') ?> 
-            </a>
-            <i class= "breadcrumb-icon" aria-hidden="true"></i>
-
+                <a class="breadcrumb-link" href="<?= htmlspecialchars($item['url'], ENT_QUOTES, 'UTF-8') ?>"><?= htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8') ?></a>
+                <i class="breadcrumb-icon" aria-hidden="true"></i>
             <?php endif; ?>
-
-        </div>
         <?php endforeach; ?>
 
     </div>

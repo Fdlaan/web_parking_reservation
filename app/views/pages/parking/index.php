@@ -12,26 +12,6 @@ $fileCss = [
 // file JS yang terhubung
 $fileJs = [];
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/models/Mall.php';
-
-$mallsByCity = [];
-
-if ($selectedLocation !== null) {
-    $recommendedMalls = Mall::getRecommended(
-        (float) $selectedLocation['latitude'],
-        (float) $selectedLocation['longitude'],
-        $parkingMalls
-    );
-
-    foreach ($recommendedMalls as $parkingMall) {
-        $city = $parkingMall['city'];
-        $mallsByCity[$city][] = $parkingMall;
-    }
-
-    foreach ($mallsByCity as $city => $cityMalls) {
-        $mallsByCity[$city] = array_slice($cityMalls, 0, 5);
-    }
-}
 
 ?>
 

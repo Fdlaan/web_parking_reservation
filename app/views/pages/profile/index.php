@@ -10,37 +10,6 @@ $fileJs = [
     'pages/profile.js',
 ];
 
-$profileMessage = $_SESSION['profile_message'] ?? null;
-unset($_SESSION['profile_message']);
-
-$avatarUrl = trim($user['avatar_url'] ?? '');
-
-if ($avatarUrl === '') {
-    $avatarUrl = $assetUrl . '/images/icons/profile-icon.svg';
-}
-
-$profileFields = [
-    'username' => [
-        'label' => 'Username:',
-        'type' => 'text',
-        'placeholder' => 'Enter your username',
-    ],
-    'email' => [
-        'label' => 'Email:',
-        'type' => 'email',
-        'placeholder' => 'Enter your email',
-    ],
-    'phone' => [
-        'label' => 'Phone:',
-        'type' => 'tel',
-        'placeholder' => 'Enter your phone number',
-    ],
-    'plate_number' => [
-        'label' => 'Plate Number:',
-        'type' => 'text',
-        'placeholder' => 'B 1234 FSD',
-    ],
-];
 
 ?>
 

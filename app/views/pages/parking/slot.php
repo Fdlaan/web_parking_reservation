@@ -1,217 +1,163 @@
-<main class="main-content d-flex flex-column">
+<?php
 
-    <style>
-        .floor-btn {
-            color: #f1f1f1;
-            border: 1px solid transparent;
-            flex: 1 1 0;
-            /* equal widths, regardless of text length */
-            text-align: center;
-        }
+$titlePage = isset($selectedMall['name'])
+    ? $selectedMall['name'] . ' | Parkeasy'
+    : 'Parking Slots | Parkeasy';
 
-        .floor-btn:hover {
-            color: #fff;
-            background-color: rgba(255, 255, 255, 0.05);
-        }
+$fileCss = [
+    'pages/parking.css',
+];
 
-        .floor-btn.active {
-            color: #e0b45a;
-            background-color: #4a3b24;
-            border-color: #e0b45a;
-        }
+?>
 
-        .floor-divider {
-            width: 1px;
-            height: 36px;
-            background-color: rgba(255, 255, 255, 0.12);
-            flex-shrink: 0;
-        }
+<main class="main-content">
 
-        .slot-block {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            border-top: 2px solid #3a3a3a;
-        }
+    <?php if (($slotPageData['error'] ?? null) !== null): ?>
 
-        .slot {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 14px;
-            height: 118px;
-            color: #b5b5b5;
-            font-size: 1.15rem;
-            text-decoration: none;
-            border-bottom: 2px solid #3a3a3a;
-        }
+        <section>
+            <a href="?page=parking" class="back-button">
+                <i class="back-icon"></i>
+                <span>Back</span>
+            </a>
 
-        /* left column of each block gets the vertical divider */
-        .slot:nth-child(odd) {
-            border-right: 2px solid #3a3a3a;
-        }
+            <p><?= parkEasyEscape($slotPageData['error']) ?></p>
+        </section>
 
-        a.slot:hover {
-            background-color: rgba(255, 255, 255, 0.04);
-            color: #fff;
-        }
+    <?php else: ?>
 
-        .slot-dot {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            flex-shrink: 0;
-            box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.06);
-            /* outer halo */
-        }
+        <section>
+            <a href="?page=detail&mall_id=<?= rawurlencode($selectedMall['mall_id']) ?>" class="back-button">
+                <i class="back-icon"></i>
+                <span>Back</span>
+            </a>
+        </section>
 
-        .slot-dot.available {
-            background-color: #1f3a2d;
-            border: 2px solid #6fd49b;
-        }
+        <section>
+            <span class="parking-header">
+                <?= parkEasyEscape($selectedMall['name']) ?>
+                <div class="parking-type-switch" role="group" aria-label="Parking type">
+                    <a
+                        href="?page=slot&mall_id=<?= rawurlencode($selectedMall['mall_id']) ?>&parking_type=REGULER<?= $selectedFloor !== null ? '&floor_id=' . rawurlencode($selectedFloor['floor_id']) : '' ?>"
+                        class="parking-type-option <?= $parkingType === 'REGULER' ? 'is-active' : '' ?>"
+                        <?= $parkingType === 'REGULER' ? 'aria-current="page"' : '' ?>
+                    >Regular</a>
 
-        .slot-dot.taken {
-            background-color: #5a1f22;
-            border: 2px solid #e57373;
-        }
-    </style>
-    
-    <!-- Wrapper: sidebar + right column side by side -->
-    <div class="d-flex">
+                    <a
+                        href="?page=slot&mall_id=<?= rawurlencode($selectedMall['mall_id']) ?>&parking_type=VALET<?= $selectedFloor !== null ? '&floor_id=' . rawurlencode($selectedFloor['floor_id']) : '' ?>"
+                        class="parking-type-option <?= $parkingType === 'VALET' ? 'is-active' : '' ?>"
+                        <?= $parkingType === 'VALET' ? 'aria-current="page"' : '' ?>
+                    >Valet</a>
+                </div>
+            </span>
 
-        <!-- Right column: topbar + main content -->
-        <div class="flex-grow-1 d-flex flex-column" style="background: var(--panel);">
+            <div class="parking-selected-rate"
+                data-parking-type="<?= parkEasyEscape($parkingType) ?>">
+                <?php if ($selectedRate !== null): ?>
+                    <span class="parking-selected-rate-label">Selected rate</span>
+                    <strong class="parking-selected-rate-price">
+                        Rp <?= number_format((int) $selectedRate['price_per_slot'], 0, ',', '.') ?>
+                    </strong>
+                    <span class="parking-selected-rate-fee">
+                        Admin fee: Rp <?= number_format((int) ($selectedRate['admin_fee'] ?? 0), 0, ',', '.') ?>
+                    </span>
+                <?php else: ?>
+                    <span class="parking-selected-rate-unavailable">Rate is not configured for this parking type.</span>
+                <?php endif; ?>
+            </div>
 
-            <!-- Main content -->
-            <main class="d-flex flex-grow flex-column-1 py-4 ms-4 me-4">
-                <div class="container py-4">
+            <div class="parking-selected-floor" style="">
 
+                <span class="parking-selected-floor-header">Floor</span>
 
-                    <div class="d-flex flex-column">
-                        <a href="/web_parking_reservation/app/views/home/index.php" class="text-decoration-none fw-bold"
-                            style="width: fit-content;">
-                            <p for="back-icon" style="color: var(--text)">
-                                <i class="fa-solid fa-arrow-left-long me-2"></i>
-                                Back
-                            </p>
-                        </a>
-                    </div>
+                <div class="parking-selected-floor-section">
 
-                    <div class="row align-items-center mt-4">
+                    <?php foreach ($parkingPageFloors as $index => $floor): ?>
+                        <?php if ($index > 0): ?>
+                            <hr class="floor-divider">
+                        <?php endif; ?>
 
-                        <!-- Title + subtitle -->
-                        <div class="col-12 col-lg-5">
-                            <p class="fs-1 fw-medium text-white mb-0">Grand Indonesia Mall</p>
-                            <span style="color: #e0b45a;">Regular Parking</span>
-                        </div>
+                        <a
+                            href="?page=slot&mall_id=<?= rawurlencode($selectedMall['mall_id']) ?>&parking_type=<?= rawurlencode($parkingType) ?>&floor_id=<?= rawurlencode($floor['floor_id']) ?>"
+                            class="floor-btn <?= $selectedFloor !== null && $selectedFloor['floor_id'] === $floor['floor_id'] ? 'active' : '' ?>"
+                            <?= $selectedFloor !== null && $selectedFloor['floor_id'] === $floor['floor_id'] ? 'aria-current="page"' : '' ?>
+                        ><?= parkEasyEscape($floor['floor_code']) ?></a>
+                    <?php endforeach; ?>
 
-                        <!-- Floor selector -->
-                        <div class="col-12 col-lg-7 mt-3 mt-lg-0">
-                            <div class="d-flex align-items-center gap-4 p-1 rounded-4 text-light"
-                                style="background-color: #2C2C2C;">
+                    <?php if (empty($parkingPageFloors)): ?>
+                        <span class="p-3">No active floors available.</span>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </section>
 
-                                <h2 class="fw-bold fs-3 mb-1 ms-2">Floor</h2>
+        <section>
+            <div class="parking-area-floor">
+                
+                <?php if ($selectedFloor === null): ?>
+                    <p>No parking floor has been configured for this mall yet.</p>
+                <?php elseif (empty($parkingPageSlots)): ?>
+                    <p>No active parking slots are configured for this floor.</p>
+                <?php else: ?>
+                
+                    <?php $slotGroups = array_chunk($parkingPageSlots, 6); ?>
+                    <div class="parking-slots-track">
 
-                                <!-- Track -->
-                                <div class="d-flex flex-grow-1 align-items-center rounded-4"
-                                    style="background-color: #343434;">
+                        <?php foreach ($slotGroups as $group): ?>
+                            <div class="slot-group">
 
-                                    <button type="button"
-                                        class="floor-btn active btn d-flex justify-content-center align-items-center flex-fill rounded-4 py-3 fs-4">LG</button>
-                                    <span class="floor-divider"></span>
+                                <?php foreach ($group as $slot): ?>
+                                    <?php
+                                        $isOccupied = (bool) $slot['is_occupied'];
 
-                                    <button type="button"
-                                        class="floor-btn btn d-flex justify-content-center align-items-center flex-fill rounded-4 py-3 fs-4">GF</button>
-                                    <span class="floor-divider"></span>
+                                        $slotUrl = '?page=invoice'
+                                            . '&mall_id=' . rawurlencode($selectedMall['mall_id'])
+                                            . '&floor_id=' . rawurlencode($selectedFloor['floor_id'])
+                                            . '&slot_id=' . rawurlencode($slot['slot_id'])
+                                            . '&parking_type=' . rawurlencode($parkingType);
 
-                                    <button type="button"
-                                        class="floor-btn btn d-flex justify-content-center align-items-center flex-fill rounded-4 py-3 fs-4">1</button>
-                                    <span class="floor-divider"></span>
+                                        $slotClass = 'parking-slot'
+                                            . ($isOccupied ? ' is-occupied' : ' is-available');
+                                    ?>
 
-                                    <button type="button"
-                                        class="floor-btn btn d-flex justify-content-center align-items-center flex-fill rounded-4 py-3 fs-4">2</button>
-                                    <span class="floor-divider"></span>
-
-                                    <button type="button"
-                                        class="floor-btn btn d-flex justify-content-center align-items-center flex-fill rounded-4 py-3 fs-4">3</button>
-
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="d-flex col-2 rounded-3 py-1 px-1 border mt-5 justify-content-between"
-                                style="background-color: #3D3527; --bs-border-color: #D9B061;">
-
-                                <a href="#"
-                                    class="d-flex justify-content-center align-items-center rounded-2 me-3 text-decoration-none fw-bold w-100"
-                                    style="background-color: #D9B061; color: #3D3527; height: 26px; font-size: 14px;">
-                                    Regular
-                                </a>
-
-                                <a href="#"
-                                    class="d-flex justify-content-center align-items-center rounded-2 text-decoration-none fw-bold w-100"
-                                    style="background-color: #D9B061; color: #3D3527; height: 26px; font-size: 14px;">
-                                    Valet
-                                </a>
-
-                            </div>
-                        </div>
-
-                        <!-- Parking Slot Demo -->
-
-                        <?php
-                        // Demo data: 36 slots. Replace this with rows from your database.
-                        $slots = [];
-                        for ($i = 1; $i <= 36; $i++) {
-                            $slots[] = [
-                                'code' => 'LG-' . $i,
-                                'taken' => $i % 2 === 0,    // example: even numbers are taken
-                            ];
-                        }
-                        $blocks = array_chunk($slots, 6);   // 6 slots per block
-                        ?>
-
-                        <div class="mt-5 p-5 text-light rounded-4" style="background-color: #2C2C2C;">
-                            <div class="row row-cols-1 row-cols-lg-3 gx-5 gy-5">
-
-                                <?php foreach ($blocks as $block): ?>
-                                    <div class="col">
-                                        <div class="slot-block">
-
-                                            <?php foreach ($block as $i => $slot): ?>
-                                                <?php
-                                                $isLeft = $i % 2 === 0;
-                                                $dot = '<span class="slot-dot ' . ($slot['taken'] ? 'taken' : 'available') . '"></span>';
-                                                $label = '<span>' . htmlspecialchars($slot['code']) . '</span>';
-                                                $content = $isLeft ? $dot . $label : $label . $dot;
-                                                ?>
-
-                                                <?php if ($slot['taken']): ?>
-                                                    <div class="slot">
-                                                        <?= $content ?>
-                                                    </div>
-                                                <?php else: ?>
-                                                    <a href="#" class="slot">
-                                                        <?= $content ?>
-                                                    </a>
-                                                <?php endif; ?>
-
-                                            <?php endforeach; ?>
-
+                                    <?php if ($isOccupied): ?>
+                                        <div
+                                            class="<?= $slotClass ?>"
+                                            aria-label="<?= parkEasyEscape($slot['slot_code']) ?> unavailable"
+                                        >
+                                            <span class="slot-dot taken"></span>
+                                            <span class="slot-label">
+                                                <?= parkEasyEscape($slot['slot_code']) ?>
+                                            </span>
                                         </div>
-                                    </div>
+                                    <?php else: ?>
+                                        <a
+                                            href="<?= parkEasyEscape($slotUrl) ?>"
+                                            class="<?= $slotClass ?>"
+                                            aria-label="Select <?= parkEasyEscape($slot['slot_code']) ?>"
+                                        >
+                                            <span class="slot-dot available"></span>
+                                            <span class="slot-label">
+                                                <?= parkEasyEscape($slot['slot_code']) ?>
+                                            </span>
+                                        </a>
+                                    <?php endif; ?>
+
                                 <?php endforeach; ?>
 
+                                <?php for ($i = count($group); $i < 6; $i++): ?>
+                                    <div
+                                        class="parking-slot is-empty"
+                                        aria-hidden="true"
+                                    ></div>
+                                <?php endfor; ?>
+
                             </div>
-                        </div>
+                        <?php endforeach; ?>
 
                     </div>
+                <?php endif; ?>
 
-                </div>
-
-            </main>
-        </div>
-
-    </div>
-
+            </div>
+        </section>
+    <?php endif; ?>
 </main>

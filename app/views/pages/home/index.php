@@ -1,104 +1,13 @@
 <?php
-    
-// setting title page
+
 $titlePage = 'Home | Parkeasy';
 
-// file CSS yang terhubung
 $fileCss = [
     'pages/home.css',
-    'components/card-parking.css'
+    'components/card-parking.css',
 ];
 
-// file JS yang terhubung
 $fileJs = [];
-
-require_once $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/models/Mall.php';
-
-$recommendedParking = [];
-
-if ($selectedLocation !== null) {
-    $recommendedParking = Mall::getRecommended(
-        (float) $selectedLocation['latitude'],
-        (float) $selectedLocation['longitude'],
-        $parkingMalls
-    );
-}
-$recommendedParking = array_slice(
-    $recommendedParking,
-    0,
-    4
-);
-
-$userReservations = array_values(array_filter(
-    $reservations,
-    fn($reservation) => (int) $reservation['user_id'] === $currentUserId && $reservation['status'] === 'COMPLETED'
-));
-
-usort (
-    $userReservations,
-    fn($a, $b) => strtotime($b['reserved_at']) <=> strtotime($a['reserved_at'])
-);
-
-$previouslyParking = [];
-foreach (array_slice($userReservations, 0, 3) as $reservation) {
-    $mall = parkEasyFindMall(
-        (int) $reservation['mall_id'],
-        $parkingMalls
-    );
-
-    if ($mall === null) {
-        continue;
-    }
-
-    $previouslyParking[] = array_merge($mall, [
-        'url' => '?page=detail&mall_id=' . (int) $mall['id'],
-        'alt' => $mall['name'],
-        'reserved_at' => $reservation['reserved_at'],
-        'slot_code' => $reservation['slot_code'],
-        'plate_number' => $reservation['plate_number'],
-    ]);
-}
-
-$activeReservations = array_values(array_filter(
-    $reservations,
-    fn($reservation) => (int) $reservation['user_id'] === $currentUserId && in_array($reservation['status'],['CONFIRMED', 'PENDING_PAYMENT'], true)
-));
-
-usort(
-    $activeReservations,
-    fn($a, $b) =>
-        strtotime($a['reserved_at']) <=> strtotime($b['reserved_at'])
-);
-
-$reservation = $activeReservations[0] ?? null;
-
-$reservationStatus = match ($reservation['status'] ?? null) {
-    'CONFIRMED' => 'paid',
-    'PENDING_PAYMENT' => 'unpaid',
-    default => 'none',
-};
-
-if ($reservation !== null) {
-    $mall = parkEasyFindMall(
-        (int) $reservation['mall_id'],
-        $parkingMalls
-    );
-
-    $startTime = new DateTimeImmutable($reservation['reserved_at']);
-
-    $reservation = array_merge($reservation, [
-        'mall_name' => $mall['name'] ?? 'Unknown Mall',
-        'parking_slot' => $reservation['slot_code'],
-        'time' => $startTime->format('d M Y, H:i'),
-        'plate_number' => $reservation['plate_number']
-            ?: ($user['plate_number'] ?? '-'),
-        'parking_type' => $reservation['parking_type'],
-    ]);
-
-    $now = new DateTimeImmutable('now');
-
-    $canCancel = $now->modify('+2 hours') <= $startTime;
-}
 
 ?>
 
@@ -181,7 +90,7 @@ if ($reservation !== null) {
                 <?php else: ?>
                 <?php if ($canCancel): ?>
                 <form action="?page=cancel-reservation" method="POST">
-                    <input type="hidden" name="reservation_id" value="<?= (int) $reservation['id'] ?>">
+                    <input type="hidden" name="reservation_id" value="<?= parkEasyEscape($reservation['reservation_id'] ?? '') ?>">
                     <button type="submit" class="reservation-button cancel-button">
                         Cancel Reservation
                     </button>

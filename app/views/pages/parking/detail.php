@@ -1,63 +1,26 @@
 <?php
 
-require_once $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/models/Mall.php';
-// file CSS yang terhubung
+$titlePage = isset($selectedMall['name'])
+    ? $selectedMall['name'] . ' | Parkeasy'
+    : 'Parking Detail | Parkeasy';
+
 $fileCss = [
     'pages/parking.css',
 ];
 
-$mallId = filter_input(
-    INPUT_GET,
-    'mall_id',
-    FILTER_VALIDATE_INT
-);
-
-$selectedMall = $mallId !== false
-    && $mallId !== null
-    && $mallId > 0
-    ? parkEasyFindMall($mallId, $parkingMalls)
-    : null;
-
-$regularPrice = $selectedMall['prices']['regular'] ?? null;
-$valetPrice = $selectedMall['prices']['valet'] ?? null;
-
-if ($selectedMall === null) {
-    http_response_code(404);
-    exit('Parking location not found');
-}
-
-$titlePage = $selectedMall['name'] . ' | Parkeasy';
-
-$distanceKm = null;
-$distanceLabel = '';
-
-if ($selectedLocation !== null) {
-    $distanceKm = parkEasyCalculateDistance(
-        (float) $selectedLocation['latitude'],
-        (float) $selectedLocation['longitude'],
-        (float) $selectedMall['latitude'],
-        (float) $selectedMall['longitude']
-    );
-
-    $distanceLabel = number_format($distanceKm, 1)
-        . ' KM From your location';
-}
-
-$floorAvailability = parkEasyFloorAvailability(
-    (int) $selectedMall['id'],
-    $parkingMalls,
-    $reservations,
-    'REGULER'
-);
-
-$mapsUrl = 'https://www.google.com/maps/search/?api=1&query='
-    . $selectedMall['latitude'] . ',' . $selectedMall['longitude'];
-
-$chooseSpotUrl = '?page=slot&mall_id=' . (int) $selectedMall['id'];
-
 ?>
 
 <main class="main-content">
+
+    <?php if (($detailPageData['error'] ?? null) !== null): ?>
+        <section>
+            <a href="?page=parking" class="back-button">
+                <i class="back-icon"></i>
+                <span>Back</span>
+            </a>
+            <p><?= parkEasyEscape($detailPageData['error']) ?></p>
+        </section>
+    <?php else: ?>
 
     <section>
         <a href="?page=home" class="back-button">
@@ -69,7 +32,7 @@ $chooseSpotUrl = '?page=slot&mall_id=' . (int) $selectedMall['id'];
     </section>
 
     <section>
-        <span class="card-parking-detail-name"><?= parkEasyEscape($selectedMall['name']) ?></span>
+        <span class="parking-header"><?= parkEasyEscape($selectedMall['name']) ?></span>
 
         <div class="card-parking-detail-mall">
 
@@ -107,7 +70,7 @@ $chooseSpotUrl = '?page=slot&mall_id=' . (int) $selectedMall['id'];
     </section>
 
     <section>
-        <span class="card-parking-detail-name">Slot Available</span>
+        <span class="parking-header" style="font: var(--text-H4);">Slot Available</span>
 
         <div class="parking-slot-table">
             <div class="parking-slot-table-heading">
@@ -143,4 +106,6 @@ $chooseSpotUrl = '?page=slot&mall_id=' . (int) $selectedMall['id'];
 
         </div>
     </section>
+    <?php endif; ?>
+
 </main>

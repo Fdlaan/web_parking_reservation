@@ -2,39 +2,35 @@
 
 class Mall
 {
-    public static function getAll(): array
-    {
-        return require $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/database/dummy-data/parking-malls.php';
-    }
-
     public static function getRecommended(
         float $userLat,
         float $userLng,
-        array $parkingMalls
+        array $parkingMalls,
+        array $parkingRates = []
     ): array {
         $parkingMalls = array_values(array_filter(
             $parkingMalls,
-            fn($parkingMall) => !empty($parkingMall['is_active'])
+            fn($mall) => !empty($mall['is_active'])
         ));
 
-        foreach ($parkingMalls as &$parkingMall) {
-            $parkingMall['distance_km'] = parkEasyCalculateDistance(
+        foreach ($parkingMalls as &$mall) {
+            $mall['distance_km'] = parkEasyCalculateDistance(
                 $userLat,
                 $userLng,
-                (float) $parkingMall['latitude'],
-                (float) $parkingMall['longitude']
+                (float) $mall['latitude'],
+                (float) $mall['longitude']
             );
 
-            $parkingMall['distance'] =
-                number_format($parkingMall['distance_km'], 1) . ' KM';
-
-            $parkingMall['url'] =
-                '?page=detail&mall_id=' . (int) $parkingMall['id'];
-
-            $parkingMall['alt'] = $parkingMall['name'];
+            $mall['distance'] = number_format($mall['distance_km'], 1) . ' KM';
+            $mall['url'] = '?page=detail&mall_id=' . rawurlencode((string) $mall['mall_id']);
+            $mall['alt'] = $mall['name'];
+            $mall['prices'] = [
+                'regular' => parkEasyFindRate((string) $mall['mall_id'], 'REGULER', $parkingRates)['price_per_slot'] ?? null,
+                'valet' => parkEasyFindRate((string) $mall['mall_id'], 'VALET', $parkingRates)['price_per_slot'] ?? null,
+            ];
         }
 
-        unset($parkingMall);
+        unset($mall);
 
         usort(
             $parkingMalls,

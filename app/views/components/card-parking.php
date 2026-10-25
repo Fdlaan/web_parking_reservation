@@ -4,7 +4,7 @@ $variant = $variant ?? 'recommended';
 
 $fileCss[] = 'components/card-parking.css';
 
-$id = (string) ($field['id'] ?? '');
+$id = (string) ($field['mall_id'] ?? $field['id'] ?? '');
 $name = (string) ($field['name'] ?? '');
 $image = (string) ($field['image'] ?? '');
 $url = (string) ($field['url'] ?? '#');
