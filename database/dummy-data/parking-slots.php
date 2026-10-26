@@ -220,54 +220,54 @@ return [
         'is_active' => true,
     ],
     [
-        'slot_id' => 'S001',
+        'slot_id' => 'S019',
         'floor_id' => 'F001',
 
-        'slot_code' => 'LG-A01',
+        'slot_code' => 'LG-D01',
 
         'is_active' => true,
     ],
 
     [
-        'slot_id' => 'S002',
+        'slot_id' => 'S020',
         'floor_id' => 'F001',
 
-        'slot_code' => 'LG-A02',
+        'slot_code' => 'LG-D02',
 
         'is_active' => true,
     ],
 
     [
-        'slot_id' => 'S003',
+        'slot_id' => 'S021',
         'floor_id' => 'F001',
 
-        'slot_code' => 'LG-A03',
+        'slot_code' => 'LG-D03',
 
         'is_active' => true,
     ],
 
     [
-        'slot_id' => 'S004',
+        'slot_id' => 'S022',
         'floor_id' => 'F001',
 
-        'slot_code' => 'LG-A04',
+        'slot_code' => 'LG-D04',
 
         'is_active' => true,
     ],
 
     [
-        'slot_id' => 'S005',
+        'slot_id' => 'S023',
         'floor_id' => 'F001',
 
-        'slot_code' => 'LG-A05',
+        'slot_code' => 'LG-D05',
 
         'is_active' => true,
     ],
     [
-        'slot_id' => 'S006',
+        'slot_id' => 'S024',
         'floor_id' => 'F001',
 
-        'slot_code' => 'LG-A06',
+        'slot_code' => 'LG-D06',
 
         'is_active' => true,
     ],
@@ -279,14 +279,14 @@ return [
     ],
 
     [
-        'slot_id' => 'S008',
+        'slot_id' => 'S026',
         'floor_id' => 'F001',
         'slot_code' => 'LG-B02',
         'is_active' => true,
     ],
 
     [
-        'slot_id' => 'S009',
+        'slot_id' => 'S027',
         'floor_id' => 'F001',
         'slot_code' => 'LG-B03',
         'is_active' => true,
@@ -300,49 +300,49 @@ return [
     ],
 
     [
-        'slot_id' => 'S011',
+        'slot_id' => 'S029',
         'floor_id' => 'F001',
         'slot_code' => 'LG-B05',
         'is_active' => true,
     ],
 
     [
-        'slot_id' => 'S012',
+        'slot_id' => 'S030',
         'floor_id' => 'F001',
         'slot_code' => 'LG-B06',
         'is_active' => true,
     ],
 
     [
-        'slot_id' => 'S013',
+        'slot_id' => 'S032',
         'floor_id' => 'F001',
         'slot_code' => 'LG-C01',
         'is_active' => true,
     ],
 
     [
-        'slot_id' => 'S014',
+        'slot_id' => 'S033',
         'floor_id' => 'F001',
         'slot_code' => 'LG-C02',
         'is_active' => true,
     ],
 
     [
-        'slot_id' => 'S015',
+        'slot_id' => 'S034',
         'floor_id' => 'F001',
         'slot_code' => 'LG-C03',
         'is_active' => true,
     ],
 
     [
-        'slot_id' => 'S016',
+        'slot_id' => 'S035',
         'floor_id' => 'F001',
         'slot_code' => 'LG-C04',
         'is_active' => true,
     ],
 
     [
-        'slot_id' => 'S017',
+        'slot_id' => 'S036',
         'floor_id' => 'F001',
         'slot_code' => 'LG-C05',
         'is_active' => true,
@@ -449,7 +449,7 @@ return [
 
 
     [
-        'slot_id' => 'S007',
+        'slot_id' => 'S037',
         'floor_id' => 'F002',
 
         'slot_code' => 'GF-A01',
@@ -458,7 +458,7 @@ return [
     ],
 
     [
-        'slot_id' => 'S008',
+        'slot_id' => 'S038',
         'floor_id' => 'F002',
 
         'slot_code' => 'GF-A02',
@@ -467,7 +467,7 @@ return [
     ],
 
     [
-        'slot_id' => 'S009',
+        'slot_id' => 'S039',
         'floor_id' => 'F002',
 
         'slot_code' => 'GF-A03',
@@ -476,7 +476,7 @@ return [
     ],
 
     [
-        'slot_id' => 'S0010',
+        'slot_id' => 'S040',
         'floor_id' => 'F002',
 
         'slot_code' => 'GF-A04',
@@ -485,7 +485,7 @@ return [
     ],
 
     [
-        'slot_id' => 'S011',
+        'slot_id' => 'S041',
         'floor_id' => 'F002',
 
         'slot_code' => 'GF-B01',
