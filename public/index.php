@@ -517,6 +517,7 @@ if (!isset($routes[$page])) {
             break;
 
         case 'detail':
+
         case 'slot':
             $parkingMallName = $selectedMall['name'] ?? null;
 
@@ -547,12 +548,43 @@ if (!isset($routes[$page])) {
             break;
 
         case 'payment':
+            $paymentMall = $paymentPageData['mall'] ?? null;
+
+            if ($paymentMall === null) {
+                $paymentMall = $selectedMall ?? null;
+            }
+
+            $mallId = $paymentMall['mall_id'] ?? null;
+            $mallName = $paymentMall['name'] ?? null;
+
             $breadcrumb = [
                 [
-                    'label' => 'Payment',
-                    'url' => null,
+                    'label' => 'Search Park',
+                    'url' => '?page=parking',
                 ],
             ];
+
+            if ($mallId !== null && $mallName !== null) {
+                $breadcrumb[] = [
+                    'label' => $mallName,
+                    'url' => '?page=detail&mall_id=' . rawurlencode(
+                        (string) $mallId
+                    ),
+                ];
+
+                $breadcrumb[] = [
+                    'label' => 'Select Parking Area',
+                    'url' => '?page=slot&mall_id=' . rawurlencode(
+                        (string) $mallId
+                    ),
+                ];
+            }
+
+            $breadcrumb[] = [
+                'label' => 'Payment',
+                'url' => null,
+            ];
+
             break;
 
         case 'invoice':
