@@ -20,6 +20,22 @@ SET time_zone = "+00:00";
 --
 -- Database: `parking_db`
 --
+CREATE DATABASE IF NOT EXISTS `parking_db` DEFAULT CHARACTER SET utf8mb4;
+USE `parking_db`;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admins`
+--
+
+CREATE TABLE `admins` (
+  `id` int NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -120,7 +136,7 @@ CREATE TABLE `parking_rates` (
   `price_per_slot` decimal(12,2) NOT NULL,
   `admin_fee` decimal(12,2) NOT NULL DEFAULT '2500.00',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` timestamp NOT NULL ON UPDATE CURRENT_TIMESTAMP
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -172,7 +188,21 @@ CREATE TABLE `reservations` (
   `status` enum('COMPLETED','CANCELLED','EXPIRED','PAID','UNPAID') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'UNPAID',
   `cancelled_at` datetime DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `active_slot_key` int GENERATED ALWAYS AS (if((`status` in (_utf8mb4'PENDING_PAYMENT',_utf8mb4'CONFIRMED')),`slot_id`,NULL)) STORED
+  `active_slot_key` int GENERATED ALWAYS AS (if((`status` in ('UNPAID','PAID')),`slot_id`,NULL)) STORED
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user_locations`
+--
+
+CREATE TABLE `user_locations` (
+  `id` int NOT NULL,
+  `name` varchar(150) NOT NULL,
+  `address` varchar(500) NOT NULL,
+  `latitude` decimal(9,6) NOT NULL,
+  `longitude` decimal(9,6) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
@@ -276,10 +306,16 @@ ALTER TABLE `password_resets`
 --
 ALTER TABLE `reservations`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `uq_slot_time_active` (`active_slot_key`,`reserved_at`),
+  ADD UNIQUE KEY `uq_slot_active` (`active_slot_key`),
   ADD KEY `vehicle_id` (`vehicle_id`),
   ADD KEY `idx_res_user_date` (`user_id`,`reserved_at` DESC),
   ADD KEY `idx_res_slot_date` (`slot_id`,`reserved_at`);
+
+--
+-- Indexes for table `user_locations`
+--
+ALTER TABLE `user_locations`
+  ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `users`
@@ -354,6 +390,12 @@ ALTER TABLE `reservations`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
+-- AUTO_INCREMENT for table `user_locations`
+--
+ALTER TABLE `user_locations`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
@@ -418,6 +460,107 @@ ALTER TABLE `reservations`
 --
 ALTER TABLE `vehicles`
   ADD CONSTRAINT `vehicles_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+
+--
+-- Seed data (replace the staff passwords after the first login; both are `password`)
+--
+INSERT INTO `admins` (`name`, `email`, `password_hash`) VALUES
+('Admin', 'admin@parkeasy.test', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi');
+
+INSERT INTO `parking_locations` (`id`, `mall_code`, `name`, `region`, `address`, `latitude`, `longitude`, `image_url`) VALUES
+(1, 'GI', 'Grand Indonesia Mall', 'Jakarta Pusat', 'Jalan M.H. Thamrin No.1, RT.1/RW.5, Kelurahan Menteng, Kecamatan Menteng, dan Kelurahan Kebon Melati, Kecamatan Tanah Abang, Jakarta Pusat 10310', -6.195368, 106.820418, 'mall-image/grand-indonesia-mall.jpg');
+
+INSERT INTO `operators` (`location_id`, `name`, `email`, `password_hash`) VALUES
+(1, 'Grand Indonesia Operator', 'operator@parkeasy.test', '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi');
+
+INSERT INTO `parking_rates` (`location_id`, `parking_type`, `price_per_slot`, `admin_fee`) VALUES
+(1, 'REGULER', 15000, 2500),
+(1, 'VALET', 50000, 2500);
+
+INSERT INTO `floors` (`id`, `location_id`, `floor_code`, `sort_order`) VALUES
+(1, 1, 'LG', 1), (2, 1, 'GF', 2), (3, 1, '1', 3), (4, 1, '2', 4);
+
+INSERT INTO `parking_slots` (`floor_id`, `slot_code`, `parking_type`, `area_block`) VALUES
+(1, 'LG-A01', 'REGULER', 'A'),
+(1, 'LG-A02', 'REGULER', 'A'),
+(1, 'LG-A03', 'REGULER', 'A'),
+(1, 'LG-A04', 'REGULER', 'A'),
+(1, 'LG-A05', 'REGULER', 'A'),
+(1, 'LG-A06', 'REGULER', 'A'),
+(1, 'LG-B01', 'REGULER', 'B'),
+(1, 'LG-B02', 'REGULER', 'B'),
+(1, 'LG-B03', 'REGULER', 'B'),
+(1, 'LG-B04', 'REGULER', 'B'),
+(1, 'LG-B05', 'REGULER', 'B'),
+(1, 'LG-B06', 'REGULER', 'B'),
+(1, 'LG-C01', 'REGULER', 'C'),
+(1, 'LG-C02', 'REGULER', 'C'),
+(1, 'LG-C03', 'REGULER', 'C'),
+(1, 'LG-C04', 'REGULER', 'C'),
+(1, 'LG-C05', 'REGULER', 'C'),
+(1, 'LG-C06', 'REGULER', 'C'),
+(1, 'LG-D01', 'REGULER', 'D'),
+(1, 'LG-D02', 'REGULER', 'D'),
+(1, 'LG-D03', 'REGULER', 'D'),
+(1, 'LG-D04', 'REGULER', 'D'),
+(1, 'LG-D05', 'REGULER', 'D'),
+(1, 'LG-D06', 'REGULER', 'D'),
+(1, 'LG-E01', 'VALET', 'E'),
+(1, 'LG-E02', 'VALET', 'E'),
+(1, 'LG-E03', 'VALET', 'E'),
+(1, 'LG-E04', 'VALET', 'E'),
+(1, 'LG-E05', 'VALET', 'E'),
+(1, 'LG-E06', 'VALET', 'E'),
+(1, 'LG-F01', 'VALET', 'F'),
+(1, 'LG-F02', 'VALET', 'F'),
+(1, 'LG-F03', 'VALET', 'F'),
+(1, 'LG-F04', 'VALET', 'F'),
+(1, 'LG-F05', 'VALET', 'F'),
+(1, 'LG-F06', 'VALET', 'F'),
+(2, 'GF-A01', 'REGULER', 'A'),
+(2, 'GF-A02', 'REGULER', 'A'),
+(2, 'GF-A03', 'REGULER', 'A'),
+(2, 'GF-A04', 'REGULER', 'A'),
+(2, 'GF-B01', 'REGULER', 'B'),
+(3, '1-A01', 'REGULER', 'A'),
+(3, '1-A02', 'REGULER', 'A'),
+(3, '1-A03', 'REGULER', 'A'),
+(3, '1-A04', 'REGULER', 'A'),
+(3, '1-A05', 'REGULER', 'A'),
+(3, '1-A06', 'REGULER', 'A'),
+(4, '2-A01', 'REGULER', 'A'),
+(4, '2-A02', 'REGULER', 'A'),
+(4, '2-A03', 'REGULER', 'A'),
+(4, '2-A04', 'REGULER', 'A'),
+(4, '2-A05', 'REGULER', 'A'),
+(4, '2-A06', 'REGULER', 'A');
+
+INSERT INTO `user_locations` (`id`, `name`, `address`, `latitude`, `longitude`) VALUES
+(1, 'Kampus UI Depok', 'Pondok Cina, Depok, Jawa Barat', -6.3644, 106.8272),
+(2, 'Margonda', 'Jl. Margonda Raya, Depok, Jawa Barat', -6.3720, 106.8340),
+(3, 'Pancoran Mas', 'Pancoran Mas, Depok, Jawa Barat', -6.4020, 106.8370),
+(4, 'Gambir', 'Gambir, Jakarta Pusat', -6.1754, 106.8272),
+(5, 'Thamrin', 'Jl. M.H. Thamrin, Jakarta Pusat', -6.1930, 106.8230),
+(6, 'Bundaran HI', 'Menteng, Jakarta Pusat', -6.1944, 106.8230),
+(7, 'Senen', 'Senen, Jakarta Pusat', -6.1765, 106.8417),
+(8, 'Cempaka Putih', 'Cempaka Putih, Jakarta Pusat', -6.1700, 106.8700),
+(9, 'Tanjung Duren', 'Tanjung Duren, Jakarta Barat', -6.1767, 106.7900),
+(10, 'Grogol Petamburan', 'Grogol Petamburan, Jakarta Barat', -6.1785, 106.7920),
+(11, 'Kembangan', 'Kembangan, Jakarta Barat', -6.1870, 106.7380),
+(12, 'Pluit', 'Penjaringan, Jakarta Utara', -6.1200, 106.7900),
+(13, 'Daan Mogot', 'Kalideres, Jakarta Barat', -6.1550, 106.7040),
+(14, 'Blok M', 'Kebayoran Baru, Jakarta Selatan', -6.2441, 106.7996),
+(15, 'Pondok Indah', 'Pondok Indah, Jakarta Selatan', -6.2654, 106.7838),
+(16, 'Gandaria', 'Kebayoran Lama, Jakarta Selatan', -6.2440, 106.7836),
+(17, 'Menteng Dalam', 'Tebet, Jakarta Selatan', -6.2250, 106.8410),
+(18, 'SCBD', 'Sudirman, Jakarta Selatan', -6.2255, 106.8097),
+(19, 'Kemang', 'Kemang, Jakarta Selatan', -6.2600, 106.8130),
+(20, 'Fatmawati', 'Cilandak, Jakarta Selatan', -6.2910, 106.7970),
+(21, 'Cakung', 'Cakung, Jakarta Timur', -6.1750, 106.9500),
+(22, 'Rawamangun', 'Rawamangun, Jakarta Timur', -6.1920, 106.8820),
+(23, 'Jatinegara', 'Jatinegara, Jakarta Timur', -6.2240, 106.8780),
+(24, 'Cililitan', 'Kramat Jati, Jakarta Timur', -6.2600, 106.8650),
+(25, 'Pinang Ranti', 'Makasar, Jakarta Timur', -6.2910, 106.8800);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

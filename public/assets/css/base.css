@@ -262,3 +262,35 @@ section {
 .back-button:hover {
   color: var(--brand-gold);
 }
+
+/* Flash alerts (success / error feedback) */
+.flash-stack {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  z-index: 1080;
+  width: min(420px, calc(100vw - 32px));
+}
+
+.flash-stack .alert {
+  margin: 0;
+  border-radius: var(--radius-md);
+  font: var(--text-body);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+}
+
+.flash-stack .alert-success {
+  color: var(--success-foreground);
+  background-color: var(--success-background);
+  border-color: var(--success-foreground);
+}
+
+.flash-stack .alert-danger {
+  color: var(--danger-foreground);
+  background-color: var(--danger-background);
+  border-color: var(--danger-foreground);
+}
+
+.flash-stack .btn-close {
+  filter: invert(1);
+}

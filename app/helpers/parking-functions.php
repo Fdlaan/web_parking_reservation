@@ -39,27 +39,27 @@ function parkEasyFloorsOfMall(string $mallId, array $floors): array
 }
 
 /**
- * Gets active slots for a floor, with availability derived from reservations.
+ * Gets active slots of one parking type on a floor, with availability from reservations.
  */
 function parkEasySlotsOfFloor(
     string $floorId,
+    string $parkingType,
     array $slots,
-    array $reservations,
-    ?DateTimeImmutable $now = null
+    array $reservations
 ): array {
-    $occupiedSlotIds = parkEasyGetOccupiedSlotIds($reservations, $now);
+    $occupiedSlotIds = parkEasyGetOccupiedSlotIds($reservations);
     $floorSlots = [];
 
     foreach ($slots as $slot) {
         if (
-            (string) ($slot['floor_id'] ?? '') !== $floorId
+            (string) $slot['floor_id'] !== $floorId
             || empty($slot['is_active'])
+            || $slot['parking_type'] !== $parkingType
         ) {
             continue;
         }
 
-        $slotId = (string) $slot['slot_id'];
-        $isOccupied = isset($occupiedSlotIds[$slotId]);
+        $isOccupied = isset($occupiedSlotIds[(string) $slot['slot_id']]);
 
         $floorSlots[] = array_merge($slot, [
             'is_occupied' => $isOccupied,
@@ -67,13 +67,7 @@ function parkEasySlotsOfFloor(
         ]);
     }
 
-    usort(
-        $floorSlots,
-        fn($a, $b) => strnatcasecmp(
-            (string) $a['slot_code'],
-            (string) $b['slot_code']
-        )
-    );
+    usort($floorSlots, fn($a, $b) => strnatcasecmp($a['slot_code'], $b['slot_code']));
 
     return $floorSlots;
 }

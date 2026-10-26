@@ -5,12 +5,15 @@
  * The template only renders the returned data and does not query raw datasets.
  */
 
-/** Prepare mall cards grouped by city for the Search Parking template. */
+/** Prepare mall cards grouped by city. ?q= searches name/city, ?city= shows one city in full. */
 function parkEasyPrepareParkingIndexData(
     ?array $selectedLocation,
     array $parkingMalls,
-    array $parkingRates
+    array $parkingRates,
+    array $query
 ): array {
+    $search = trim((string) ($query['q'] ?? ''));
+    $onlyCity = trim((string) ($query['city'] ?? ''));
     $mallsByCity = [];
 
     if ($selectedLocation !== null) {
@@ -23,15 +26,25 @@ function parkEasyPrepareParkingIndexData(
 
         foreach ($recommendedMalls as $mall) {
             $city = (string) ($mall['city'] ?? 'Other');
+
+            if ($onlyCity !== '' && $city !== $onlyCity) {
+                continue;
+            }
+            if ($search !== '' && stripos($mall['name'] . ' ' . $city, $search) === false) {
+                continue;
+            }
+
             $mallsByCity[$city][] = $mall;
         }
 
-        foreach ($mallsByCity as $city => $cityMalls) {
-            $mallsByCity[$city] = array_slice($cityMalls, 0, 5);
+        if ($search === '' && $onlyCity === '') {
+            foreach ($mallsByCity as $city => $cityMalls) {
+                $mallsByCity[$city] = array_slice($cityMalls, 0, 5);
+            }
         }
     }
 
-    return ['malls_by_city' => $mallsByCity];
+    return ['malls_by_city' => $mallsByCity, 'search' => $search, 'only_city' => $onlyCity];
 }
 
 function parkEasyPrepareSlotPageData(
@@ -88,6 +101,7 @@ function parkEasyPrepareSlotPageData(
     $floorSlots = $selectedFloor !== null
         ? parkEasySlotsOfFloor(
             (string) $selectedFloor['floor_id'],
+            $parkingType,
             $parkingSlots,
             $reservations
         )

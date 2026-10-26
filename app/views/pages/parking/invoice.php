@@ -1,7 +1,7 @@
 <?php
 
-$titlePage = isset($selectedMall['name'])
-    ? $selectedMall['name'] . ' | Parkeasy'
+$titlePage = isset($res['mall_name'])
+    ? $res['mall_name'] . ' | Invoice'
     : 'Invoice | Parkeasy';
 
 $fileCss = [
@@ -9,47 +9,28 @@ $fileCss = [
     'pages/parking/index.css',
 ];
 
-$fileJs = [];
-
 ?>
 
 <main class="main-content invoice-page">
-    <?php if (($invoicePageData['error'] ?? null) !== null): ?>
-        <section>
-            <a href="?page=parking" class="back-button">
-                <i class="back-icon"></i>
-                <span>Back</span>
-            </a>
-            <span><?= parkEasyEscape($invoicePageData['error']) ?></span>
-        </section>
-        
-    <?php else: ?>
 
     <section>
-        <a href="?page=home" class="back-button">
+        <a href="?page=history" class="back-button">
             <i class="back-icon"></i>
-            <span>
-                Back
-            </span>
+            <span>Back</span>
         </a>
     </section>
-
 
     <h1>Reservation Invoice</h1>
     <p>Review your parking reservation details.</p>
 
-    <?php if ($invoiceError !== null || $invoiceData === null): ?>
+    <?php if ($res === null): ?>
 
         <section class="invoice-card invoice-error">
             <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
 
             <h2>Unable to Open Invoice</h2>
 
-            <p>
-                <?= parkEasyEscape(
-                    $invoiceError ?? 'Invoice details are unavailable.'
-                ) ?>
-            </p>
+            <p>Reservation not found.</p>
 
             <a href="?page=history" class="invoice-button invoice-button-secondary">
                 Back to History
@@ -59,39 +40,25 @@ $fileJs = [];
     <?php else: ?>
 
         <?php
-            $reservation = $invoiceData['reservation'] ?? null;
-            $mall = $invoiceData['mall'];
-            $floor = $invoiceData['floor'];
-            $rate = $invoiceData['rate'];
+            $reservedDate = new DateTimeImmutable($res['reserved_at']);
+            $payBefore = new DateTimeImmutable($res['pay_before']);
+            $status = $res['status'];
+            $isPaid = in_array($status, ['PAID', 'COMPLETED'], true);
 
-            $isExistingReservation = $reservation !== null;
+            $statusLabels = [
+                'UNPAID' => 'Unpaid',
+                'PAID' => 'Paid',
+                'COMPLETED' => 'Completed',
+                'CANCELLED' => 'Cancelled',
+                'EXPIRED' => 'Expired',
+            ];
 
-            $reservationId = $reservation['reservation_id'] ?? null;
-            $slotCode = $reservation['slot_code']
-                ?? $invoiceData['slot']['slot_code']
-                ?? '-';
-
-            $parkingType = $reservation['parking_type']
-                ?? $invoiceData['parking_type']
-                ?? 'REGULER';
-
-            $plateNumber = $reservation['plate_number'] ?? '-';
-
-            $reservedAt = $reservation['reserved_at'] ?? null;
-            $reservedDate = $reservedAt
-                ? new DateTimeImmutable($reservedAt)
-                : null;
-
-            $reservationFee = (int) ($rate['price_per_slot'] ?? 0);
-            $serviceFee = (int) ($rate['admin_fee'] ?? 0);
-            $total = $reservationFee + $serviceFee;
-
-            $status = strtoupper(
-                (string) ($reservation['status'] ?? 'NOT_CREATED')
-            );
-
-            $isPaid = $isExistingReservation
-                && $status === 'CONFIRMED';
+            $paymentText = match ($status) {
+                'UNPAID' => 'Waiting for payment, pay before ' . $payBefore->format('d M Y, H:i'),
+                'PAID', 'COMPLETED' => 'Payment completed',
+                'CANCELLED' => 'Reservation cancelled',
+                default => 'Reservation expired',
+            };
         ?>
 
         <div class="invoice-grid">
@@ -102,23 +69,11 @@ $fileJs = [];
                     <div>
                         <span class="invoice-eyebrow">INVOICE NUMBER</span>
 
-                        <h2>
-                            <?= $isExistingReservation
-                                ? parkEasyEscape($reservationId)
-                                : 'Reservation Preview'
-                            ?>
-                        </h2>
+                        <h2><?= parkEasyEscape($res['invoice_number']) ?></h2>
                     </div>
 
-                    <span class="invoice-status <?= $isPaid
-                        ? 'is-paid'
-                        : 'is-unpaid'
-                    ?>">
-                        <?= $isPaid ? 'Paid' : (
-                            $isExistingReservation
-                                ? parkEasyEscape($status)
-                                : 'Not Reserved'
-                        ) ?>
+                    <span class="invoice-status <?= $isPaid ? 'is-paid' : 'is-unpaid' ?>">
+                        <?= parkEasyEscape($statusLabels[$status] ?? $status) ?>
                     </span>
                 </div>
 
@@ -126,49 +81,37 @@ $fileJs = [];
 
                 <div class="invoice-info-row">
                     <span>Parking Location</span>
-                    <strong><?= parkEasyEscape($mall['name']) ?></strong>
+                    <strong><?= parkEasyEscape($res['mall_name']) ?></strong>
                 </div>
 
                 <div class="invoice-info-row">
                     <span>Parking Slot</span>
-                    <strong><?= parkEasyEscape($slotCode) ?></strong>
+                    <strong><?= parkEasyEscape($res['slot_code']) ?></strong>
                 </div>
 
                 <div class="invoice-info-row">
                     <span>Floor</span>
-                    <strong><?= parkEasyEscape($floor['floor_code']) ?></strong>
+                    <strong><?= parkEasyEscape($res['floor_code']) ?></strong>
                 </div>
 
                 <div class="invoice-info-row">
                     <span>Parking Type</span>
-                    <strong><?= parkEasyEscape(
-                        $parkingType === 'VALET' ? 'Valet' : 'Regular'
-                    ) ?></strong>
+                    <strong><?= $res['parking_type'] === 'VALET' ? 'Valet' : 'Regular' ?></strong>
                 </div>
 
                 <div class="invoice-info-row">
                     <span>Plate Number</span>
-                    <strong><?= parkEasyEscape($plateNumber) ?></strong>
+                    <strong><?= parkEasyEscape($res['plate_number']) ?></strong>
                 </div>
 
                 <div class="invoice-info-row">
                     <span>Reservation Date</span>
-                    <strong>
-                        <?= $reservedDate
-                            ? parkEasyEscape($reservedDate->format('d M Y'))
-                            : 'Not set'
-                        ?>
-                    </strong>
+                    <strong><?= $reservedDate->format('d M Y') ?></strong>
                 </div>
 
                 <div class="invoice-info-row">
                     <span>Reserved Time</span>
-                    <strong>
-                        <?= $reservedDate
-                            ? parkEasyEscape($reservedDate->format('H:i'))
-                            : 'Not set'
-                        ?>
-                    </strong>
+                    <strong><?= $reservedDate->format('H:i') ?></strong>
                 </div>
 
                 <hr>
@@ -177,23 +120,17 @@ $fileJs = [];
 
                 <div class="invoice-info-row">
                     <span>Reservation Fee</span>
-                    <strong>
-                        Rp <?= number_format($reservationFee, 0, ',', '.') ?>
-                    </strong>
+                    <strong>Rp <?= number_format((float) $res['parking_fee'], 0, ',', '.') ?></strong>
                 </div>
 
                 <div class="invoice-info-row">
                     <span>Service Fee</span>
-                    <strong>
-                        Rp <?= number_format($serviceFee, 0, ',', '.') ?>
-                    </strong>
+                    <strong>Rp <?= number_format((float) $res['admin_fee'], 0, ',', '.') ?></strong>
                 </div>
 
                 <div class="invoice-info-row invoice-total">
                     <span>Total</span>
-                    <strong>
-                        Rp <?= number_format($total, 0, ',', '.') ?>
-                    </strong>
+                    <strong>Rp <?= number_format((float) $res['total'], 0, ',', '.') ?></strong>
                 </div>
 
                 <hr>
@@ -202,8 +139,7 @@ $fileJs = [];
 
                 <p class="invoice-note">
                     This invoice covers the reservation fee and service fee.
-                    Additional parking charges, if applicable, may be handled
-                    separately.
+                    Show your plate number to the parking operator to confirm your reservation.
                 </p>
 
             </section>
@@ -213,19 +149,11 @@ $fileJs = [];
                 <section class="invoice-card">
                     <h3>Payment Status</h3>
 
-                    <p class="invoice-payment-status">
-                        <?= $isPaid ? 'Payment completed' : (
-                            $isExistingReservation
-                                ? 'Payment not verified'
-                                : 'Reservation not created yet'
-                        ) ?>
-                    </p>
+                    <p class="invoice-payment-status"><?= parkEasyEscape($paymentText) ?></p>
 
-                    <?php if ($isExistingReservation && !$isPaid): ?>
+                    <?php if ($status === 'UNPAID'): ?>
                         <a
-                            href="?page=payment&reservation_id=<?= rawurlencode(
-                                (string) $reservationId
-                            ) ?>"
+                            href="?page=payment&reservation_id=<?= (int) $res['id'] ?>"
                             class="invoice-button invoice-button-primary"
                         >
                             Continue to Payment
@@ -238,17 +166,9 @@ $fileJs = [];
                             class="invoice-button invoice-button-primary"
                             onclick="window.print()"
                         >
-                            <i class="fa-solid fa-file-arrow-down"
-                                aria-hidden="true"></i>
+                            <i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i>
                             Download / Print Invoice
                         </button>
-                    <?php endif; ?>
-
-                    <?php if (!$isExistingReservation): ?>
-                        <p class="invoice-note">
-                            This is a slot preview. Your reservation has not
-                            been created yet.
-                        </p>
                     <?php endif; ?>
 
                 </section>
@@ -261,7 +181,6 @@ $fileJs = [];
 
         </div>
 
-    <?php endif; ?>
     <?php endif; ?>
 
 </main>

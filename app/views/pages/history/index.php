@@ -35,7 +35,7 @@ $fileJs = [
                 <tbody class="table-history-body">
                     <?php foreach ($paginatedRows as $r): ?>
                         <?php
-                            $invoiceUrl = '?page=invoice&reservation_id=' . rawurldecode($r['reservation_id']);
+                            $invoiceUrl = '?page=invoice&reservation_id=' . rawurlencode($r['reservation_id']);
                         ?>
                         <tr class="history-row" data-href="<?= parkEasyEscape($invoiceUrl) ?>" tabIndex="0" role="link" aria-label="View invoice for reservation <?= parkEasyEscape($r['reservation_id']) ?>">
                             <td>

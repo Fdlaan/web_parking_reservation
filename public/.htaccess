@@ -1,9 +1,6 @@
 Options -Indexes
+
 RewriteEngine On
 
-RewriteCond %{THE_REQUEST} \s/+web_parking_reservation/public/index.php(?:[\s?]) [NC]
-RewriteRule ^index.php$ http://localhost/web_parking_reservation/public/?page=home [R=302,L]
-
-RewriteCond %{REQUEST_FILENAME} !-f
-RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^ index.php [QSA,L]
+RewriteCond %{THE_REQUEST} /index\.php[\s?] [NC]
+RewriteRule ^index\.php$ /web_parking_reservation/public/ [R=301,L,QSA]

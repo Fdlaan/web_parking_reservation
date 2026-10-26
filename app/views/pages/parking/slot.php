@@ -9,6 +9,10 @@ $fileCss = [
     'pages/parking/index.css',
 ];
 
+$fileJs = [
+    'pages/slot.js',
+];
+
 ?>
 
 <main class="main-content">
@@ -65,6 +69,7 @@ $fileCss = [
         </div>
 
         <div class="parking-selected-floor" style="">
+
             <div class="parking-selected-floor-section">
 
                 <?php foreach ($parkingPageFloors as $index => $floor): ?>
@@ -92,7 +97,7 @@ $fileCss = [
             <?php if ($selectedFloor === null): ?>
                 <p>No parking floor has been configured for this mall yet.</p>
             <?php elseif (empty($parkingPageSlots)): ?>
-                <p>No active parking slots are configured for this floor.</p>
+                <p>No <?= $parkingType === 'VALET' ? 'valet' : 'regular' ?> slots on this floor.</p>
             <?php else: ?>
             
                 <?php $slotGroups = array_chunk($parkingPageSlots, 6); ?>
@@ -104,12 +109,6 @@ $fileCss = [
                             <?php foreach ($group as $slot): ?>
                                 <?php
                                     $isOccupied = (bool) $slot['is_occupied'];
-
-                                    $slotUrl = '?page=payment'
-                                        . '&mall_id=' . rawurlencode($selectedMall['mall_id'])
-                                        . '&floor_id=' . rawurlencode($selectedFloor['floor_id'])
-                                        . '&slot_id=' . rawurlencode($slot['slot_id'])
-                                        . '&parking_type=' . rawurlencode($parkingType);
 
                                     $slotClass = 'parking-slot'
                                         . ($isOccupied ? ' is-occupied' : ' is-available');
@@ -126,16 +125,20 @@ $fileCss = [
                                         </span>
                                     </div>
                                 <?php else: ?>
-                                    <a
-                                        href="<?= parkEasyEscape($slotUrl) ?>"
+                                    <button
+                                        type="button"
                                         class="<?= $slotClass ?>"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#reserveModal"
+                                        data-slot-id="<?= parkEasyEscape($slot['slot_id']) ?>"
+                                        data-slot-code="<?= parkEasyEscape($slot['slot_code']) ?>"
                                         aria-label="Select <?= parkEasyEscape($slot['slot_code']) ?>"
                                     >
                                         <span class="slot-dot available"></span>
                                         <span class="slot-label">
                                             <?= parkEasyEscape($slot['slot_code']) ?>
                                         </span>
-                                    </a>
+                                    </button>
                                 <?php endif; ?>
 
                             <?php endforeach; ?>
@@ -155,5 +158,78 @@ $fileCss = [
 
         </div>
     </section>
+
+    <?php
+        $timeOptions = parkEasyTimeOptions();
+        $slotTotal = (int) ($selectedPrice ?? 0) + (int) ($selectedAdminFee ?? 0);
+        $hasActiveReservation = (bool) array_filter(
+            $reservations,
+            fn($r) => $r['user_id'] === $currentUserId && in_array($r['status'], ['UNPAID', 'PAID'], true)
+        );
+        $canReserve = !$hasActiveReservation && !empty($vehicles) && $selectedRate !== null && !empty($timeOptions);
+    ?>
+
+    <div class="modal fade reserve-modal" id="reserveModal" tabindex="-1" aria-labelledby="reserveModalTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form action="?page=reserve" method="POST">
+                    <?= csrfField() ?>
+                    <input type="hidden" name="slot_id" value="">
+
+                    <h2 class="reserve-title" id="reserveModalTitle" data-slot-title>Parking slot</h2>
+
+                    <?php if ($hasActiveReservation): ?>
+                        <p class="reserve-note">
+                            You already have an active reservation. Finish or cancel it on the
+                            <a href="?page=home">Home page</a> before reserving another slot.
+                        </p>
+                    <?php endif; ?>
+
+                    <div class="reserve-field">
+                        <label for="reserveVehicle">Plate number</label>
+
+                        <?php if (empty($vehicles)): ?>
+                            <p class="reserve-note">
+                                You have no plate number yet.
+                                <a href="?page=profile">Add one in your profile</a> first.
+                            </p>
+                        <?php else: ?>
+                            <select id="reserveVehicle" name="vehicle_id" required>
+                                <option value="" disabled selected>Choose plate number</option>
+                                <?php foreach ($vehicles as $vehicle): ?>
+                                    <option value="<?= (int) $vehicle['id'] ?>"><?= parkEasyEscape($vehicle['plate_number']) ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        <?php endif; ?>
+                    </div>
+
+                    <div class="reserve-field">
+                        <label for="reserveTime">Reservation time</label>
+                        <select id="reserveTime" name="reserved_at" required>
+                            <?php foreach ($timeOptions as $value => $label): ?>
+                                <option value="<?= parkEasyEscape($value) ?>"><?= parkEasyEscape($label) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                        <small>You can reserve up to <?= PARKEASY_MAX_AHEAD_HOURS ?> hours from now.</small>
+                    </div>
+
+                    <div class="reserve-field">
+                        <label for="reserveType">Parking type</label>
+                        <input type="text" id="reserveType" value="<?= $parkingType === 'VALET' ? 'Valet' : 'Regular' ?>" disabled>
+                    </div>
+
+                    <div class="reserve-actions">
+                        <button type="button" class="reserve-cancel" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="reserve-submit" <?= $canReserve ? '' : 'disabled' ?>>Reservation</button>
+                    </div>
+
+                    <div class="reserve-total">
+                        <span>Total (incl. admin fee):</span>
+                        <strong><small>Rp</small> <?= number_format($slotTotal, 0, ',', '.') ?></strong>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
     <?php endif; ?>
 </main>

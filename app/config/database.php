@@ -18,7 +18,6 @@
         http_response_code(500);
         exit('Database connection was fail, check your configuration database.');
     } else {
-        echo 'Database connected successfully!';
     }
 
     mysqli_set_charset($conn, 'utf8mb4');

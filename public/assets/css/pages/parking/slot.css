@@ -204,3 +204,114 @@
   background-color: var(--danger-background);
   border: 2px solid var(--danger-foreground);
 }
+
+/* Slots are buttons (they open the reservation modal) */
+button.parking-slot {
+  padding: 0;
+  font: inherit;
+  background: none;
+  border-top: 0;
+  border-left: 0;
+}
+
+/* Reservation modal */
+.reserve-modal .modal-content {
+  padding: 24px;
+  color: var(--primary-text);
+  background-color: var(--surface-card);
+  border: 1px solid var(--border-divider);
+  border-radius: var(--radius-2xl);
+}
+
+.reserve-title {
+  margin: 0 0 20px;
+  text-align: center;
+  font: var(--text-H3);
+}
+
+.reserve-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.reserve-field label {
+  font: var(--text-label);
+}
+
+.reserve-field small,
+.reserve-note {
+  margin: 0;
+  color: var(--secondary-text);
+  font: var(--text-body-S);
+}
+
+.reserve-note a {
+  color: var(--brand-gold);
+}
+
+.reserve-field select,
+.reserve-field input {
+  width: 100%;
+  padding: 10px 12px;
+  color: var(--muted-text-on-light);
+  background: var(--white-input-surface);
+  border: 1px solid var(--border-divider);
+  border-radius: var(--radius-md);
+  font: var(--text-body);
+}
+
+.reserve-field select:not(:invalid) {
+  color: #222;
+}
+
+.reserve-field input:disabled {
+  color: var(--secondary-text);
+  background: var(--raised-secondary-action);
+}
+
+.reserve-actions {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+  gap: 12px;
+  margin: 24px 0 20px;
+}
+
+.reserve-actions button {
+  padding: 12px;
+  border-radius: var(--radius-md);
+  font: var(--text-button);
+}
+
+.reserve-cancel {
+  color: var(--danger-foreground);
+  background: var(--danger-background);
+  border: 1px solid var(--danger-foreground);
+}
+
+.reserve-submit {
+  color: var(--brand-gold);
+  background: var(--active-navigation-background);
+  border: 1px solid var(--brand-gold);
+}
+
+.reserve-submit:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.reserve-total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.reserve-total strong {
+  font: var(--text-H2);
+}
+
+.reserve-total strong small {
+  font: var(--text-body);
+  vertical-align: super;
+}

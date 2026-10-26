@@ -16,7 +16,7 @@ $fileJs = [];
 
     <!-- Section | Location -->
     <section>     
-        <?php include $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/components/user-location.php'; ?>
+        <?php include $projectRoot . '/app/views/components/user-location.php'; ?>
     </section>
 
     <!-- Section | Reservation -->
@@ -31,7 +31,7 @@ $fileJs = [];
             <span style="font: var(--text-label);">You currently have no reservations.</span>
         </div>
 
-        <!-- Reservation: paid -->
+        <!-- Reservation: unpaid or paid -->
         <?php else: ?>
         <div class="reservation-card">
             <div class="reservation-header">
@@ -80,33 +80,29 @@ $fileJs = [];
 
             <div class="reservation-actions">
 
-                <!-- Reservation: unpaid -->
-                <?php if($reservationStatus === 'unpaid'): ?>
-                <a href="?page=payment" class="reservation-button pay-button">
+                <?php if ($reservationStatus === 'unpaid'): ?>
+                <a href="?page=payment&reservation_id=<?= rawurlencode((string) $reservation['reservation_id']) ?>" class="reservation-button pay-button">
                     Pay Now
                 </a>
-                
-                <!-- Reservation:  -->
-                <?php else: ?>
+                <?php endif; ?>
+
                 <?php if ($canCancel): ?>
-                <form action="?page=cancel-reservation" method="POST">
+                <form action="?page=cancel-reservation" method="POST" onsubmit="return confirm('Cancel this reservation?')">
+                    <?= csrfField() ?>
                     <input type="hidden" name="reservation_id" value="<?= parkEasyEscape($reservation['reservation_id'] ?? '') ?>">
                     <button type="submit" class="reservation-button cancel-button">
                         Cancel Reservation
                     </button>
                 </form>
-                
-                <!-- Reservation:  -->
                 <?php else: ?>
                 <button type="button" class="reservation-button cancel-button" disabled>
                     Cancel Reservation
                 </button>
-                <p class="reservation-cancel-note" style = "font: var(--text-body-S)">
-                    Cancellation is only available at least 2 hours before your reservation.
+                <p class="reservation-cancel-note" style="font: var(--text-body-S)">
+                    Paid reservations can be cancelled until 1 hour before.
                 </p>
-                
                 <?php endif; ?>
-                <?php endif; ?>
+
             </div>
         </div>
         <?php endif; ?>
@@ -125,7 +121,7 @@ $fileJs = [];
                 <?php
                 $variant = 'recommended';
                 
-                require $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/components/card-parking.php';
+                require $projectRoot . '/app/views/components/card-parking.php';
                 ?>
             <?php endforeach; ?>
 
@@ -148,7 +144,7 @@ $fileJs = [];
                 <?php
                 $variant = 'previous';
                 
-                require $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/components/card-parking.php';
+                require $projectRoot . '/app/views/components/card-parking.php';
                 ?>
             <?php endforeach; ?>
 

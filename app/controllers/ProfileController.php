@@ -1,100 +1,81 @@
 <?php
 
-function parkEasyHandleProfileUpdate(
-    string $page,
-    string $requestMethod,
-    int $currentUserId,
-    ?array $user,
-    array &$users
-): void {
-    if (
-        $requestMethod !== 'POST'
-        || $page !== 'profile'
-        || ($_POST['profile_action'] ?? '') !== 'save'
-    ) {
-        return;
+/** Handles the profile form and the plate number list. Always redirects back to the profile. */
+function parkEasyHandleProfileUpdate(mysqli $conn, int $userId): never
+{
+    $action = $_POST['profile_action'] ?? '';
+    $error = null;
+
+    if ($action === 'save') {
+        $name = trim((string) ($_POST['name'] ?? ''));
+        $phone = trim((string) ($_POST['phone'] ?? ''));
+
+        if ($name === '') {
+            $error = 'Username is required.';
+        } elseif (!preg_match('/^\+?[0-9]{8,15}$/', $phone)) {
+            $error = 'Phone number must be 8-15 digits.';
+        } else {
+            $conn->prepare('UPDATE users SET name = ?, phone = ? WHERE id = ?')->execute([$name, $phone, $userId]);
+            flash('Profile updated successfully.');
+        }
+    } elseif ($action === 'add_plate') {
+        $plate = strtoupper(trim((string) ($_POST['plate_number'] ?? '')));
+
+        if (!preg_match('/^([A-Z]{1,2}) ?([0-9]{1,4}) ?([A-Z]{0,3})$/', $plate, $m)) {
+            $error = 'Enter a valid plate number, for example B 1234 FSD.';
+        } else {
+            try {
+                $conn->prepare('INSERT INTO vehicles (user_id, plate_number) VALUES (?, ?)')
+                    ->execute([$userId, trim($m[1] . ' ' . $m[2] . ' ' . $m[3])]);
+                flash('Plate number added.');
+            } catch (mysqli_sql_exception $ex) {
+                $error = $ex->getCode() === 1062 ? 'You already added that plate number.' : 'Could not save the plate number.';
+            }
+        }
+    } elseif ($action === 'delete_plate') {
+        $st = $conn->prepare('DELETE FROM vehicles WHERE id = ? AND user_id = ?');
+        $st->execute([(int) ($_POST['vehicle_id'] ?? 0), $userId]);
+
+        if ($st->affected_rows > 0) {
+            flash('Plate number removed.');
+        } else {
+            $error = 'Plate number not found.';
+        }
     }
 
-    if ($user === null) {
-        header('Location: ?page=auth&step=login');
-        exit;
+    if ($error !== null) {
+        flash('!' . $error);
     }
 
-    $username = trim($_POST['username'] ?? '');
-    $email = trim((string) ($user['email'] ?? ''));
-    $phone = trim($_POST['phone'] ?? '');
-    $plateNumber = trim($_POST['plate_number'] ?? '');
-
-    $errors = [];
-
-    if ($username === '') {
-        $errors[] = 'Username is required.';
-    }
-
-    if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $errors[] = 'A valid email is required.';
-    }
-
-    if ($phone === '') {
-        $errors[] = 'Phone number is required.';
-    }
-
-    if ($plateNumber === '') {
-        $errors[] = 'Plate number is required.';
-    }
-
-    if ($errors === []) {
-        $users[$currentUserId]['username'] = $username;
-        $users[$currentUserId]['email'] = $email;
-        $users[$currentUserId]['phone'] = $phone;
-        $users[$currentUserId]['plate_number'] = $plateNumber;
-        $users[$currentUserId]['updated_at'] = date('Y-m-d H:i:s');
-
-        $_SESSION['profile_message'] = 'Profile updated successfully.';
-    } else {
-        $_SESSION['profile_message'] = implode(' ', $errors);
-    }
-
-    header('Location: ?page=profile');
-    exit;
+    redirect('?page=profile');
 }
 
+/** Saves the location picked on Home / Search Park (kept in the session, no table of its own). */
+function parkEasyActionSetLocation(mysqli $conn): never
+{
+    $id = (int) ($_POST['location_id'] ?? 0);
+
+    if (staffRows($conn, 'SELECT id FROM user_locations WHERE id = ?', [$id])) {
+        $_SESSION['location_id'] = $id;
+        flash('Location updated.');
+    } else {
+        flash('!That location does not exist.');
+    }
+
+    redirect(($_POST['back'] ?? '') === 'parking' ? '?page=parking' : '?page=home');
+}
 
 /** Prepare values rendered by the Profile template. */
 function parkEasyPrepareProfilePageData(?array $user, string $assetUrl): array
 {
-    $profileMessage = $_SESSION['profile_message'] ?? null;
-    unset($_SESSION['profile_message']);
-
     $avatarUrl = trim((string) ($user['avatar_url'] ?? ''));
-    if ($avatarUrl === '') {
-        $avatarUrl = $assetUrl . '/images/icons/profile-icon.svg';
-    }
 
     return [
-        'profileMessage' => $profileMessage,
-        'avatarUrl' => $avatarUrl,
+        'avatarUrl' => $avatarUrl !== '' ? $avatarUrl : $assetUrl . '/images/icons/profile-icon.svg',
         'profileFields' => [
-            'username' => [
-                'label' => 'Username:',
-                'type' => 'text',
-                'placeholder' => 'Enter your username',
-            ],
-            'email' => [
-                'label' => 'Email:',
-                'type' => 'email',
-                'placeholder' => 'Enter your email',
-            ],
-            'phone' => [
-                'label' => 'Phone:',
-                'type' => 'tel',
-                'placeholder' => 'Enter your phone number',
-            ],
-            'plate_number' => [
-                'label' => 'Plate Number:',
-                'type' => 'text',
-                'placeholder' => 'B 1234 FSD',
-            ],
+            'name' => ['label' => 'Username:', 'type' => 'text', 'placeholder' => 'Enter your username'],
+            'email' => ['label' => 'Email:', 'type' => 'email', 'placeholder' => 'Enter your email'],
+            'phone' => ['label' => 'Phone:', 'type' => 'tel', 'placeholder' => 'Enter your phone number'],
         ],
     ];
 }

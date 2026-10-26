@@ -1,0 +1,104 @@
+/* Search Park */
+.search-section {
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    padding: 12px 24px;
+    gap: 8px;
+    border: 2px solid var(--border-divider);
+    border-radius: var(--radius-sm);
+    background: var(--raised-secondary-action);
+    text-align: left;
+    color: var(--secondary-text);
+    font: var(--text-label);
+}
+
+.mall-list {
+    display: flex;
+    align-items: stretch;
+    gap: 16px;
+    padding: 0 48px;
+
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+
+    overflow-x: auto;
+    overflow-y: hidden;
+
+    scroll-snap-type: none;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.mall-list::-webkit-scrollbar {
+    display: none;
+}
+
+.mall-list .parking-card-item {
+    flex: 0 0 calc((100% - 48px) / 3);
+    min-width: 0;
+    scroll-snap-align: start;
+}
+
+.mall-list .parking-card {
+    height: 100%;
+    gap: 20px;
+}
+
+.mall-list .parking-card-image {
+    height: 220px;
+    flex-shrink: 0;
+    object-fit: cover;
+}
+
+.mall-list .parking-card-content {
+    gap: 8px;
+}
+
+.mall-list .parking-card-heading {
+    min-width: 0;
+}
+
+.mall-list .parking-card-title {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.mall-list .parking-card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 8px;
+}
+
+.mall-list .parking-card-price {
+    min-width: 0;
+}
+
+.mall-list .parking-card-distance {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.parking-header {
+  font: var(--text-H3);
+  color: var(--primary-text);
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.search-section input {
+  flex: 1;
+  min-width: 0;
+  color: var(--primary-text);
+  background: transparent;
+  border: 0;
+  outline: 0;
+}
