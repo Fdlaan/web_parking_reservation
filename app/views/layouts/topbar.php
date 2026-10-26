@@ -36,14 +36,9 @@
     <!-- right section -->
     <div class="topbar-item-right">
 
-        <!-- notification button -->
-        <a href="#" class="notification" aria-label="Notifications">
-            <span class="notification-icon" aria-hidden="true"></span>
-        </a>
-
         <!-- user profile -->
         <a href="?page=profile" class="profile text-uppercase text-decoration-none">
-            <img src="<?= htmlspecialchars($user['avatar_url'] ?? 'http://github.com/mdo.png', ENT_QUOTES, 'UTF-8' ) ?>" alt="Profile picture" width="36" height="36">
+            <img src="<?= htmlspecialchars($user['avatar_url'] ?: $assetUrl . '/images/icons/profile-icon.svg', ENT_QUOTES, 'UTF-8') ?>" alt="Profile picture" width="36" height="36">
             <?= htmlspecialchars($user['name'] ?? 'User', ENT_QUOTES, 'UTF-8') ?>
         </a>
 

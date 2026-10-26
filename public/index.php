@@ -4,12 +4,17 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 
+date_default_timezone_set('Asia/Jakarta');
+
 $projectRoot = $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation';
 
 require_once $projectRoot . '/app/config/app.php';
-require_once $projectRoot . '/app/helpers/dummy-data.php';
+require_once $projectRoot . '/app/helpers/staff.php'; // $conn, flash(), csrf helpers, redirect()
+require_once $projectRoot . '/app/helpers/lookup.php';
 require_once $projectRoot . '/app/helpers/auth.php';
 require_once $projectRoot . '/app/helpers/parking-functions.php';
+require_once $projectRoot . '/app/helpers/reservations.php';
+require_once $projectRoot . '/database/DatabaseDataProvider.php';
 require_once $projectRoot . '/app/controllers/ParkingController.php';
 require_once $projectRoot . '/app/controllers/HomeController.php';
 require_once $projectRoot . '/app/controllers/HistoryController.php';
@@ -17,89 +22,61 @@ require_once $projectRoot . '/app/controllers/AuthController.php';
 require_once $projectRoot . '/app/controllers/ProfileController.php';
 require_once $projectRoot . '/app/models/Mall.php';
 
-/*
- * Change this value when the real database provider is ready.
- * Page templates and controllers consume the same variable names regardless
- * of where the data comes from.
- */
-$dataSource = 'dummy';
+// Runs on every request, so slots free up without a cron job (also used by the operator dashboard).
+parkEasyExpireReservations($conn);
 
-if ($dataSource === 'dummy') {
-    $dummyDataPath = $projectRoot . '/database/dummy-data/';
-
-    $userLocations = require $dummyDataPath . 'user-locations.php';
-    $parkingMalls = require $dummyDataPath . 'parking-malls.php';
-    $parkingRates = require $dummyDataPath . 'parking-rates.php';
-    $parkingFloors = require $dummyDataPath . 'parking-floors.php';
-    $parkingSlots = require $dummyDataPath . 'parking-slots.php';
-    $reservations = require $dummyDataPath . 'reservations.php';
-    $vehicles = require $dummyDataPath . 'vehicles.php';
-
-    if (!isset($_SESSION['demo_users'])) {
-        $_SESSION['demo_users'] = require $dummyDataPath . 'users.php';
-    }
-
-    $users = &$_SESSION['demo_users'];
-} elseif ($dataSource === 'database') {
-    /*
-     * Database provider must return the same dataset contract as the dummy
-     * source above. Implement it here when the real schema is ready, then
-     * switch only $dataSource to 'database'.
-     */
-    require_once $projectRoot . '/app/config/database.php';
-    require_once $projectRoot . '/database/DatabaseDataProvider.php';
-
-    $databaseData = parkEasyLoadDatabaseData($conn);
-    $userLocations = $databaseData['userLocations'];
-    $parkingMalls = $databaseData['parkingMalls'];
-    $parkingRates = $databaseData['parkingRates'];
-    $parkingFloors = $databaseData['parkingFloors'];
-    $parkingSlots = $databaseData['parkingSlots'];
-    $reservations = $databaseData['reservations'];
-    $vehicles = $databaseData['vehicles'];
-    $users = $databaseData['users'];
-} else {
-    throw new RuntimeException('Unknown Parkeasy data source.');
+// Staff dashboards have their own login.
+if (in_array($_GET['page'] ?? '', ['admin', 'operator'], true)) {
+    require $projectRoot . '/app/views/' . $_GET['page'] . '/' . $_GET['page'] . '.php';
+    exit;
 }
 
 $page = $_GET['page'] ?? 'home';
 $step = $_GET['step'] ?? 'login';
 $requestMethod = $_SERVER['REQUEST_METHOD'];
 
-parkEasyHandleAuthRequest($page, $step, $requestMethod, $users);
+if ($requestMethod === 'POST' && !csrfOk()) {
+    flash('!Your session expired. Please try again.');
+    redirect($page === 'auth' ? '?page=auth&step=' . urlencode($step) : '?page=home');
+}
+
+parkEasyHandleAuthRequest($conn, $page, $step, $requestMethod);
 
 $currentUserId = parkEasyCurrentUserId() ?? 0;
-$user = $users[$currentUserId] ?? null;
+$user = $currentUserId ? parkEasyFindUserById($conn, $currentUserId) : null;
 $isLoggedIn = $user !== null;
 
 if (!$isLoggedIn && $page !== 'auth') {
     unset($_SESSION['user_id']);
-
-    header('Location: ?page=auth&step=login');
-    exit;
+    redirect('?page=auth&step=login');
 }
 
-if ($isLoggedIn && $page === 'auth' && $step === 'login') {
-    header('Location: ?page=home');
-    exit;
+if ($isLoggedIn && $page === 'auth') {
+    redirect('?page=home');
 }
 
-$selectedLocation = parkEasyFindLocation(
-    (int) ($user['location_id'] ?? 0),
-    $userLocations
-);
-
-if ($selectedLocation === null) {
-    $selectedLocation = $userLocations[0] ?? null;
+if ($isLoggedIn && $requestMethod === 'POST') {
+    match ($page) {
+        'reserve' => parkEasyActionReserve($conn, $currentUserId),
+        'check-payment' => parkEasyActionPay($conn, $currentUserId),
+        'cancel-reservation' => parkEasyActionCancel($conn, $currentUserId),
+        'set-location' => parkEasyActionSetLocation($conn),
+        'profile' => parkEasyHandleProfileUpdate($conn, $currentUserId),
+        default => null,
+    };
 }
 
-parkEasyHandleProfileUpdate(
-    $page,
-    $requestMethod,
-    $currentUserId,
-    $user,
-    $users
-);
+$data = $isLoggedIn ? parkEasyLoadDatabaseData($conn, $currentUserId, $assetUrl) : [];
+$userLocations = $data['userLocations'] ?? [];
+$parkingMalls = $data['parkingMalls'] ?? [];
+$parkingRates = $data['parkingRates'] ?? [];
+$parkingFloors = $data['parkingFloors'] ?? [];
+$parkingSlots = $data['parkingSlots'] ?? [];
+$reservations = $data['reservations'] ?? [];
+$vehicles = $data['vehicles'] ?? [];
+
+$selectedLocation = parkEasyFindLocation((int) ($_SESSION['location_id'] ?? 0), $userLocations)
+    ?? ($userLocations[0] ?? null);
 
 // Prepare parking page data outside the view templates.
 if ($page === 'slot') {
@@ -156,7 +133,6 @@ if ($page === 'home') {
     $homePageData = parkEasyPrepareHomePageData(
         $currentUserId,
         $selectedLocation,
-        $user,
         $parkingMalls,
         $parkingRates,
         $reservations
@@ -173,153 +149,22 @@ if ($page === 'parking') {
     $parkingIndexData = parkEasyPrepareParkingIndexData(
         $selectedLocation,
         $parkingMalls,
-        $parkingRates
+        $parkingRates,
+        $_GET
     );
     $mallsByCity = $parkingIndexData['malls_by_city'];
 }
 
-if ($page === 'payment') {
-    $paymentPageData = [
-        'error' => null,
-        'reservation' => null,
-        'mall' => null,
-        'floor' => null,
-        'slot' => null,
-        'rate' => null,
-    ];
+// Payment and invoice both show one reservation of the logged-in user.
+if ($page === 'payment' || $page === 'invoice') {
+    $res = parkEasyLoadReservation($conn, (int) ($_GET['reservation_id'] ?? 0), $currentUserId);
 
-    $reservationId = trim(
-        (string) ($_GET['reservation_id'] ?? '')
-    );
-
-    // Flow 1: payment for an existing reservation.
-    if ($reservationId !== '') {
-        $selectedReservation = null;
-
-        foreach ($reservations as $item) {
-            if (
-                (string) ($item['reservation_id'] ?? '') === $reservationId
-                && (int) ($item['user_id'] ?? 0) === $currentUserId
-            ) {
-                $selectedReservation = $item;
-                break;
-            }
-        }
-
-        if ($selectedReservation === null) {
-            http_response_code(404);
-            $paymentPageData['error'] = 'Reservation not found.';
-        } elseif (
-            strtoupper((string) ($selectedReservation['status'] ?? ''))
-            !== 'PENDING_PAYMENT'
-        ) {
-            $paymentPageData['error'] =
-                'This reservation is not awaiting payment.';
-        } else {
-            $mall = parkEasyFindMall(
-                (string) $selectedReservation['mall_id'],
-                $parkingMalls
-            );
-
-            $floor = null;
-
-            foreach ($parkingFloors as $item) {
-                if (
-                    (string) ($item['floor_id'] ?? '')
-                    === (string) $selectedReservation['floor_id']
-                ) {
-                    $floor = $item;
-                    break;
-                }
-            }
-
-            $slot = null;
-
-            foreach ($parkingSlots as $item) {
-                if (
-                    (string) ($item['slot_id'] ?? '')
-                    === (string) $selectedReservation['slot_id']
-                    && (string) ($item['floor_id'] ?? '')
-                    === (string) $selectedReservation['floor_id']
-                ) {
-                    $slot = $item;
-                    break;
-                }
-            }
-
-            $rate = parkEasyFindRate(
-                (string) $selectedReservation['mall_id'],
-                (string) $selectedReservation['parking_type'],
-                $parkingRates
-            );
-
-            if (
-                $mall === null
-                || $floor === null
-                || $slot === null
-                || $rate === null
-            ) {
-                http_response_code(404);
-                $paymentPageData['error'] =
-                    'Some reservation details are unavailable.';
-            } else {
-                $paymentPageData = [
-                    'error' => null,
-                    'reservation' => $selectedReservation,
-                    'mall' => $mall,
-                    'floor' => $floor,
-                    'slot' => $slot,
-                    'rate' => $rate,
-                ];
-            }
-        }
+    if ($res === null) {
+        http_response_code(404);
+    } elseif ($page === 'payment' && $res['status'] !== 'UNPAID') {
+        redirect('?page=invoice&reservation_id=' . $res['id']); // nothing left to pay
     } else {
-        // Flow 2: user arrives from the slot selection page.
-        $slotPageData = parkEasyPrepareSlotPageData(
-            $_GET,
-            $parkingMalls,
-            $parkingRates,
-            $parkingFloors,
-            $parkingSlots,
-            $reservations
-        );
-
-        $requestedSlotId = trim(
-            (string) ($_GET['slot_id'] ?? '')
-        );
-
-        $selectedSlot = null;
-
-        foreach ($slotPageData['slots'] as $item) {
-            if (
-                (string) ($item['slot_id'] ?? '') === $requestedSlotId
-            ) {
-                $selectedSlot = $item;
-                break;
-            }
-        }
-
-        if (
-            $slotPageData['error'] !== null
-            || $selectedSlot === null
-            || !empty($selectedSlot['is_occupied'])
-            || $slotPageData['selected_floor'] === null
-            || $slotPageData['rate'] === null
-        ) {
-            http_response_code(404);
-            $paymentPageData['error'] =
-                'The selected parking slot is unavailable.';
-        } else {
-            $paymentPageData = [
-                'error' => null,
-                'reservation' => null,
-                'mall' => $slotPageData['mall'],
-                'floor' => $slotPageData['selected_floor'],
-                'slot' => $selectedSlot,
-                'rate' => $slotPageData['rate'],
-                'parking_type' => $slotPageData['parking_type'],
-            ];
-        }
+        $selectedMall = ['mall_id' => $res['mall_id'], 'name' => $res['mall_name']];
     }
 }
 
@@ -340,122 +185,8 @@ if ($page === 'history') {
     $months = $historyPageData['months'];
 }
 
-if ($page === 'invoice') {
-    $invoiceError = null;
-    $invoiceData = null;
-
-    $reservationId = trim(
-        (string) ($_GET['reservation_id'] ?? '')
-    );
-
-    if ($reservationId !== '') {
-        // Invoice dibuka dari History.
-        // Cari reservasi milik pengguna yang sedang login.
-        $selectedReservation = null;
-
-        foreach ($reservations as $item) {
-            if (
-                (string) ($item['reservation_id'] ?? '') === $reservationId
-                && (int) ($item['user_id'] ?? 0) === $currentUserId
-            ) {
-                $selectedReservation = $item;
-                break;
-            }
-        }
-
-        if ($selectedReservation === null) {
-            http_response_code(404);
-            $invoiceError = 'Reservation not found.';
-        } else {
-            $invoiceMall = parkEasyFindMall(
-                (string) $selectedReservation['mall_id'],
-                $parkingMalls
-            );
-
-            $invoiceFloor = null;
-
-            foreach ($parkingFloors as $floor) {
-                if (
-                    (string) $floor['floor_id']
-                    === (string) $selectedReservation['floor_id']
-                ) {
-                    $invoiceFloor = $floor;
-                    break;
-                }
-            }
-
-            $invoiceRate = parkEasyFindRate(
-                (string) $selectedReservation['mall_id'],
-                (string) $selectedReservation['parking_type'],
-                $parkingRates
-            );
-
-            $invoiceData = [
-                'reservation' => $selectedReservation,
-                'mall' => $invoiceMall,
-                'floor' => $invoiceFloor,
-                'rate' => $invoiceRate,
-                'source' => 'history',
-            ];
-
-            if (
-                $invoiceMall === null
-                || $invoiceFloor === null
-                || $invoiceRate === null
-            ) {
-                http_response_code(404);
-                $invoiceError = 'Some reservation details are unavailable.';
-                $invoiceData = null;
-            }
-        }
-    } else {
-        // Invoice dibuka setelah pengguna memilih slot.
-        // Pada tahap ini, tampilkan preview slot, bukan reservasi tersimpan.
-        $slotPageData = parkEasyPrepareSlotPageData(
-            $_GET,
-            $parkingMalls,
-            $parkingRates,
-            $parkingFloors,
-            $parkingSlots,
-            $reservations
-        );
-
-        $requestedSlotId = trim((string) ($_GET['slot_id'] ?? ''));
-        $selectedSlot = null;
-
-        foreach ($slotPageData['slots'] as $slot) {
-            if ((string) $slot['slot_id'] === $requestedSlotId) {
-                $selectedSlot = $slot;
-                break;
-            }
-        }
-
-        if (
-            $slotPageData['error'] !== null
-            || $selectedSlot === null
-            || !empty($selectedSlot['is_occupied'])
-            || $slotPageData['selected_floor'] === null
-            || $slotPageData['rate'] === null
-        ) {
-            http_response_code(404);
-            $invoiceError = 'The selected parking slot is unavailable.';
-        } else {
-            $invoiceData = [
-                'reservation' => null,
-                'mall' => $slotPageData['mall'],
-                'floor' => $slotPageData['selected_floor'],
-                'slot' => $selectedSlot,
-                'rate' => $slotPageData['rate'],
-                'parking_type' => $slotPageData['parking_type'],
-                'source' => 'slot',
-            ];
-        }
-    }
-}
-
 if ($page === 'profile') {
     $profilePageData = parkEasyPrepareProfilePageData($user, $assetUrl);
-    $profileMessage = $profilePageData['profileMessage'];
     $avatarUrl = $profilePageData['avatarUrl'];
     $profileFields = $profilePageData['profileFields'];
 }
@@ -548,51 +279,24 @@ if (!isset($routes[$page])) {
             break;
 
         case 'payment':
-            $paymentMall = $paymentPageData['mall'] ?? null;
-
-            if ($paymentMall === null) {
-                $paymentMall = $selectedMall ?? null;
-            }
-
-            $mallId = $paymentMall['mall_id'] ?? null;
-            $mallName = $paymentMall['name'] ?? null;
-
             $breadcrumb = [
-                [
-                    'label' => 'Search Park',
-                    'url' => '?page=parking',
-                ],
+                ['label' => 'Search Park', 'url' => '?page=parking'],
             ];
 
-            if ($mallId !== null && $mallName !== null) {
+            if (isset($res)) {
                 $breadcrumb[] = [
-                    'label' => $mallName,
-                    'url' => '?page=detail&mall_id=' . rawurlencode(
-                        (string) $mallId
-                    ),
-                ];
-
-                $breadcrumb[] = [
-                    'label' => 'Select Parking Area',
-                    'url' => '?page=slot&mall_id=' . rawurlencode(
-                        (string) $mallId
-                    ),
+                    'label' => $res['mall_name'],
+                    'url' => '?page=detail&mall_id=' . rawurlencode((string) $res['mall_id']),
                 ];
             }
 
-            $breadcrumb[] = [
-                'label' => 'Payment',
-                'url' => null,
-            ];
-
+            $breadcrumb[] = ['label' => 'Payment', 'url' => null];
             break;
 
         case 'invoice':
             $breadcrumb = [
-                [
-                    'label' => 'Invoice',
-                    'url' => null,
-                ],
+                ['label' => 'History', 'url' => '?page=history'],
+                ['label' => 'Invoice', 'url' => null],
             ];
             break;
 
@@ -654,6 +358,8 @@ if (!isset($routes[$page])) {
 <?php require $projectRoot . '/app/views/includes/head.php'; ?>
 
 <body>
+
+<?php require $projectRoot . '/app/views/components/alerts.php'; ?>
 
 <?php if ($showLayout): ?>
 

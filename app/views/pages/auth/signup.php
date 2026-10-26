@@ -8,7 +8,7 @@ $fields = [
         'name' => 'username',
         'label' => 'Username',
         'type' => 'text',
-        'placeholder' => 'brianfadlan',
+        'placeholder' => 'Your name',
         'required' => true,
         'autocomplete' => 'username',
     ],
@@ -17,7 +17,7 @@ $fields = [
         'name' => 'email',
         'label' => 'Email',
         'type' => 'email',
-        'placeholder' => 'brianfadlan@example.com',
+        'placeholder' => 'you@example.com',
         'required' => true,
         'autocomplete' => 'email',
     ],
@@ -35,7 +35,7 @@ $fields = [
         'name' => 'password',
         'label' => 'Create Password',
         'type' => 'password',
-        'placeholder' => 'Brianfadlan123.',
+        'placeholder' => 'At least 8 characters',
         'required' => true,
         'autocomplete' => 'new-password',
     ],
@@ -44,7 +44,7 @@ $fields = [
         'name' => 'confirm_password',
         'label' => 'Confirm Password',
         'type' => 'password',
-        'placeholder' => 'Brianfadlan123.',
+        'placeholder' => 'At least 8 characters',
         'required' => true,
         'autocomplete' => 'new-password',
     ],
@@ -61,13 +61,15 @@ $fields = [
 
             <form class="input-form" action="?page=auth&step=signup" method="POST">
 
+                <?= csrfField() ?>
+
                 <?php foreach ($fields as $field): ?>
-                    <?php require $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/components/auth-user-input.php'; ?>
+                    <?php require $projectRoot . '/app/views/components/auth-user-input.php'; ?>
                 <?php endforeach; ?>
 
+                <button class="continue-button" type="submit">Continue</button>
+
             </form>
-            
-            <button class="continue-button" type="submit">Continue</button>
 
             <div class="links">
                 <span>

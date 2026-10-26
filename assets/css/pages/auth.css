@@ -1,0 +1,124 @@
+.auth-content {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  min-height: 100vh;
+  padding: 24px;
+  background-color: var(--canvas-background);
+}
+
+.auth-image {
+  flex: 1;
+  width: 50%;
+  overflow: hidden;
+  border-radius: 12px;
+  background-color: var(--primary-text);
+}
+
+.auth-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.form-side {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 48px;
+}
+
+.form-wrap {
+  width: 100%;
+  gap: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.form-wrap .auth-header {
+  width: 100%;
+  font: var(--text-display);
+  color: var(--primary-text);
+}
+
+.alert {
+  margin:0;
+  width: 100%;
+}
+
+.form-side form {
+  width: 100%;
+}
+
+.input-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.continue-button {
+  width: 100%;
+  padding: 12px 0 12px;
+  border-radius: 12px;
+  background: var(--primary-action-available-emerald);
+  color: var(--white-input-surface);
+  border: none;
+  cursor: pointer;
+  font: var(--text-button);
+}
+
+.links span {
+  color: var(--secondary-text);
+  font: var(--text-body);
+}
+
+.links a {
+  color: var(--brand-gold);
+  font: var(--text-button);
+  text-decoration: none;
+}
+
+.form-check {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: left;
+  align-items: center;
+  gap: 6px;
+}
+
+.form-check label {
+  font: var(--text-body);
+  color: var(--primary-text);
+}
+
+.form-check-input {
+  flex-shrink: 0;
+  width: 1.2em;
+  height: 1.2em;
+  background-color: var(--white-input-surface);
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  border: var(--secondary-text) solid var(--secondary-text);
+}
+
+.forgot-password {
+  display: flex;
+  justify-content: end;
+  width: 100%;
+}
+
+.forgot-password a {
+  color: var(--brand-gold);
+  font: var(--text-button);
+  text-decoration: none;
+}

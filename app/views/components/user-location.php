@@ -9,9 +9,17 @@
         <i class="location-icon"></i>
     </div>
 
-    <a href="#" class="location-dropdown d-flex justify-items-center align-items-center">
-        <?= htmlspecialchars($selectedLocation['address'] ?? 'Unknown location', ENT_QUOTES, 'UTF-8') ?>
-        <i class="fa-solid fa-caret-down" style="color: var(--primary-text);"></i>
-    </a>
+    <form action="?page=set-location" method="POST" class="location-form">
+        <?= csrfField() ?>
+        <input type="hidden" name="back" value="<?= parkEasyEscape($currentPage ?? 'home') ?>">
+
+        <select name="location_id" class="location-dropdown location-select" aria-label="Current location" onchange="this.form.submit()">
+            <?php foreach ($userLocations as $location): ?>
+                <option value="<?= (int) $location['id'] ?>" <?= (int) $location['id'] === (int) ($selectedLocation['id'] ?? 0) ? 'selected' : '' ?>>
+                    <?= parkEasyEscape($location['address']) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </form>
 
 </div>

@@ -20,15 +20,24 @@ $fileJs = [];
 
     <!-- Section | Location -->
     <section>
-        <?php include $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/components/user-location.php'; ?>
+        <?php include $projectRoot . '/app/views/components/user-location.php'; ?>
     </section>
     
     <section>
-        <button type="button" class="d-flex align-items-center search-section" data-bs-toggle="dialog" data-bs-target="#bdSearchDialog" aria-haspopup="dialog" aria-label="Search">
+        <form method="GET" action="" class="d-flex align-items-center search-section" role="search">
+            <input type="hidden" name="page" value="parking">
             <i class="fa-solid fa-magnifying-glass"></i>
-            <span>Search Here</span>
-        </button>
+            <input type="search" name="q" value="<?= parkEasyEscape($parkingIndexData['search']) ?>" placeholder="Search here" aria-label="Search parking">
+        </form>
     </section>
+
+    <?php if (empty($mallsByCity)): ?>
+    <section>
+        <p style="font: var(--text-body); color: var(--secondary-text);">
+            No parking location found. <a href="?page=parking">Show all</a>
+        </p>
+    </section>
+    <?php endif; ?>
 
     <!-- Section | Area Mall Section -->
     <?php foreach ($mallsByCity as $city => $cityMalls): ?>
@@ -46,7 +55,7 @@ $fileJs = [];
             <?php foreach ($cityMalls as $field): ?>
                 <?php
                 $variant = 'area';
-                require $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/components/card-parking.php';
+                require $projectRoot . '/app/views/components/card-parking.php';
                 ?>
             <?php endforeach; ?>
 

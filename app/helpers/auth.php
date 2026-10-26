@@ -2,32 +2,16 @@
 
 function parkEasyCurrentUserId(): ?int
 {
-    if (!isset($_SESSION['user_id'])) {
-        return null;
-    }
-
-    return (int) $_SESSION['user_id'];
+    return isset($_SESSION['user_id']) ? (int) $_SESSION['user_id'] : null;
 }
 
-function parkEasyFindUserByEmail(string $email, array $users): ?array
+function parkEasyFindUserById(mysqli $conn, int $id): ?array
 {
-    if ($email === '') {
-        return null;
-    }
-
-    foreach ($users as $user) {
-        if (strcasecmp((string) $user['email'], $email) === 0) {
-            return $user;
-        }
-    }
-
-    return null;
+    return staffRows($conn, 'SELECT id, name, email, phone, avatar_url FROM users WHERE id = ?', [$id])[0] ?? null;
 }
 
 function parkEasyLogout(): void
 {
-    $_SESSION = [];
-    session_destroy();
+    unset($_SESSION['user_id']);
+    session_regenerate_id(true);
 }
-
-?>

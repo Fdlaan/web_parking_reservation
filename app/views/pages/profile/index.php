@@ -18,12 +18,6 @@ $fileJs = [
     <section>
         <span class="section-header">Manage Profile</span>
 
-        <?php if ($profileMessage !== null): ?>
-            <div class="profile-message" role="status">
-                <?= parkEasyEscape($profileMessage) ?>
-            </div>
-        <?php endif; ?>
-
         <div class="profile-section">
 
             <div class="profile-image">
@@ -38,6 +32,7 @@ $fileJs = [
                 action="?page=profile"
                 method="POST"
             >
+                <?= csrfField() ?>
                 <input
                     type="hidden"
                     name="profile_action"
@@ -52,7 +47,7 @@ $fileJs = [
                             $isMissing = $value === '';
                         ?>
 
-                        <div class="form-field <?= $name === 'plate_number' ? 'plate-field' : '' ?> <?= $isMissing ? 'is-incomplete' : '' ?>">
+                        <div class="form-field <?= $isMissing ? 'is-incomplete' : '' ?>">
 
                             <label
                                 for="<?= parkEasyEscape($name) ?>"
@@ -68,7 +63,7 @@ $fileJs = [
                                 name="<?= parkEasyEscape($name) ?>"
                                 placeholder="<?= parkEasyEscape($field['placeholder']) ?>"
                                 value="<?= parkEasyEscape($value) ?>"
-                                autocomplete="<?= $name === 'username' ? 'username' : ($name === 'email' ? 'email' : 'off') ?>"
+                                autocomplete="<?= $name === 'name' ? 'username' : ($name === 'email' ? 'email' : 'tel') ?>"
                                 <?= $name === 'email' ? 'readonly' : '' ?>
                                 disabled
                                 required
@@ -118,6 +113,42 @@ $fileJs = [
 
                 </div>
 
+            </form>
+
+        </div>
+    </section>
+
+    <section>
+        <span class="section-header">My Plate Numbers</span>
+
+        <div class="vehicle-card">
+
+            <?php if (empty($vehicles)): ?>
+                <p class="vehicle-empty">
+                    You have no plate number yet. Add one to start reserving a parking slot.
+                </p>
+            <?php else: ?>
+                <ul class="vehicle-list">
+                    <?php foreach ($vehicles as $vehicle): ?>
+                        <li class="vehicle-item">
+                            <span><i class="fa-solid fa-car" aria-hidden="true"></i> <?= parkEasyEscape($vehicle['plate_number']) ?></span>
+
+                            <form action="?page=profile" method="POST" onsubmit="return confirm('Remove this plate number?')">
+                                <?= csrfField() ?>
+                                <input type="hidden" name="profile_action" value="delete_plate">
+                                <input type="hidden" name="vehicle_id" value="<?= (int) $vehicle['id'] ?>">
+                                <button type="submit" class="vehicle-remove">Remove</button>
+                            </form>
+                        </li>
+                    <?php endforeach; ?>
+                </ul>
+            <?php endif; ?>
+
+            <form action="?page=profile" method="POST" class="vehicle-add">
+                <?= csrfField() ?>
+                <input type="hidden" name="profile_action" value="add_plate">
+                <input type="text" name="plate_number" class="form-control" placeholder="B 1234 FSD" maxlength="12" required aria-label="Plate number">
+                <button type="submit" class="vehicle-add-button">Add plate</button>
             </form>
 
         </div>

@@ -1,7 +1,6 @@
 Options -Indexes
+
 RewriteEngine On
 
-RewriteRule ^$ http://localhost/web_parking_reservation/public/?page=home [R=302,L]
-
-RewriteRule ^(app|database|z-design-references|.git)(/|$) - [F,L]
-RewriteRule ^(.gitignore|README.md)$ - [F,L]
+RewriteCond %{THE_REQUEST} /index\.php[\s?] [NC]
+RewriteRule ^index\.php$ /web_parking_reservation/public/ [R=301,L,QSA]

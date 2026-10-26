@@ -4,7 +4,6 @@
 function parkEasyPrepareHomePageData(
     int $currentUserId,
     ?array $selectedLocation,
-    ?array $user,
     array $parkingMalls,
     array $parkingRates,
     array $reservations
@@ -56,7 +55,7 @@ function parkEasyPrepareHomePageData(
         $reservations,
         fn($reservation) =>
             (int) ($reservation['user_id'] ?? 0) === $currentUserId
-            && in_array($reservation['status'] ?? '', ['CONFIRMED', 'PENDING_PAYMENT'], true)
+            && in_array($reservation['status'] ?? '', ['PAID', 'UNPAID'], true)
     ));
 
     usort(
@@ -66,8 +65,8 @@ function parkEasyPrepareHomePageData(
 
     $reservation = $activeReservations[0] ?? null;
     $reservationStatus = match ($reservation['status'] ?? null) {
-        'CONFIRMED' => 'paid',
-        'PENDING_PAYMENT' => 'unpaid',
+        'PAID' => 'paid',
+        'UNPAID' => 'unpaid',
         default => 'none',
     };
     $canCancel = false;
@@ -80,12 +79,10 @@ function parkEasyPrepareHomePageData(
             'mall_name' => $mall['name'] ?? 'Unknown Mall',
             'parking_slot' => $reservation['slot_code'] ?? '-',
             'time' => $startTime->format('d M Y, H:i'),
-            'plate_number' => ($reservation['plate_number'] ?? '')
-                ?: ($user['plate_number'] ?? '-'),
             'parking_type' => $reservation['parking_type'] ?? '-',
         ]);
 
-        $canCancel = (new DateTimeImmutable('now'))->modify('+2 hours') <= $startTime;
+        $canCancel = parkEasyCanCancel($reservation['reserved_at'], $reservation['status']);
     }
 
     return [

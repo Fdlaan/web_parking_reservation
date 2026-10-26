@@ -67,11 +67,11 @@ function parkEasyPrepareHistoryPageData(
     );
 
     $statusLabels = [
-        'COMPLETED' => ['Successful', 'success'],
+        'COMPLETED' => ['Completed', 'success'],
+        'PAID' => ['Paid', 'info'],
+        'UNPAID' => ['Unpaid', 'warning'],
         'CANCELLED' => ['Cancelled', 'danger'],
-        'PENDING_PAYMENT' => ['Pending', 'warning'],
-        'CONFIRMED' => ['Confirmed', 'success'],
-        'EXPIRED' => ['Expired', 'danger'],
+        'EXPIRED' => ['Expired', 'secondary'],
     ];
 
     $totalPages = max(1, (int) ceil(count($rows) / PARKEASY_HISTORY_PER_PAGE));

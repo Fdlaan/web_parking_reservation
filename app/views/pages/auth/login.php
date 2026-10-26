@@ -2,16 +2,13 @@
 
 $titlePage = 'Log in | Parkeasy';
 
-$loginMessage = $_SESSION['login_message'] ?? null;
-unset($_SESSION['login_message']);
-
 $fields = [
     [
         'id' => 'email',
         'name' => 'email',
         'label' => 'Email',
         'type' => 'email',
-        'placeholder' => 'brianfadlan@example.com',
+        'placeholder' => 'you@example.com',
         'required' => true,
         'autocomplete' => 'email',
     ],
@@ -20,9 +17,9 @@ $fields = [
         'name' => 'password',
         'label' => 'Password',
         'type' => 'password',
-        'placeholder' => 'Brianfadlan123.',
+        'placeholder' => 'Your password',
         'required' => true,
-        'autocomplete' => 'new-password',
+        'autocomplete' => 'current-password',
     ],
 ];
 
@@ -39,32 +36,16 @@ $fields = [
 
             <span class="auth-header">Welcome back</span>
 
-            <?php if ($loginMessage !== null): ?>
-                <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <?= parkEasyEscape($loginMessage) ?>
-
-                    <button
-                        type="button"
-                        class="btn-close"
-                        data-bs-dismiss="alert"
-                        aria-label="Close">
-                    </button>
-                </div>
-            <?php endif; ?>
-
             <form class="input-form" action="?page=auth&step=login" method="POST">
 
+                <?= csrfField() ?>
+
                 <?php foreach ($fields as $field): ?>
-                    <?php require $_SERVER['DOCUMENT_ROOT'] . '/web_parking_reservation/app/views/components/auth-user-input.php'; ?>
+                    <?php require $projectRoot . '/app/views/components/auth-user-input.php'; ?>
                 <?php endforeach; ?>
 
                 <div class="forgot-password">
                     <a class="forgot" href="?page=auth&step=forgot-email">Forgot Password?</a><br>
-                </div>
-
-                <div class="form-check">
-                    <input class="form-check-input" type="checkbox" value="1" id="checkDefault">
-                    <label class="form-check-label" for="checkDefault">Remember me</label>
                 </div>
 
                 <button class="continue-button" type="submit">Continue</button>
