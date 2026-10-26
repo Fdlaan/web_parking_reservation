@@ -65,9 +65,6 @@ $fileCss = [
         </div>
 
         <div class="parking-selected-floor" style="">
-
-            <span class="parking-selected-floor-header">Floor</span>
-
             <div class="parking-selected-floor-section">
 
                 <?php foreach ($parkingPageFloors as $index => $floor): ?>
