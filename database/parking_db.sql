@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 20, 2026 at 05:25 PM
+-- Generation Time: Oct 26, 2026 at 05:53 PM
 -- Server version: 8.4.3
 -- PHP Version: 8.3.33
 
@@ -20,6 +20,20 @@ SET time_zone = "+00:00";
 --
 -- Database: `parking_db`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `admins`
+--
+
+CREATE TABLE `admins` (
+  `id` int NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
 -- --------------------------------------------------------
 
@@ -60,15 +74,16 @@ CREATE TABLE `invoices` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `notifications`
+-- Table structure for table `operators`
 --
 
-CREATE TABLE `notifications` (
+CREATE TABLE `operators` (
   `id` int NOT NULL,
-  `user_id` int NOT NULL,
-  `title` varchar(150) NOT NULL,
-  `body` text,
-  `is_read` tinyint(1) NOT NULL DEFAULT '0',
+  `location_id` int NOT NULL,
+  `name` varchar(255) NOT NULL,
+  `email` varchar(255) NOT NULL,
+  `password_hash` varchar(255) NOT NULL,
+  `is_active` tinyint(1) NOT NULL DEFAULT '1',
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
@@ -154,7 +169,7 @@ CREATE TABLE `reservations` (
   `plate_number` varchar(12) NOT NULL,
   `parking_type` enum('REGULER','VALET') NOT NULL,
   `reserved_at` datetime NOT NULL,
-  `status` enum('PENDING_PAYMENT','CONFIRMED','COMPLETED','CANCELLED','EXPIRED') NOT NULL DEFAULT 'PENDING_PAYMENT',
+  `status` enum('COMPLETED','CANCELLED','EXPIRED','PAID','UNPAID') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'UNPAID',
   `cancelled_at` datetime DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `active_slot_key` int GENERATED ALWAYS AS (if((`status` in (_utf8mb4'PENDING_PAYMENT',_utf8mb4'CONFIRMED')),`slot_id`,NULL)) STORED
@@ -196,6 +211,13 @@ CREATE TABLE `vehicles` (
 --
 
 --
+-- Indexes for table `admins`
+--
+ALTER TABLE `admins`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `email` (`email`);
+
+--
 -- Indexes for table `floors`
 --
 ALTER TABLE `floors`
@@ -212,11 +234,12 @@ ALTER TABLE `invoices`
   ADD KEY `idx_inv_status` (`payment_status`,`pay_before`);
 
 --
--- Indexes for table `notifications`
+-- Indexes for table `operators`
 --
-ALTER TABLE `notifications`
+ALTER TABLE `operators`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `idx_notif_user` (`user_id`,`is_read`,`created_at`);
+  ADD UNIQUE KEY `email` (`email`),
+  ADD KEY `idx_op_location` (`location_id`);
 
 --
 -- Indexes for table `parking_locations`
@@ -277,6 +300,12 @@ ALTER TABLE `vehicles`
 --
 
 --
+-- AUTO_INCREMENT for table `admins`
+--
+ALTER TABLE `admins`
+  MODIFY `id` int NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `floors`
 --
 ALTER TABLE `floors`
@@ -289,9 +318,9 @@ ALTER TABLE `invoices`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT for table `notifications`
+-- AUTO_INCREMENT for table `operators`
 --
-ALTER TABLE `notifications`
+ALTER TABLE `operators`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
@@ -353,10 +382,10 @@ ALTER TABLE `invoices`
   ADD CONSTRAINT `invoices_ibfk_1` FOREIGN KEY (`reservation_id`) REFERENCES `reservations` (`id`);
 
 --
--- Constraints for table `notifications`
+-- Constraints for table `operators`
 --
-ALTER TABLE `notifications`
-  ADD CONSTRAINT `notifications_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE;
+ALTER TABLE `operators`
+  ADD CONSTRAINT `operators_ibfk_1` FOREIGN KEY (`location_id`) REFERENCES `parking_locations` (`id`);
 
 --
 -- Constraints for table `parking_rates`
