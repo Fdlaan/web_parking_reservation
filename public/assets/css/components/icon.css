@@ -181,3 +181,19 @@
   mask: url("/web_parking_reservation/public/assets/images/icons/maps-icon.svg")
     center / contain no-repeat;
 }
+.qris-icon {
+  display: inline-block;
+  flex-shrink: 0;
+  width: 4em;
+  height: 1.5em;
+
+  background-color: currentColor;
+
+  -webkit-mask: center / contain no-repeat;
+  mask: center / contain no-repeat;
+
+  -webkit-mask: url("/web_parking_reservation/public/assets/images/icons/qris-icon.svg")
+  center / contain no-repeat;
+  mask: url("/web_parking_reservation/public/assets/images/icons/qris-icon.svg")
+    center / contain no-repeat;
+}
