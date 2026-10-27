@@ -6,6 +6,6 @@
     <title>Error page | Parkeasy</title>
 </head>
 <body>
-    <p>Sorry, our system is currently unavailable. Please try again later.</p>
+    <span class="error-message">Sorry, our system is currently unavailable. Please try again later.</span>
 </body>
 </html>

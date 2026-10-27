@@ -224,6 +224,7 @@ button.parking-slot {
 }
 
 .reserve-title {
+  display: block;
   margin: 0 0 20px;
   text-align: center;
   font: var(--text-H3);
@@ -249,6 +250,11 @@ button.parking-slot {
 
 .reserve-note a {
   color: var(--brand-gold);
+}
+
+.parking-empty-state {
+  color: var(--secondary-text);
+  font: var(--text-body);
 }
 
 .reserve-field select,

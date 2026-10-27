@@ -1,17 +1,39 @@
 .table-history-wrapper {
   width: 100%;
-
-  overflow: hidden;
+  min-width: 0;
+  overflow-x: auto;
+  overflow-y: hidden;
 
   border: 1px solid var(--border-divider);
   border-radius: var(--radius-xl);
 
   background-color: var(--surface-card);
+  scrollbar-width: thin;
+  scrollbar-color: var(--border-divider) transparent;
+  -webkit-overflow-scrolling: touch;
+}
+
+.table-history-wrapper::-webkit-scrollbar {
+  height: 8px;
+}
+
+.table-history-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.table-history-wrapper::-webkit-scrollbar-thumb {
+  background-color: var(--border-divider);
+  border: 2px solid var(--canvas-background);
+  border-radius: var(--radius-full);
+}
+
+.table-history-wrapper::-webkit-scrollbar-thumb:hover {
+  background-color: var(--brand-gold);
 }
 
 .table-history {
   width: 100%;
-  min-width: 0;
+  min-width: 560px;
 
   border-collapse: separate;
   border-spacing: 0;

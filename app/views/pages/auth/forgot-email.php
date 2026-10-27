@@ -16,7 +16,7 @@ $fields = [
 
             <span class="auth-header">Forgot your password?</span>
 
-            <form class="input-form" action="?page=auth&step=forgot-email" method="POST">
+            <form class="input-form" action="?page=auth&amp;step=forgot-email" method="POST" novalidate data-auth-form data-auth-step="forgot-email">
 
                 <?= csrfField() ?>
 

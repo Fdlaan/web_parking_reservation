@@ -1,0 +1,86 @@
+.confirmation-open {
+  overflow: hidden;
+}
+
+.action-confirmation {
+  position: fixed;
+  inset: 0;
+  z-index: 2100;
+  display: grid;
+  place-items: center;
+  padding: 20px;
+}
+
+.action-confirmation[hidden] {
+  display: none;
+}
+
+.action-confirmation-backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--overlay-scrim);
+}
+
+.action-confirmation-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  width: min(100%, 440px);
+  padding: 24px;
+  border: 1px solid var(--border-divider);
+  border-radius: var(--radius-xl);
+  background: var(--surface-card);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.45);
+}
+
+.action-confirmation-title {
+  color: var(--primary-text);
+  font: var(--text-H4);
+}
+
+.action-confirmation-message {
+  color: var(--secondary-text);
+  font: var(--text-body);
+}
+
+.action-confirmation-actions {
+  display: flex;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.action-confirmation-actions button {
+  min-height: 42px;
+  padding: 10px 14px;
+  border: 1px solid var(--brand-gold);
+  border-radius: var(--radius-md);
+  font: var(--text-button);
+  cursor: pointer;
+}
+
+.action-confirmation-cancel {
+  color: var(--brand-gold);
+  background: transparent;
+}
+
+.action-confirmation-accept {
+  color: var(--canvas-background);
+  background: var(--brand-gold);
+}
+
+@media (max-width: 480px) {
+  .action-confirmation-card {
+    padding: 18px;
+  }
+
+  .action-confirmation-actions {
+    flex-direction: column-reverse;
+  }
+
+  .action-confirmation-actions button {
+    width: 100%;
+  }
+}

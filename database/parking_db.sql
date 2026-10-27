@@ -329,7 +329,8 @@ ALTER TABLE `users`
 --
 ALTER TABLE `vehicles`
   ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `uq_user_plate` (`user_id`,`plate_number`);
+  ADD UNIQUE KEY `uq_plate_number` (`plate_number`),
+  ADD KEY `idx_vehicle_user` (`user_id`);
 
 --
 -- AUTO_INCREMENT for dumped tables

@@ -17,6 +17,12 @@
   z-index: 10;
 }
 
+.sidebar-toggle {
+  display: none;
+  position: relative;
+  flex: 0 0 40px;
+}
+
 /* Left section */
 .topbar-item-breadcrumb {
   display: flex;
@@ -84,10 +90,25 @@
   display: flex;
   align-items: center;
 
+  max-width: min(240px, 35vw);
   gap: 6px;
+  overflow: hidden;
+  white-space: nowrap;
 
   color: var(--primary-text);
   font: var(--text-body-S);
+}
+
+.profile-role {
+  flex: 0 0 auto;
+  color: var(--brand-gold);
+  font-weight: 600;
+}
+
+.profile-name {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* Profile image */
@@ -96,4 +117,39 @@
   flex-shrink: 0;
 
   border-radius: var(--radius-xs);
+}
+
+@media (max-width: 480px) {
+  .topbar {
+    gap: 8px;
+  }
+
+  .topbar-item-breadcrumb {
+    gap: 8px;
+  }
+
+  .profile {
+    max-width: 38vw;
+  }
+}
+
+@media (max-width: 900px) {
+  .topbar {
+    justify-content: flex-start;
+    gap: 12px;
+    padding-right: 16px;
+    padding-left: 16px;
+  }
+
+  .topbar .sidebar-toggle {
+    display: inline-flex;
+  }
+
+  .topbar-item-breadcrumb {
+    flex: 1 1 auto;
+  }
+
+  .topbar-item-right {
+    margin-left: auto;
+  }
 }

@@ -18,7 +18,7 @@ $fileJs = [
 
         <span class="section-header">History Reservation</span>
 
-        <div class="table-history-wrapper">
+        <div class="table-history-wrapper" role="region" aria-label="Reservation history table" tabindex="0">
             <table class="table-history">
 
                 <thead class="table-history-head">

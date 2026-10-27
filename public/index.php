@@ -20,14 +20,25 @@ require_once $projectRoot . '/app/controllers/HomeController.php';
 require_once $projectRoot . '/app/controllers/HistoryController.php';
 require_once $projectRoot . '/app/controllers/AuthController.php';
 require_once $projectRoot . '/app/controllers/ProfileController.php';
+require_once $projectRoot . '/app/controllers/AdminController.php';
+require_once $projectRoot . '/app/controllers/OperatorController.php';
 require_once $projectRoot . '/app/models/Mall.php';
 
 // Runs on every request, so slots free up without a cron job (also used by the operator dashboard).
 parkEasyExpireReservations($conn);
 
-// Staff dashboards have their own login.
-if (in_array($_GET['page'] ?? '', ['admin', 'operator'], true)) {
-    require $projectRoot . '/app/views/' . $_GET['page'] . '/' . $_GET['page'] . '.php';
+// Staff routes keep role authorization while using the shared login and layout system.
+if (($_GET['page'] ?? '') === 'admin') {
+    extract(parkEasyPrepareAdminPageData($conn), EXTR_SKIP);
+    require $projectRoot . '/app/views/pages/admin/index.php';
+    echo '</main></div></div></body></html>';
+    exit;
+}
+
+if (($_GET['page'] ?? '') === 'operator') {
+    extract(parkEasyPrepareOperatorPageData($conn), EXTR_SKIP);
+    require $projectRoot . '/app/views/pages/operator/index.php';
+    echo '</main></div></div></body></html>';
     exit;
 }
 
@@ -44,6 +55,9 @@ parkEasyHandleAuthRequest($conn, $page, $step, $requestMethod);
 
 $currentUserId = parkEasyCurrentUserId() ?? 0;
 $user = $currentUserId ? parkEasyFindUserById($conn, $currentUserId) : null;
+if ($user !== null) {
+    $user['avatar_url'] = parkEasyResolveProfileAvatarUrl($user['avatar_url'] ?? null, $assetUrl);
+}
 $isLoggedIn = $user !== null;
 
 if (!$isLoggedIn && $page !== 'auth') {
@@ -61,7 +75,7 @@ if ($isLoggedIn && $requestMethod === 'POST') {
         'check-payment' => parkEasyActionPay($conn, $currentUserId),
         'cancel-reservation' => parkEasyActionCancel($conn, $currentUserId),
         'set-location' => parkEasyActionSetLocation($conn),
-        'profile' => parkEasyHandleProfileUpdate($conn, $currentUserId),
+        'profile' => parkEasyHandleProfileUpdate($conn, $currentUserId, $assetUrl),
         default => null,
     };
 }
@@ -213,8 +227,8 @@ if (!isset($routes[$page])) {
 
     ob_start();
     echo '<main class="main-content">';
-    echo '<h1>400 - Page not found</h1>';
-    echo '<p>The page you requested could not be found.</p>';
+    echo '<span class="section-header">400 - Page not found</span>';
+    echo '<span>The page you requested could not be found.</span>';
     echo '<a href="?page=home">Back to home.</a>';
     echo '</main>';
     $pageContent = ob_get_clean();
@@ -342,11 +356,13 @@ if (!isset($routes[$page])) {
 
     if ($showLayout) {
         $fileCss = array_merge($fileCss, [
-            '/components/icon.css',
-            '/layouts/sidebar.css',
-            '/layouts/topbar.css',
-            '/layouts/footer.css',
+            'components/confirmation-dialog.css',
+            'layouts/sidebar.css',
+            'layouts/topbar.css',
+            'layouts/footer.css',
         ]);
+        $fileJs[] = 'layouts/sidebar.js';
+        $fileJs[] = 'layouts/confirm-actions.js';
     }
 }
 

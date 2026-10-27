@@ -33,9 +33,9 @@ $fileJs = [];
 
     <?php if (empty($mallsByCity)): ?>
     <section>
-        <p style="font: var(--text-body); color: var(--secondary-text);">
+        <span style="display:block;font: var(--text-body); color: var(--secondary-text);">
             No parking location found. <a href="?page=parking">Show all</a>
-        </p>
+        </span>
     </section>
     <?php endif; ?>
 

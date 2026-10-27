@@ -2,6 +2,31 @@
 
 const PARKEASY_OTP_MINUTES = 10;
 
+function parkEasyIsValidEmail(string $email): bool
+{
+    return filter_var($email, FILTER_VALIDATE_EMAIL) !== false
+        && preg_match('/^[^@\s]+@(?:[A-Za-z0-9](?:[A-Za-z0-9-]*[A-Za-z0-9])?\.)+[A-Za-z]{2,}$/D', $email) === 1;
+}
+
+function parkEasyFindAccountsByEmail(mysqli $conn, string $email): array
+{
+    $accounts = [];
+
+    foreach (['users' => 'user', 'operators' => 'operator', 'admins' => 'admin'] as $table => $role) {
+        $rows = staffRows(
+            $conn,
+            "SELECT id, password_hash" . ($table === 'operators' ? ', is_active' : '') . " FROM `$table` WHERE email = ?",
+            [$email]
+        );
+
+        foreach ($rows as $row) {
+            $accounts[] = ['role' => $role, 'account' => $row];
+        }
+    }
+
+    return $accounts;
+}
+
 /** Handles logout and every auth form (login, signup, forgot password). Redirects when it acts. */
 function parkEasyHandleAuthRequest(mysqli $conn, string $page, string $step, string $method): void
 {
@@ -15,6 +40,15 @@ function parkEasyHandleAuthRequest(mysqli $conn, string $page, string $step, str
         return;
     }
 
+    if ($method !== 'POST') {
+        if (isset($_SESSION['admin_id'])) {
+            redirect('?page=admin');
+        }
+        if (isset($_SESSION['operator_id'])) {
+            redirect('?page=operator');
+        }
+    }
+
     // The password reset steps only make sense in order.
     if ($step === 'forgot-otp' && !isset($_SESSION['reset_user_id'])
         || $step === 'reset-password' && !isset($_SESSION['reset_verified_id'])) {
@@ -25,24 +59,49 @@ function parkEasyHandleAuthRequest(mysqli $conn, string $page, string $step, str
         return;
     }
 
-    $back = '?page=auth&step=' . $step;
+    $returnPage = (string) ($_GET['return'] ?? '');
+    $returnPage = in_array($returnPage, ['admin', 'operator'], true) ? $returnPage : '';
+    $back = '?page=auth&step=' . $step . ($returnPage !== '' ? '&return=' . $returnPage : '');
     $fail = function (string $message) use ($back): never {
         flash('!' . $message);
         redirect($back);
     };
 
     if ($step === 'login') {
-        $user = staffRows($conn, 'SELECT id, password_hash FROM users WHERE email = ?',
-            [trim((string) ($_POST['email'] ?? ''))])[0] ?? null;
+        $email = trim((string) ($_POST['email'] ?? ''));
+        if (!parkEasyIsValidEmail($email)) {
+            $fail('Please enter a valid email address, including a domain such as .com.');
+        }
 
-        if ($user === null || !password_verify((string) ($_POST['password'] ?? ''), $user['password_hash'])) {
+        $accounts = parkEasyFindAccountsByEmail($conn, $email);
+        if (count($accounts) > 1) {
+            $fail('This email is assigned to more than one account role. Please contact support.');
+        }
+        $identity = $accounts[0] ?? null;
+        $account = $identity['account'] ?? null;
+        $isActive = $account === null
+            || !array_key_exists('is_active', $account)
+            || (int) $account['is_active'] === 1;
+
+        if ($account === null
+            || !password_verify((string) ($_POST['password'] ?? ''), $account['password_hash'])
+            || !$isActive) {
             $fail('Wrong email or password.');
         }
 
         session_regenerate_id(true);
-        $_SESSION['user_id'] = (int) $user['id'];
+        unset($_SESSION['user_id'], $_SESSION['operator_id'], $_SESSION['admin_id']);
+
+        if ($identity['role'] === 'user') {
+            $_SESSION['user_id'] = (int) $account['id'];
+            flash('Welcome back!');
+            redirect('?page=home');
+        }
+
+        $rolePage = $identity['role'];
+        $_SESSION[$rolePage . '_id'] = (int) $account['id'];
         flash('Welcome back!');
-        redirect('?page=home');
+        redirect('?page=' . $rolePage);
     }
 
     if ($step === 'signup') {
@@ -54,8 +113,8 @@ function parkEasyHandleAuthRequest(mysqli $conn, string $page, string $step, str
         if ($name === '') {
             $fail('Username is required.');
         }
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            $fail('Please enter a valid email address.');
+        if (!parkEasyIsValidEmail($email)) {
+            $fail('Please enter a valid email address, including a domain such as .com.');
         }
         if (!preg_match('/^\+?[0-9]{8,15}$/', $phone)) {
             $fail('Phone number must be 8-15 digits.');
@@ -66,6 +125,9 @@ function parkEasyHandleAuthRequest(mysqli $conn, string $page, string $step, str
         if ($password !== (string) ($_POST['confirm_password'] ?? '')) {
             $fail('Passwords do not match.');
         }
+        if (parkEasyFindAccountsByEmail($conn, $email) !== []) {
+            $fail('That email is already registered to an account.');
+        }
 
         try {
             $st = $conn->prepare('INSERT INTO users (name, email, phone, password_hash) VALUES (?, ?, ?, ?)');
@@ -75,6 +137,7 @@ function parkEasyHandleAuthRequest(mysqli $conn, string $page, string $step, str
         }
 
         session_regenerate_id(true);
+        unset($_SESSION['operator_id'], $_SESSION['admin_id']);
         $_SESSION['user_id'] = $st->insert_id;
         flash('Account created. Add your plate number below before making a reservation.');
         redirect('?page=profile');
@@ -82,7 +145,11 @@ function parkEasyHandleAuthRequest(mysqli $conn, string $page, string $step, str
 
     // Forgot password, demo version: there is no mail server, so the OTP is shown in the alert.
     if ($step === 'forgot-email') {
-        $user = staffRows($conn, 'SELECT id FROM users WHERE email = ?', [trim((string) ($_POST['email'] ?? ''))])[0] ?? null;
+        $email = trim((string) ($_POST['email'] ?? ''));
+        if (!parkEasyIsValidEmail($email)) {
+            $fail('Please enter a valid email address, including a domain such as .com.');
+        }
+        $user = staffRows($conn, 'SELECT id FROM users WHERE email = ?', [$email])[0] ?? null;
 
         if ($user === null) {
             $fail('Email is not registered.');
@@ -107,7 +174,11 @@ function parkEasyHandleAuthRequest(mysqli $conn, string $page, string $step, str
         if ($reset === null) {
             $fail('This OTP has expired. Please request a new one.');
         }
-        if (!password_verify(trim((string) ($_POST['otp'] ?? '')), $reset['token_hash'])) {
+        $otp = trim((string) ($_POST['otp'] ?? ''));
+        if (!preg_match('/^[0-9]{6}$/', $otp)) {
+            $fail('OTP must be a 6-digit code.');
+        }
+        if (!password_verify($otp, $reset['token_hash'])) {
             $fail('The OTP is incorrect.');
         }
 

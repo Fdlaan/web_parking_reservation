@@ -4,12 +4,19 @@ document.addEventListener("DOMContentLoaded", () => {
   const editButton = document.querySelector(".btn-edit-profile");
   const cancelButton = document.querySelector(".btn-cancel-profile");
   const saveActions = document.querySelector(".profile-edit-actions");
+  const photoForm = card?.querySelector(".profile-photo-form");
+  const photoInput = photoForm?.querySelector('input[type="file"]');
+  const photoPreview = card?.querySelector("[data-profile-photo-preview]");
+  const photoFilename = photoForm?.querySelector("[data-profile-photo-filename]");
+  const uploadButton = photoForm?.querySelector(".btn-upload-photo");
 
   if (!form || !card || !editButton || !cancelButton || !saveActions) {
     return;
   }
 
   const fields = form.querySelectorAll('input:not([type="hidden"])');
+  const originalPhotoSrc = photoPreview?.src;
+  let previewUrl = null;
 
   function setEditing(editing) {
     card.classList.toggle("is-editing", editing);
@@ -21,6 +28,48 @@ document.addEventListener("DOMContentLoaded", () => {
     editButton.hidden = editing;
     saveActions.hidden = !editing;
   }
+
+  photoInput?.addEventListener("change", () => {
+    const file = photoInput.files?.[0];
+    if (!file) {
+      if (previewUrl !== null) {
+        URL.revokeObjectURL(previewUrl);
+        previewUrl = null;
+      }
+      if (photoPreview && originalPhotoSrc) {
+        photoPreview.src = originalPhotoSrc;
+      }
+      if (photoFilename) {
+        photoFilename.textContent = "No photo selected";
+      }
+      if (uploadButton) {
+        uploadButton.disabled = true;
+      }
+      return;
+    }
+
+    if (previewUrl !== null) {
+      URL.revokeObjectURL(previewUrl);
+    }
+
+    previewUrl = URL.createObjectURL(file);
+    if (photoPreview) {
+      photoPreview.src = previewUrl;
+    }
+    if (photoFilename) {
+      photoFilename.textContent = file.name;
+    }
+    if (uploadButton) {
+      uploadButton.disabled = false;
+    }
+  });
+
+  photoForm?.addEventListener("submit", (event) => {
+    if (!photoInput?.files?.length) {
+      event.preventDefault();
+      photoInput?.focus();
+    }
+  });
 
   editButton.addEventListener("click", () => {
     setEditing(true);

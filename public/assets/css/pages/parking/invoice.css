@@ -12,13 +12,15 @@
     gap: 8px;
 }
 
-.invoice-header h1 {
+.invoice-page-title {
+    display: block;
     margin: 8px 0 0;
     font-size: 28px;
     font-weight: 600;
 }
 
-.invoice-header p {
+.invoice-page-description {
+    display: block;
     margin: 0;
     color: var(--secondary-text);
 }
@@ -77,14 +79,16 @@
     letter-spacing: 0.08em;
 }
 
-.invoice-title-row h2 {
+.invoice-number-title {
+    display: block;
     margin: 6px 0 0;
     font-size: 24px;
     font-weight: 600;
     overflow-wrap: anywhere;
 }
 
-.invoice-card h3 {
+.invoice-section-title {
+    display: block;
     margin: 0;
     font-size: 17px;
     font-weight: 600;
@@ -148,11 +152,13 @@
 }
 
 .invoice-payment-status {
+    display: block;
     margin: 0;
     color: var(--secondary-text);
 }
 
 .invoice-note {
+    display: block;
     margin: 0;
     color: var(--secondary-text);
     font-size: 13px;
@@ -212,12 +218,18 @@
     font-size: 28px;
 }
 
-.invoice-error h2,
-.invoice-error p {
+.invoice-error-title,
+.invoice-error-message {
+    display: block;
     margin: 0;
 }
 
-.invoice-error p {
+.invoice-error-title {
+    font-size: 20px;
+    font-weight: 600;
+}
+
+.invoice-error-message {
     color: var(--secondary-text);
 }
 
@@ -240,7 +252,7 @@
         padding: 18px;
     }
 
-    .invoice-title-row h2 {
+    .invoice-number-title {
         font-size: 20px;
     }
 

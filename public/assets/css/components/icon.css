@@ -19,33 +19,63 @@
   -webkit-mask: center / contain no-repeat;
   mask: center / contain no-repeat;
 
-  -webkit-mask-image: url("/web_parking_reservation/public/assets/images/icons/logo.svg");
-  mask-image: url("/web_parking_reservation/public/assets/images/icons/logo.svg");
+  -webkit-mask-image: url("../../images/icons/logo.svg");
+  mask-image: url("../../images/icons/logo.svg");
 }
 
 .home-icon {
-  -webkit-mask-image: url("/web_parking_reservation/public/assets/images/icons/home-icon.svg");
-  mask-image: url("/web_parking_reservation/public/assets/images/icons/home-icon.svg");
+  -webkit-mask-image: url("../../images/icons/home-icon.svg");
+  mask-image: url("../../images/icons/home-icon.svg");
 }
 
 .search-icon {
-  -webkit-mask-image: url("/web_parking_reservation/public/assets/images/icons/search-icon.svg");
-  mask-image: url("/web_parking_reservation/public/assets/images/icons/search-icon.svg");
+  -webkit-mask-image: url("../../images/icons/search-icon.svg");
+  mask-image: url("../../images/icons/search-icon.svg");
 }
 
 .history-icon {
-  -webkit-mask-image: url("/web_parking_reservation/public/assets/images/icons/history-icon.svg");
-  mask-image: url("/web_parking_reservation/public/assets/images/icons/history-icon.svg");
+  -webkit-mask-image: url("../../images/icons/history-icon.svg");
+  mask-image: url("../../images/icons/history-icon.svg");
 }
 
 .profile-icon {
-  -webkit-mask-image: url("/web_parking_reservation/public/assets/images/icons/profile-icon.svg");
-  mask-image: url("/web_parking_reservation/public/assets/images/icons/profile-icon.svg");
+  -webkit-mask-image: url("../../images/icons/profile-icon.svg");
+  mask-image: url("../../images/icons/profile-icon.svg");
+}
+
+.rate-icon {
+  -webkit-mask-image: url("../../images/icons/rate-icon.svg");
+  mask-image: url("../../images/icons/rate-icon.svg");
+}
+
+.users-icon {
+  -webkit-mask-image: url("../../images/icons/users-icon.svg");
+  mask-image: url("../../images/icons/users-icon.svg");
+}
+
+.floors-icon {
+  -webkit-mask-image: url("../../images/icons/floors-icon.svg");
+  mask-image: url("../../images/icons/floors-icon.svg");
+}
+
+.parking-icon {
+  -webkit-mask-image: url("../../images/icons/parking-icon.svg");
+  mask-image: url("../../images/icons/parking-icon.svg");
+}
+
+.reservation-icon {
+  -webkit-mask-image: url("../../images/icons/reservation-icon.svg");
+  mask-image: url("../../images/icons/reservation-icon.svg");
+}
+
+.invoice-icon {
+  -webkit-mask-image: url("../../images/icons/invoice-icon.svg");
+  mask-image: url("../../images/icons/invoice-icon.svg");
 }
 
 .logout-icon {
-  -webkit-mask-image: url("/web_parking_reservation/public/assets/images/icons/logout-icon.svg");
-  mask-image: url("/web_parking_reservation/public/assets/images/icons/logout-icon.svg");
+  -webkit-mask-image: url("../../images/icons/logout-icon.svg");
+  mask-image: url("../../images/icons/logout-icon.svg");
 }
 
 .location-icon {
@@ -59,10 +89,9 @@
   -webkit-mask: center / contain no-repeat;
   mask: center / contain no-repeat;
 
-  -webkit-mask: url("/web_parking_reservation/public/assets/images/icons/location-icon.svg")
-    center / contain no-repeat;
-  mask: url("/web_parking_reservation/public/assets/images/icons/location-icon.svg")
-    center / contain no-repeat;
+  -webkit-mask: url("../../images/icons/location-icon.svg") center / contain
+    no-repeat;
+  mask: url("../../images/icons/location-icon.svg") center / contain no-repeat;
 }
 
 .breadcrumb-icon {
@@ -76,10 +105,9 @@
   -webkit-mask: center / contain no-repeat;
   mask: center / contain no-repeat;
 
-  -webkit-mask: url("/web_parking_reservation/public/assets/images/icons/breadcrumb-icon.svg")
-    center / contain no-repeat;
-  mask: url("/web_parking_reservation/public/assets/images/icons/breadcrumb-icon.svg")
-    center / contain no-repeat;
+  -webkit-mask: url("../../images/icons/breadcrumb-icon.svg") center / contain
+    no-repeat;
+  mask: url("../../images/icons/breadcrumb-icon.svg") center / contain no-repeat;
 }
 
 .dot-icon {
@@ -93,10 +121,9 @@
   -webkit-mask: center / contain no-repeat;
   mask: center / contain no-repeat;
 
-  -webkit-mask: url("/web_parking_reservation/public/assets/images/icons/dot-icon.svg")
-  center / contain no-repeat;
-  mask: url("/web_parking_reservation/public/assets/images/icons/dot-icon.svg")
-    center / contain no-repeat;
+  -webkit-mask: url("../../images/icons/dot-icon.svg") center / contain
+    no-repeat;
+  mask: url("../../images/icons/dot-icon.svg") center / contain no-repeat;
 }
 
 .prev-icon {
@@ -110,10 +137,9 @@
   -webkit-mask: center / contain no-repeat;
   mask: center / contain no-repeat;
 
-  -webkit-mask: url("/web_parking_reservation/public/assets/images/icons/prev-icon.svg")
-  center / contain no-repeat;
-  mask: url("/web_parking_reservation/public/assets/images/icons/prev-icon.svg")
-    center / contain no-repeat;
+  -webkit-mask: url("../../images/icons/prev-icon.svg") center / contain
+    no-repeat;
+  mask: url("../../images/icons/prev-icon.svg") center / contain no-repeat;
 }
 
 .next-icon {
@@ -127,10 +153,9 @@
   -webkit-mask: center / contain no-repeat;
   mask: center / contain no-repeat;
 
-  -webkit-mask: url("/web_parking_reservation/public/assets/images/icons/next-icon.svg")
-  center / contain no-repeat;
-  mask: url("/web_parking_reservation/public/assets/images/icons/next-icon.svg")
-    center / contain no-repeat;
+  -webkit-mask: url("../../images/icons/next-icon.svg") center / contain
+    no-repeat;
+  mask: url("../../images/icons/next-icon.svg") center / contain no-repeat;
 }
 
 .back-icon {
@@ -144,10 +169,9 @@
   -webkit-mask: center / contain no-repeat;
   mask: center / contain no-repeat;
 
-  -webkit-mask: url("/web_parking_reservation/public/assets/images/icons/back-icon.svg")
-  center / contain no-repeat;
-  mask: url("/web_parking_reservation/public/assets/images/icons/back-icon.svg")
-    center / contain no-repeat;
+  -webkit-mask: url("../../images/icons/back-icon.svg") center / contain
+    no-repeat;
+  mask: url("../../images/icons/back-icon.svg") center / contain no-repeat;
 }
 
 .maps-icon {
@@ -161,10 +185,9 @@
   -webkit-mask: center / contain no-repeat;
   mask: center / contain no-repeat;
 
-  -webkit-mask: url("/web_parking_reservation/public/assets/images/icons/maps-icon.svg")
-  center / contain no-repeat;
-  mask: url("/web_parking_reservation/public/assets/images/icons/maps-icon.svg")
-    center / contain no-repeat;
+  -webkit-mask: url("../../images/icons/maps-icon.svg") center / contain
+    no-repeat;
+  mask: url("../../images/icons/maps-icon.svg") center / contain no-repeat;
 }
 .qris-icon {
   display: inline-block;
@@ -177,8 +200,7 @@
   -webkit-mask: center / contain no-repeat;
   mask: center / contain no-repeat;
 
-  -webkit-mask: url("/web_parking_reservation/public/assets/images/icons/qris-icon.svg")
-  center / contain no-repeat;
-  mask: url("/web_parking_reservation/public/assets/images/icons/qris-icon.svg")
-    center / contain no-repeat;
+  -webkit-mask: url("../../images/icons/qris-icon.svg") center / contain
+    no-repeat;
+  mask: url("../../images/icons/qris-icon.svg") center / contain no-repeat;
 }

@@ -95,9 +95,9 @@ $fileJs = [
         <div class="parking-area-floor">
             
             <?php if ($selectedFloor === null): ?>
-                <p>No parking floor has been configured for this mall yet.</p>
+                <span class="parking-empty-state">No parking floor has been configured for this mall yet.</span>
             <?php elseif (empty($parkingPageSlots)): ?>
-                <p>No <?= $parkingType === 'VALET' ? 'valet' : 'regular' ?> slots on this floor.</p>
+                <span class="parking-empty-state">No <?= $parkingType === 'VALET' ? 'valet' : 'regular' ?> slots on this floor.</span>
             <?php else: ?>
             
                 <?php $slotGroups = array_chunk($parkingPageSlots, 6); ?>
@@ -176,23 +176,23 @@ $fileJs = [
                     <?= csrfField() ?>
                     <input type="hidden" name="slot_id" value="">
 
-                    <h2 class="reserve-title" id="reserveModalTitle" data-slot-title>Parking slot</h2>
+                    <span class="reserve-title" id="reserveModalTitle" data-slot-title>Parking slot</span>
 
                     <?php if ($hasActiveReservation): ?>
-                        <p class="reserve-note">
+                        <span class="reserve-note">
                             You already have an active reservation. Finish or cancel it on the
                             <a href="?page=home">Home page</a> before reserving another slot.
-                        </p>
+                        </span>
                     <?php endif; ?>
 
                     <div class="reserve-field">
                         <label for="reserveVehicle">Plate number</label>
 
                         <?php if (empty($vehicles)): ?>
-                            <p class="reserve-note">
+                            <span class="reserve-note">
                                 You have no plate number yet.
                                 <a href="?page=profile">Add one in your profile</a> first.
-                            </p>
+                            </span>
                         <?php else: ?>
                             <select id="reserveVehicle" name="vehicle_id" required>
                                 <option value="" disabled selected>Choose plate number</option>

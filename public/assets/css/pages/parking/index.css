@@ -27,12 +27,27 @@
     overflow-y: hidden;
 
     scroll-snap-type: none;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-divider) transparent;
+    -webkit-overflow-scrolling: touch;
 }
 
 .mall-list::-webkit-scrollbar {
-    display: none;
+    height: 8px;
+}
+
+.mall-list::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.mall-list::-webkit-scrollbar-thumb {
+    background-color: var(--border-divider);
+    border: 2px solid var(--canvas-background);
+    border-radius: var(--radius-full);
+}
+
+.mall-list::-webkit-scrollbar-thumb:hover {
+    background-color: var(--brand-gold);
 }
 
 .mall-list .parking-card-item {
@@ -43,13 +58,6 @@
 
 .mall-list .parking-card {
     height: 100%;
-    gap: 20px;
-}
-
-.mall-list .parking-card-image {
-    height: 220px;
-    flex-shrink: 0;
-    object-fit: cover;
 }
 
 .mall-list .parking-card-content {
@@ -61,9 +69,7 @@
 }
 
 .mall-list .parking-card-title {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+  -webkit-line-clamp: 1;
 }
 
 .mall-list .parking-card-meta {
@@ -83,6 +89,19 @@
     gap: 6px;
     flex-shrink: 0;
     white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+  .mall-list {
+    gap: 16px;
+    padding: 0 24px 8px;
+    scroll-snap-type: x mandatory;
+  }
+
+  .mall-list .parking-card-item {
+    flex: 0 0 280px;
+    min-width: 280px;
+  }
 }
 
 .parking-header {

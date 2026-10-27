@@ -13,6 +13,7 @@
 
     <!-- Global CSS -->
     <link rel="stylesheet" href="<?= $assetUrl ?>/css/base.css">
+    <link rel="stylesheet" href="<?= $assetUrl ?>/css/components/icon.css">
 
     <!-- Font Awesome Icons -->
     <script src="https://kit.fontawesome.com/5ba89cd74f.js" crossorigin="anonymous"></script>

@@ -20,11 +20,38 @@ $fileJs = [
 
         <div class="profile-section">
 
-            <div class="profile-image">
-                <img
-                    src="<?= parkEasyEscape($avatarUrl) ?>"
-                    alt="Profile picture"
+            <div class="profile-avatar-column">
+                <div class="profile-image">
+                    <img
+                        src="<?= parkEasyEscape($avatarUrl) ?>"
+                        alt="Profile picture"
+                        data-profile-photo-preview
+                    >
+                </div>
+
+                <form
+                    class="profile-photo-form"
+                    action="?page=profile"
+                    method="POST"
+                    enctype="multipart/form-data"
                 >
+                    <?= csrfField() ?>
+                    <input type="hidden" name="profile_action" value="avatar_upload">
+                    <input
+                        type="file"
+                        id="profile-photo"
+                        name="profile_photo"
+                        accept="image/jpeg,image/png,image/webp"
+                        required
+                    >
+                    <label for="profile-photo" class="profile-photo-picker">
+                        <i class="fa-solid fa-camera" aria-hidden="true"></i>
+                        Choose a photo
+                    </label>
+                    <span class="profile-photo-filename" data-profile-photo-filename aria-live="polite">No photo selected</span>
+                    <span class="profile-photo-hint">JPG, PNG, or WebP - Maximum 5 MB</span>
+                    <button type="submit" class="btn-upload-photo" disabled>Upload photo</button>
+                </form>
             </div>
 
             <form
@@ -124,16 +151,16 @@ $fileJs = [
         <div class="vehicle-card">
 
             <?php if (empty($vehicles)): ?>
-                <p class="vehicle-empty">
+                <span class="vehicle-empty">
                     You have no plate number yet. Add one to start reserving a parking slot.
-                </p>
+                </span>
             <?php else: ?>
                 <ul class="vehicle-list">
                     <?php foreach ($vehicles as $vehicle): ?>
                         <li class="vehicle-item">
                             <span><i class="fa-solid fa-car" aria-hidden="true"></i> <?= parkEasyEscape($vehicle['plate_number']) ?></span>
 
-                            <form action="?page=profile" method="POST" onsubmit="return confirm('Remove this plate number?')">
+                            <form action="?page=profile" method="POST" data-confirm-message="Remove this plate number from your profile?">
                                 <?= csrfField() ?>
                                 <input type="hidden" name="profile_action" value="delete_plate">
                                 <input type="hidden" name="vehicle_id" value="<?= (int) $vehicle['id'] ?>">

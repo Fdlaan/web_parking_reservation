@@ -6,16 +6,21 @@
   border-radius: var(--radius-lg);
   text-decoration: none;
   background-color: var(--surface-card);
-    color: var(--primary-text);
+  color: var(--primary-text);
 }
 
 .parking-card {
-  gap: 20px;
+  height: 100%;
+  gap: 16px;
+  justify-content: flex-start !important;
 }
 
 .parking-card-image {
+  display: block;
   width: 100%;
-  height: 150px;
+  height: auto;
+  aspect-ratio: 16 / 9;
+  flex: 0 0 auto;
   object-fit: cover;
   border-radius: var(--radius-lg);
   background-color: var(--secondary-text);
@@ -23,8 +28,10 @@
 
 .parking-card-content {
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
   gap: 4px;
+  min-width: 0;
 }
 
 .parking-card-heading {
@@ -36,11 +43,21 @@
 
   font: var(--text-H4);
   color: var(--primary-text);
+  min-width: 0;
+}
+
+.parking-card-title {
+  display: -webkit-box;
+  min-width: 0;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .parking-card-meta {
-    font: var(--text-label);
-    color: var(--secondary-text);
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
+  gap: 8px;
+  font: var(--text-label);
+  color: var(--secondary-text);
 }

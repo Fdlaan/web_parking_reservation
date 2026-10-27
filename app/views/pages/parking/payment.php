@@ -7,6 +7,9 @@ $titlePage = isset($res['mall_name'])
 $fileCss = [
     'pages/parking/payment.css',
 ];
+$fileJs = [
+    'pages/payment-navigation.js',
+];
 
 $reservedAt = isset($res) ? new DateTimeImmutable($res['reserved_at']) : null;
 $payBefore = isset($res) ? new DateTimeImmutable($res['pay_before']) : null;
@@ -22,7 +25,7 @@ $payBefore = isset($res) ? new DateTimeImmutable($res['pay_before']) : null;
                 <span>Back</span>
             </a>
 
-            <p class="payment-error-message">Reservation not found.</p>
+            <span class="payment-error-message">Reservation not found.</span>
         </section>
 
     <?php else: ?>
@@ -128,10 +131,10 @@ $payBefore = isset($res) ? new DateTimeImmutable($res['pay_before']) : null;
 
                         </div>
 
-                        <p class="payment-status-description">
+                        <span class="payment-status-description">
                             Pay before <strong><?= $payBefore->format('d M Y, H:i') ?></strong>,
                             otherwise the reservation expires.
-                        </p>
+                        </span>
 
                         <div class="payment-divider"></div>
 
@@ -157,4 +160,25 @@ $payBefore = isset($res) ? new DateTimeImmutable($res['pay_before']) : null;
         </section>
     <?php endif; ?>
 
+    <?php if ($res !== null): ?>
+        <div class="action-confirmation" data-payment-leave-dialog hidden>
+            <div class="action-confirmation-backdrop" data-payment-cancel></div>
+            <section
+                class="action-confirmation-card"
+                role="dialog"
+                aria-modal="true"
+                aria-labelledby="payment-leave-title"
+                aria-describedby="payment-leave-description"
+            >
+                <span class="action-confirmation-title" id="payment-leave-title">Leave payment?</span>
+                <span class="action-confirmation-message" id="payment-leave-description">
+                    Your reservation is still awaiting payment. You can return to this page later from History.
+                </span>
+                <div class="action-confirmation-actions">
+                    <button type="button" class="action-confirmation-cancel" data-payment-cancel>Stay on payment</button>
+                    <button type="button" class="action-confirmation-accept" data-payment-confirm>Leave page</button>
+                </div>
+            </section>
+        </div>
+    <?php endif; ?>
 </main>

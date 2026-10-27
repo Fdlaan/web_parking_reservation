@@ -5,6 +5,10 @@ $fileCss = [
     'components/auth-user-input.css'
 ];
 
+$fileJs = [
+    'pages/auth.js',
+];
+
 $authSteps = [
     'login' => $projectRoot . '/app/views/pages/auth/login.php',
     'signup' => $projectRoot . '/app/views/pages/auth/signup.php',

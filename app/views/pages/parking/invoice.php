@@ -20,17 +20,17 @@ $fileCss = [
         </a>
     </section>
 
-    <h1>Reservation Invoice</h1>
-    <p>Review your parking reservation details.</p>
+    <span class="invoice-page-title">Reservation Invoice</span>
+    <span class="invoice-page-description">Review your parking reservation details.</span>
 
     <?php if ($res === null): ?>
 
         <section class="invoice-card invoice-error">
             <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
 
-            <h2>Unable to Open Invoice</h2>
+            <span class="invoice-error-title">Unable to Open Invoice</span>
 
-            <p>Reservation not found.</p>
+            <span class="invoice-error-message">Reservation not found.</span>
 
             <a href="?page=history" class="invoice-button invoice-button-secondary">
                 Back to History
@@ -69,7 +69,7 @@ $fileCss = [
                     <div>
                         <span class="invoice-eyebrow">INVOICE NUMBER</span>
 
-                        <h2><?= parkEasyEscape($res['invoice_number']) ?></h2>
+                        <span class="invoice-number-title"><?= parkEasyEscape($res['invoice_number']) ?></span>
                     </div>
 
                     <span class="invoice-status <?= $isPaid ? 'is-paid' : 'is-unpaid' ?>">
@@ -116,7 +116,7 @@ $fileCss = [
 
                 <hr>
 
-                <h3>Payment Details</h3>
+                <span class="invoice-section-title">Payment Details</span>
 
                 <div class="invoice-info-row">
                     <span>Reservation Fee</span>
@@ -135,21 +135,21 @@ $fileCss = [
 
                 <hr>
 
-                <h3>Notes</h3>
+                <span class="invoice-section-title">Notes</span>
 
-                <p class="invoice-note">
+                <span class="invoice-note">
                     This invoice covers the reservation fee and service fee.
                     Show your plate number to the parking operator to confirm your reservation.
-                </p>
+                </span>
 
             </section>
 
             <aside class="invoice-sidebar">
 
                 <section class="invoice-card">
-                    <h3>Payment Status</h3>
+                    <span class="invoice-section-title">Payment Status</span>
 
-                    <p class="invoice-payment-status"><?= parkEasyEscape($paymentText) ?></p>
+                    <span class="invoice-payment-status"><?= parkEasyEscape($paymentText) ?></span>
 
                     <?php if ($status === 'UNPAID'): ?>
                         <a

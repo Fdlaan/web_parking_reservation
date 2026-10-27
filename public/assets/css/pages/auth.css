@@ -2,14 +2,19 @@
   display: flex;
   flex-direction: row;
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
+  height: 100dvh;
   padding: 24px;
+  box-sizing: border-box;
   background-color: var(--canvas-background);
+  gap: 24px;
+  overflow: hidden;
 }
 
 .auth-image {
   flex: 1;
-  width: 50%;
+  min-width: 0;
+  height: 100%;
   overflow: hidden;
   border-radius: 12px;
   background-color: var(--primary-text);
@@ -24,7 +29,8 @@
 
 .form-side {
   flex: 1;
-  width: 100%;
+  min-width: 0;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -50,7 +56,7 @@
 }
 
 .alert {
-  margin:0;
+  margin: 0;
   width: 100%;
 }
 
@@ -121,4 +127,23 @@
   color: var(--brand-gold);
   font: var(--text-button);
   text-decoration: none;
+}
+
+@media (max-width: 700px) {
+  .auth-content {
+    min-height: 100svh;
+    padding: 16px;
+  }
+
+  .auth-image {
+    display: none;
+  }
+
+  .form-side {
+    padding: 24px 8px;
+  }
+
+  .form-wrap .auth-header {
+    font: var(--text-H2);
+  }
 }

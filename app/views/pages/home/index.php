@@ -87,7 +87,7 @@ $fileJs = [];
                 <?php endif; ?>
 
                 <?php if ($canCancel): ?>
-                <form action="?page=cancel-reservation" method="POST" onsubmit="return confirm('Cancel this reservation?')">
+                <form action="?page=cancel-reservation" method="POST" data-confirm-message="Cancel this reservation?">
                     <?= csrfField() ?>
                     <input type="hidden" name="reservation_id" value="<?= parkEasyEscape($reservation['reservation_id'] ?? '') ?>">
                     <button type="submit" class="reservation-button cancel-button">
@@ -98,9 +98,9 @@ $fileJs = [];
                 <button type="button" class="reservation-button cancel-button" disabled>
                     Cancel Reservation
                 </button>
-                <p class="reservation-cancel-note" style="font: var(--text-body-S)">
+                <span class="reservation-cancel-note" style="display:block;font: var(--text-body-S)">
                     Paid reservations can be cancelled until 1 hour before.
-                </p>
+                </span>
                 <?php endif; ?>
 
             </div>

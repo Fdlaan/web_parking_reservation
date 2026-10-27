@@ -2,11 +2,25 @@
 
     // breadcrumb for the current page
     $breadcrumb = $breadcrumb ?? [];
+    $topbarProfileUrl = $topbarProfileUrl ?? '?page=profile';
+    $topbarShowAvatar = $topbarShowAvatar ?? true;
+    $topbarRole = $topbarRole ?? null;
 
 ?>
 
 <!-- topbar container -->
 <header class="topbar d-flex flex-row sticky-top">
+
+    <button
+        type="button"
+        class="sidebar-toggle"
+        data-sidebar-toggle
+        aria-label="Open navigation"
+        aria-expanded="false"
+        aria-controls="primary-navigation"
+    >
+        <span class="sidebar-toggle-icon" aria-hidden="true"></span>
+    </button>
 
     <!-- breadcrumb nav -->
     <nav class="topbar-item-breadcrumb" aria-label="Breadcrumb">
@@ -37,9 +51,14 @@
     <div class="topbar-item-right">
 
         <!-- user profile -->
-        <a href="?page=profile" class="profile text-uppercase text-decoration-none">
-            <img src="<?= htmlspecialchars($user['avatar_url'] ?: $assetUrl . '/images/icons/profile-icon.svg', ENT_QUOTES, 'UTF-8') ?>" alt="Profile picture" width="36" height="36">
-            <?= htmlspecialchars($user['name'] ?? 'User', ENT_QUOTES, 'UTF-8') ?>
+        <a href="<?= parkEasyEscape($topbarProfileUrl) ?>" class="profile text-decoration-none <?= $topbarRole === null ? 'text-uppercase' : '' ?>">
+            <?php if ($topbarShowAvatar): ?>
+                <img src="<?= htmlspecialchars($user['avatar_url'] ?: $assetUrl . '/images/icons/profile-icon.svg', ENT_QUOTES, 'UTF-8') ?>" alt="" width="36" height="36">
+            <?php endif; ?>
+            <?php if ($topbarRole !== null): ?>
+                <span class="profile-role"><?= htmlspecialchars($topbarRole, ENT_QUOTES, 'UTF-8') ?>:</span>
+            <?php endif; ?>
+            <span class="profile-name"><?= htmlspecialchars($user['name'] ?? 'User', ENT_QUOTES, 'UTF-8') ?></span>
         </a>
 
     </div>

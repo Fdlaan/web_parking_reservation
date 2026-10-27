@@ -23,3 +23,76 @@ input::placeholder {
   font-style: italic;
   opacity: 1;
 }
+
+.auth-field-feedback {
+  color: var(--danger-foreground);
+  font: var(--text-body-S);
+}
+
+.form-group input[aria-invalid="true"] {
+  border-color: var(--danger-foreground);
+  outline-color: var(--danger-foreground);
+}
+
+.password-input-wrapper {
+  position: relative;
+}
+
+.password-input-wrapper input {
+  width: 100%;
+  padding-right: 44px;
+}
+
+.password-visibility-toggle {
+  position: absolute;
+  top: 50%;
+  right: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--brand-gold);
+  cursor: pointer;
+  transform: translateY(-50%);
+}
+
+.password-visibility-toggle:focus-visible {
+  outline: 2px solid var(--brand-gold);
+  outline-offset: 2px;
+}
+
+.password-strength {
+  display: grid;
+  gap: 5px;
+  color: var(--secondary-text);
+  font: var(--text-caption);
+}
+
+.password-strength-meter {
+  display: flex;
+  gap: 4px;
+}
+
+.password-strength-meter span {
+  height: 5px;
+  flex: 1;
+  border-radius: var(--radius-full);
+  background: var(--border-divider);
+}
+
+.password-strength[data-level="1"] .password-strength-meter span:first-child {
+  background: var(--danger-foreground);
+}
+
+.password-strength[data-level="2"] .password-strength-meter span:nth-child(-n + 2) {
+  background: var(--brand-gold);
+}
+
+.password-strength[data-level="3"] .password-strength-meter span {
+  background: var(--success-foreground);
+}

@@ -1,6 +1,9 @@
 <?php
 
 $titlePage = 'Log in | Parkeasy';
+$loginReturn = in_array($_GET['return'] ?? '', ['admin', 'operator'], true)
+    ? (string) $_GET['return']
+    : '';
 
 $fields = [
     [
@@ -28,7 +31,7 @@ $fields = [
 <main class="auth-content">
 
     <div class="auth-image" role="img" aria-label="Parking garage entrance">
-        <img src="" alt="">
+        <img src="<?=$assetUrl?>/images/image-auth.svg" alt="">
     </div>
 
     <section class="form-side">
@@ -36,7 +39,7 @@ $fields = [
 
             <span class="auth-header">Welcome back</span>
 
-            <form class="input-form" action="?page=auth&step=login" method="POST">
+            <form class="input-form" action="?page=auth&amp;step=login<?= $loginReturn !== '' ? '&amp;return=' . rawurlencode($loginReturn) : '' ?>" method="POST" novalidate data-auth-form data-auth-step="login">
 
                 <?= csrfField() ?>
 

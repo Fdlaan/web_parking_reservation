@@ -18,7 +18,7 @@ $fields = [
 
             <span class="auth-header">Reset your password</span>
 
-            <form class="input-form" action="?page=auth&step=reset-password" method="POST">
+            <form class="input-form" action="?page=auth&amp;step=reset-password" method="POST" novalidate data-auth-form data-auth-step="reset-password">
 
                 <?= csrfField() ?>
 

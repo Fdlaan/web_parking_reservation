@@ -59,7 +59,7 @@ $fields = [
 
             <span class="auth-header">Let's create your account</span>
 
-            <form class="input-form" action="?page=auth&step=signup" method="POST">
+            <form class="input-form" action="?page=auth&amp;step=signup" method="POST" novalidate data-auth-form data-auth-step="signup">
 
                 <?= csrfField() ?>
 
@@ -82,7 +82,7 @@ $fields = [
     </section>
 
     <div class="auth-image" role="img" aria-label="Parking garage entrance">
-        <img src="" alt="">
+        <img src="<?=$assetUrl?>/images/image-auth.svg" alt="">
     </div>
 
 </main>

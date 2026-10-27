@@ -16,7 +16,7 @@ $fields = [
 
             <span class="auth-header">Enter your OTP</span>
 
-            <form class="input-form" action="?page=auth&step=forgot-otp" method="POST">
+            <form class="input-form" action="?page=auth&amp;step=forgot-otp" method="POST" novalidate data-auth-form data-auth-step="forgot-otp">
 
                 <?= csrfField() ?>
 

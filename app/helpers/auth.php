@@ -12,6 +12,6 @@ function parkEasyFindUserById(mysqli $conn, int $id): ?array
 
 function parkEasyLogout(): void
 {
-    unset($_SESSION['user_id']);
+    unset($_SESSION['user_id'], $_SESSION['operator_id'], $_SESSION['admin_id']);
     session_regenerate_id(true);
 }

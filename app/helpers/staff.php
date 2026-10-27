@@ -43,35 +43,17 @@ function redirect(string $url): never
 }
 
 /**
- * Handles logout + login for one staff table and returns the logged-in row.
- * Shows the login form and exits when nobody is logged in.
+ * Requires an active staff session and returns the logged-in row.
+ * Guests are redirected to the shared role-aware login form.
  * $table is a hardcoded string from the caller, never user input.
  */
-function staffAuth(mysqli $conn, string $table, string $sessKey, string $self, string $title): array
+function staffAuth(mysqli $conn, string $table, string $sessKey, string $self): array
 {
-    $error = null;
-
     if ($_SERVER['REQUEST_METHOD'] === 'POST' && csrfOk()) {
         if (($_POST['action'] ?? '') === 'logout') {
-            unset($_SESSION[$sessKey]);
+            unset($_SESSION['user_id'], $_SESSION['operator_id'], $_SESSION['admin_id']);
+            session_regenerate_id(true);
             redirect($self);
-        }
-
-        if (($_POST['action'] ?? '') === 'login') {
-            $st = $conn->prepare("SELECT * FROM `$table` WHERE email = ?");
-            $st->execute([trim((string) ($_POST['email'] ?? ''))]);
-            $row = $st->get_result()->fetch_assoc();
-
-            $ok = $row
-                && password_verify((string) ($_POST['password'] ?? ''), $row['password_hash'])
-                && ($row['is_active'] ?? 1); // admins have no is_active column
-
-            if ($ok) {
-                session_regenerate_id(true);
-                $_SESSION[$sessKey] = (int) $row['id'];
-                redirect($self);
-            }
-            $error = 'Wrong email or password.';
         }
     }
 
@@ -86,78 +68,164 @@ function staffAuth(mysqli $conn, string $table, string $sessKey, string $self, s
         unset($_SESSION[$sessKey]);
     }
 
-    staffHead($title);
-    echo '<form method="post" class="card" style="max-width:340px;margin:12vh auto">'
-        . '<h2>' . e($title) . '</h2>'
-        . ($error ? '<p class="msg err">' . e($error) . '</p>' : '')
-        . csrfField() . '<input type="hidden" name="action" value="login">'
-        . '<label>Email<input type="email" name="email" required></label>'
-        . '<label>Password<input type="password" name="password" required></label>'
-        . '<button>Log in</button></form></body></html>';
-    exit;
+    $role = $table === 'admins' ? 'admin' : 'operator';
+    redirect('?page=auth&step=login&return=' . $role);
 }
 
 function staffHead(string $title): void
 {
+    $assetUrl = $GLOBALS['assetUrl'] ?? '';
     echo '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8">'
         . '<meta name="viewport" content="width=device-width, initial-scale=1">'
-        . '<title>' . e($title) . '</title><style>
-:root{--bg:#1e1e1e;--card:#2c2c2c;--line:#454545;--text:#f4f2eb;--mute:#b5b5ad;--gold:#d9b061;--ok:#79d5a2;--bad:#f19c9c}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 Lato,Inter,sans-serif}
-header{display:flex;gap:16px;align-items:center;padding:12px 24px;background:#181818;flex-wrap:wrap}
-header b{color:var(--gold);font-size:18px}nav{display:flex;gap:4px;flex:1;flex-wrap:wrap}
-nav a{color:var(--mute);padding:6px 12px;border-radius:6px;text-decoration:none}
-nav a.on,nav a:hover{background:#3d3527;color:var(--gold)}
-main{padding:24px;max-width:1200px;margin:auto}h2{margin:0 0 12px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:16px;margin-bottom:20px}
-.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px}
-label{display:block;font-size:12px;color:var(--mute)}
-input,select{width:100%;margin:2px 0 8px;padding:8px;border-radius:6px;border:1px solid var(--line);background:#fff;color:#222}
-input[type=checkbox]{width:auto}
-button,.btn{background:var(--gold);color:#222;border:0;border-radius:6px;padding:7px 14px;font-weight:600;cursor:pointer;text-decoration:none;display:inline-block}
-button.red{background:#470909;color:var(--bad)}button.link{background:none;color:var(--text);border:1px solid var(--line)}
-.tbl{overflow-x:auto}table{width:100%;border-collapse:collapse}
-th,td{text-align:left;padding:8px;border-bottom:1px solid var(--line);white-space:nowrap}th{color:var(--mute);font-weight:500}
-td form{display:inline}.msg{padding:8px 12px;border-radius:6px;background:#173d2b;color:var(--ok)}.msg.err{background:#470909;color:var(--bad)}
-</style></head><body>';
+        . '<title>' . e($title) . '</title>'
+        . '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">'
+        . '<link rel="stylesheet" href="' . e($assetUrl . '/css/base.css') . '">'
+        . '<link rel="stylesheet" href="' . e($assetUrl . '/css/components/confirmation-dialog.css') . '">'
+        . '<link rel="stylesheet" href="' . e($assetUrl . '/css/components/icon.css') . '">'
+        . '<link rel="stylesheet" href="' . e($assetUrl . '/css/layouts/sidebar.css') . '">'
+        . '<link rel="stylesheet" href="' . e($assetUrl . '/css/layouts/topbar.css') . '">'
+        . '<link rel="stylesheet" href="' . e($assetUrl . '/css/pages/staff.css') . '">'
+        . '<script src="' . e($assetUrl . '/js/layouts/sidebar.js') . '" defer></script>'
+        . '<script src="' . e($assetUrl . '/js/layouts/confirm-actions.js') . '" defer></script></head><body class="staff-dashboard">';
 }
 
-/** Top bar. $nav = ['key' => 'Label'], links go to $self . key. */
+/** Shared role layout with a role-specific navigation set. */
 function staffBar(string $brand, array $nav, string $active, string $self, string $who): void
 {
-    echo '<header><b>' . e($brand) . '</b><nav>';
+    $isAdmin = str_starts_with($self, '?page=admin');
+    $roleBrand = $isAdmin ? 'Parkeasy Admin' : 'Parkeasy Operator';
+    $sidebarBrand = $roleBrand;
+    $sidebarHomeUrl = $self . array_key_first($nav);
+    $sidebarLogoutUrl = $self . $active;
+    $sidebarLogoutForm = true;
+    $currentPage = $active;
+    $sidebarItems = [];
+    $staffIcons = [
+        'malls' => 'location-icon',
+        'operators' => 'profile-icon',
+        'rates' => 'rate-icon',
+        'areas' => 'maps-icon',
+        'users' => 'users-icon',
+        'floors' => 'floors-icon',
+        'slots' => 'parking-icon',
+        'reservations' => 'reservation-icon',
+        'invoices' => 'invoice-icon',
+    ];
+
     foreach ($nav as $key => $label) {
-        echo '<a href="' . e($self . $key) . '"' . ($key === $active ? ' class="on"' : '') . '>' . e($label) . '</a>';
+        $sidebarItems[] = [
+            'label' => $label,
+            'page' => $key,
+            'url' => $self . $key,
+            'icon' => $staffIcons[$key] ?? 'history-icon',
+        ];
     }
-    echo '</nav><span>' . e($who) . '</span><form method="post">' . csrfField()
-        . '<input type="hidden" name="action" value="logout"><button class="link">Log out</button></form></header><main>';
+
+    $user = ['name' => $who, 'avatar_url' => null];
+    $topbarProfileUrl = $sidebarHomeUrl;
+    $topbarShowAvatar = false;
+    $topbarRole = $isAdmin ? 'ADMIN' : 'OPERATOR';
+    $breadcrumb = [['label' => $brand], ['label' => $nav[$active] ?? $roleBrand]];
+    $layoutRoot = dirname(__DIR__) . '/views/layouts/';
+
+    echo '<div class="layout d-flex align-items-stretch staff-layout">';
+    require $layoutRoot . 'sidebar.php';
+    echo '<div class="content d-flex flex-column">';
+    require $layoutRoot . 'topbar.php';
+    echo '<main class="main-content">';
 
     if ($m = flash()) {
-        echo '<p class="msg' . (str_starts_with($m, '!') ? ' err">' . e(substr($m, 1)) : '">' . e($m)) . '</p>';
+        echo '<span class="msg' . (str_starts_with($m, '!') ? ' err">' . e(substr($m, 1)) : '">' . e($m)) . '</span>';
     }
 }
 
-/** Renders rows as a table; $actions(row) returns extra HTML for the last cell. Hidden columns start with "_". */
+function staffPageUrl(int $page): string
+{
+    $query = $_GET;
+    unset($query['edit']);
+    $query['table_page'] = max(1, $page);
+
+    return '?' . http_build_query($query);
+}
+
+function staffCurrentPage(): int
+{
+    $page = filter_var($_GET['table_page'] ?? 1, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+
+    return $page === false ? 1 : $page;
+}
+
+/** Renders paginated table rows; $actions(row) returns extra HTML for the last cell. Hidden columns start with "_". */
 function staffTable(array $rows, ?callable $actions = null): void
 {
     if (!$rows) {
-        echo '<p style="color:var(--mute)">Nothing here yet.</p>';
+        echo '<div class="staff-table-shell"><div class="staff-table-empty">'
+            . '<span>Nothing here yet.</span></div></div>';
         return;
     }
+
+    $pageSize = 10;
+    $totalRows = count($rows);
+    $totalPages = (int) ceil($totalRows / $pageSize);
+    $currentPage = min(staffCurrentPage(), $totalPages);
+    $visibleRows = array_slice($rows, ($currentPage - 1) * $pageSize, $pageSize);
     $cols = array_filter(array_keys($rows[0]), fn($c) => $c[0] !== '_');
-    echo '<div class="tbl"><table><tr>';
+    echo '<div class="staff-table-shell"><div class="staff-table-wrapper">'
+        . '<table class="staff-table"><thead><tr>';
     foreach ($cols as $c) {
         echo '<th>' . e(str_replace('_', ' ', $c)) . '</th>';
     }
-    echo $actions ? '<th></th>' : '', '</tr>';
-    foreach ($rows as $r) {
+    echo $actions ? '<th>Actions</th>' : '', '</tr></thead><tbody>';
+    foreach ($visibleRows as $r) {
         echo '<tr>';
         foreach ($cols as $c) {
-            echo '<td>' . e($r[$c] ?? '') . '</td>';
+            $value = $r[$c] ?? '';
+            if ($c === 'status' && $value !== '') {
+                echo '<td><span class="staff-status staff-status-' . e(strtolower((string) $value)) . '">'
+                    . e($value) . '</span></td>';
+            } else {
+                echo '<td>' . e($value) . '</td>';
+            }
         }
         echo $actions ? '<td>' . $actions($r) . '</td>' : '', '</tr>';
     }
-    echo '</table></div>';
+    echo '</tbody></table></div>';
+
+    if ($totalPages > 1) {
+        $startPage = max(1, min($currentPage - 2, $totalPages - 4));
+        $endPage = min($totalPages, $startPage + 4);
+        echo '<div class="staff-table-footer"><span class="staff-pagination-summary">Showing '
+            . (($currentPage - 1) * $pageSize + 1) . '-'
+            . min($currentPage * $pageSize, $totalRows) . ' of ' . $totalRows
+            . '</span><nav class="staff-pagination" aria-label="Table pagination">';
+
+        if ($currentPage > 1) {
+            echo '<a class="staff-page-arrow" href="' . e(staffPageUrl($currentPage - 1))
+                . '" aria-label="Previous page"><i class="prev-icon" aria-hidden="true"></i></a>';
+        } else {
+            echo '<span class="staff-page-arrow is-disabled" aria-hidden="true"><i class="prev-icon"></i></span>';
+        }
+
+        echo '<div class="staff-pagination-links">';
+        for ($page = $startPage; $page <= $endPage; $page++) {
+            $current = $page === $currentPage;
+            echo '<a href="' . e(staffPageUrl($page)) . '"'
+                . ($current ? ' class="current" aria-current="page"' : '')
+                . ' aria-label="Page ' . $page . '">' . $page . '</a>';
+        }
+        echo '</div>';
+
+        if ($currentPage < $totalPages) {
+            echo '<a class="staff-page-arrow" href="' . e(staffPageUrl($currentPage + 1))
+                . '" aria-label="Next page"><i class="next-icon" aria-hidden="true"></i></a>';
+        } else {
+            echo '<span class="staff-page-arrow is-disabled" aria-hidden="true"><i class="next-icon"></i></span>';
+        }
+
+        echo '</nav></div>';
+    }
+
+    echo '</div>';
 }
 
 function staffRows(mysqli $conn, string $sql, array $params = []): array

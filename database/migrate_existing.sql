@@ -47,3 +47,14 @@ INSERT INTO `user_locations` (`id`, `name`, `address`, `latitude`, `longitude`) 
 (23, 'Jatinegara', 'Jatinegara, Jakarta Timur', -6.2240, 106.8780),
 (24, 'Cililitan', 'Kramat Jati, Jakarta Timur', -6.2600, 106.8650),
 (25, 'Pinang Ranti', 'Makasar, Jakarta Timur', -6.2910, 106.8800);
+
+-- 4. vehicle plate numbers must be globally unique, including concurrent inserts.
+-- Resolve any rows returned by this query before applying the unique index.
+SELECT `plate_number`, COUNT(*) AS `claims`
+FROM `vehicles`
+GROUP BY `plate_number`
+HAVING COUNT(*) > 1;
+
+ALTER TABLE `vehicles`
+  DROP INDEX `uq_user_plate`,
+  ADD UNIQUE KEY `uq_plate_number` (`plate_number`);
